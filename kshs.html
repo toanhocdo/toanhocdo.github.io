@@ -1,144 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Khảo sát hàm số</title>
-    <script src="https://cdn.jsdelivr.net/npm/mathjs/lib/browser/math.js"></script>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        #chart {
-            width: 100%;
-            height: 500px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khảo Sát Hàm Số Bậc Ba</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.1.2/es5/tex-mml-chtml.js" async></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    h2 {
+      color: red;
+    }
+    .input-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Khảo sát hàm số</h1>
-    <label for="functionInput">Nhập hàm số (ví dụ: x^3 - 3*x^2 + 2): </label>
-    <input type="text" id="functionInput" value="x^3 - 3*x^2 + 2" style="width: 200px;">
-    <button onclick="analyzeFunction()">Khảo sát</button>
-    <div id="output"></div>
-    <div id="chart"></div>
+  <h1>Khảo Sát Hàm Số Bậc Ba</h1>
 
-    <script>
-        function analyzeFunction() {
-            const expr = document.getElementById('functionInput').value;
-            const math = mathjs;
+  <div class="input-container">
+    <label for="a">Nhập a:</label>
+    <input type="text" id="a">
+    <label for="b">Nhập b:</label>
+    <input type="text" id="b">
+    <label for="c">Nhập c:</label>
+    <input type="text" id="c">
+    <label for="d">Nhập d:</label>
+    <input type="text" id="d">
+    <button onclick="calculate()">Khảo sát</button>
+  </div>
 
-            // Define the function
-            const f = math.compile(expr);
+  <div id="result"></div>
+  <div id="plot" style="width:600px;height:400px;"></div>
 
-            // Find the domain (assuming the domain is all real numbers)
-            const domain = '\\mathbb{R}';
+  <script>
+    function calculate() {
+      // Input validation
+      const a = parseFloat(document.getElementById('a').value);
+      const b = parseFloat(document.getElementById('b').value);
+      const c = parseFloat(document.getElementById('c').value);
+      const d = parseFloat(document.getElementById('d').value);
 
-            // Derivative of the function
-            const derivative = math.derivative(expr, 'x');
-            const df = derivative.compile();
+      if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
+        alert('Vui lòng nhập tất cả các hệ số!');
+        return;
+      }
 
-            // Solve the derivative equal to 0 for critical points
-            let criticalPoints;
-            try {
-                criticalPoints = math.solve(derivative, 'x');
-            } catch (error) {
-                criticalPoints = [];
-            }
+      // Hiển thị hàm số nhập vào
+      const functionText = `y = ${a}x^3 + ${b}x^2 + ${c}x + ${d}`;
+      const functionHtml = `<h2>\\(${functionText}\\)</h2>`;
 
-            // Determine increasing/decreasing intervals
-            let increasingIntervals = [];
-            let decreasingIntervals = [];
-            criticalPoints.sort((a, b) => a - b);
-            for (let i = 0; i < criticalPoints.length - 1; i++) {
-                const midPoint = (criticalPoints[i] + criticalPoints[i + 1]) / 2;
-                const slope = df.evaluate({ x: midPoint });
-                if (slope > 0) {
-                    increasingIntervals.push(`[${criticalPoints[i]}, ${criticalPoints[i + 1]}]`);
-                } else {
-                    decreasingIntervals.push(`[${criticalPoints[i]}, ${criticalPoints[i + 1]}]`);
-                }
-            }
+      // Tính đạo hàm và rút gọn
+      const expr = `${a}*x^3 + ${b}*x^2 + ${c}*x + ${d}`;
+      const derivative = math.derivative(expr, 'x').toString();
+      const simplifiedDerivative = math.simplify(derivative).toString();
 
-            // Find extrema points
-            let extrema = [];
-            for (let point of criticalPoints) {
-                const value = f.evaluate({ x: point });
-                extrema.push({ point, value });
-            }
+      // Giải phương trình đạo hàm
+      const solutions = math.roots([3 * a, 2 * b, c]);
 
-            // Limits at positive and negative infinity
-            let limitPositiveInfinity, limitNegativeInfinity;
-            try {
-                limitPositiveInfinity = math.lim(f, 'x', Infinity);
-            } catch (error) {
-                limitPositiveInfinity = 'undefined';
-            }
-            try {
-                limitNegativeInfinity = math.lim(f, 'x', -Infinity);
-            } catch (error) {
-                limitNegativeInfinity = 'undefined';
-            }
+      // Tập xác định
+      const domainText = "Tập xác định: \\(\\mathbb{R}\\)";
 
-            // Find intercepts
-            let xIntercepts, yIntercept;
-            try {
-                xIntercepts = math.solve(expr, 'x');
-            } catch (error) {
-                xIntercepts = [];
-            }
-            try {
-                yIntercept = f.evaluate({ x: 0 });
-            } catch (error) {
-                yIntercept = 'undefined';
-            }
+      // Hiển thị kết quả
+      document.getElementById('result').innerHTML = `
+        ${functionHtml}
+        <p>${domainText}</p>
+        <p>Đạo hàm: \\(${simplifiedDerivative}\\)</p>
+        <p>Nghiệm của đạo hàm: \\(${solutions.map(sol => 'x = ' + sol.toFixed(6)).join(', ')}\\)</p>
+      `;
 
-            // Create the output
-            let output = `<p><strong>Tập xác định:</strong> \\(${domain}\\)</p>`;
-            output += `<p><strong>Đạo hàm:</strong> \\(${derivative.toString()}\\)</p>`;
-            output += `<p><strong>Nghiệm của đạo hàm (điểm tới hạn):</strong> \\(${criticalPoints.join(', ')}\\)</p>`;
-            output += `<p><strong>Hàm số tăng trên các khoảng:</strong> \\(${increasingIntervals.join(', ')}\\)</p>`;
-            output += `<p><strong>Hàm số giảm trên các khoảng:</strong> \\(${decreasingIntervals.join(', ')}\\)</p>`;
-            output += `<p><strong>Cực trị tại:</strong></p><ul>`;
-            for (let ext of extrema) {
-                output += `<li>\\(x = ${ext.point}, f(x) = ${ext.value}\\)</li>`;
-            }
-            output += `</ul>`;
-            output += `<p><strong>Giới hạn tại +∞:</strong> \\(${limitPositiveInfinity}\\)</p>`;
-            output += `<p><strong>Giới hạn tại -∞:</strong> \\(${limitNegativeInfinity}\\)</p>`;
-            output += `<p><strong>Giao điểm với trục tung:</strong> \\((0, ${yIntercept})\\)</p>`;
-            output += `<p><strong>Giao điểm với trục hoành:</strong> \\(x = ${xIntercepts.join(', ')}\\)</p>`;
-            document.getElementById('output').innerHTML = output;
+      // Cập nhật MathJax
+      window.MathJax.typesetPromise();
 
-            // Render MathJax
-            MathJax.typeset();
+      // Vẽ đồ thị hàm số
+      const xValues = math.range(-10, 10, 0.1).toArray();
+      const yValues = xValues.map(x => a * Math.pow(x, 3) + b * Math.pow(x, 2) + c * x + d);
 
-            // Plot the function
-            plotFunction(f, expr);
+      const trace = {
+        x: xValues,
+        y: yValues,
+        mode: 'lines',
+        name: functionText
+      };
+
+      const layout = {
+        title: 'Đồ thị hàm số bậc ba',
+        xaxis: {
+          title: 'x'
+        },
+        yaxis: {
+          title: 'y'
         }
+      };
 
-        function plotFunction(f, expr) {
-            const xValues = math.range(-10, 10, 0.1).toArray();
-            const yValues = xValues.map(x => f.evaluate({ x }));
-
-            const trace = {
-                x: xValues,
-                y: yValues,
-                type: 'scatter'
-            };
-
-            const layout = {
-                title: `Đồ thị của hàm số: y = ${expr}`,
-                xaxis: { title: 'x' },
-                yaxis: { title: 'y' }
-            };
-
-            Plotly.newPlot('chart', [trace], layout);
-        }
-    </script>
+      Plotly.newPlot('plot', [trace], layout);
+    }
+  </script>
 </body>
 </html>
