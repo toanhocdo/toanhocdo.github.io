@@ -1,104 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Khảo Sát Hàm Số Bậc Ba</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.1.2/es5/tex-mml-chtml.js" async></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
-  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-  <style>
-    h2 {
-      color: red;
-    }
-    .input-container {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-  </style>
+<title>Khảo sát hàm số bậc ba</title>
+<meta charset="UTF-8">
+<script>
+MathJax = {
+tex: {
+inlineMath: [['$', '$'], ['\\(', '\\)']]
+},
+svg: {
+fontCache: 'global'
+}
+};
+</script>
+<script type="text/javascript" id="MathJax-script" async
+src="https://math.booktoan.com/mathjax/es5/tex-svg.js">
+</script>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+  #result {
+    margin-top: 20px;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  #graph {
+    width: 400px;
+    height: 400px;
+    border: 1px solid black;
+  }
+</style>
 </head>
 <body>
-  <h1>Khảo Sát Hàm Số Bậc Ba</h1>
+<h1>Khảo sát hàm số bậc ba</h1>
+<p>$x^2-x-9=0$ vaf \(x^5-c-9=0\)</p>
 
-  <div class="input-container">
-    <label for="a">Nhập a:</label>
-    <input type="text" id="a">
-    <label for="b">Nhập b:</label>
-    <input type="text" id="b">
-    <label for="c">Nhập c:</label>
-    <input type="text" id="c">
-    <label for="d">Nhập d:</label>
-    <input type="text" id="d">
-    <button onclick="calculate()">Khảo sát</button>
-  </div>
+<label for="a">Nhập hệ số a:</label>
+<input type="number" id="a" value="1"><br>
+<label for="b">Nhập hệ số b:</label>
+<input type="number" id="b" value="0"><br>
+<label for="c">Nhập hệ số c:</label>
+<input type="number" id="c" value="0"><br>
+<label for="d">Nhập hệ số d:</label>
+<input type="number" id="d" value="0"><br>
+<button onclick="analyze()">Khảo sát</button>
 
-  <div id="result"></div>
-  <div id="plot" style="width:600px;height:400px;"></div>
+<div id="result"></div>
+<canvas id="graph"></canvas>
 
-  <script>
-    function calculate() {
-      // Input validation
-      const a = parseFloat(document.getElementById('a').value);
-      const b = parseFloat(document.getElementById('b').value);
-      const c = parseFloat(document.getElementById('c').value);
-      const d = parseFloat(document.getElementById('d').value);
+<script>
+  function analyze() {
+    // Thực hiện các phép tính và hiển thị kết quả
+    let a = parseFloat(document.getElementById("a").value);
+    let b = parseFloat(document.getElementById("b").value);
+    let c = parseFloat(document.getElementById("c").value);
+    let d = parseFloat(document.getElementById("d").value);
 
-      if (isNaN(a) || isNaN(b) || isNaN(c) || isNaN(d)) {
-        alert('Vui lòng nhập tất cả các hệ số!');
-        return;
-      }
-
-      // Hiển thị hàm số nhập vào
-      const functionText = `y = ${a}x^3 + ${b}x^2 + ${c}x + ${d}`;
-      const functionHtml = `<h2>\\(${functionText}\\)</h2>`;
-
-      // Tính đạo hàm và rút gọn
-      const expr = `${a}*x^3 + ${b}*x^2 + ${c}*x + ${d}`;
-      const derivative = math.derivative(expr, 'x').toString();
-      const simplifiedDerivative = math.simplify(derivative).toString();
-
-      // Giải phương trình đạo hàm
-      const solutions = math.roots([3 * a, 2 * b, c]);
-
-      // Tập xác định
-      const domainText = "Tập xác định: \\(\\mathbb{R}\\)";
-
-      // Hiển thị kết quả
-      document.getElementById('result').innerHTML = `
-        ${functionHtml}
-        <p>${domainText}</p>
-        <p>Đạo hàm: \\(${simplifiedDerivative}\\)</p>
-        <p>Nghiệm của đạo hàm: \\(${solutions.map(sol => 'x = ' + sol.toFixed(6)).join(', ')}\\)</p>
+    let result = `
+      <h3>Hàm số: $y = ${a}x^3 + ${b}x^2 + ${c}x + ${d}$</h3>
+      <h4>Tập xác định:</h4>
+      $D = \\mathbb{R}$
+      <h4>Đạo hàm:</h4>
+      $y' = 3${a}x^2 + 2${b}x + ${c}$
       `;
 
-      // Cập nhật MathJax
-      window.MathJax.typesetPromise();
-
-      // Vẽ đồ thị hàm số
-      const xValues = math.range(-10, 10, 0.1).toArray();
-      const yValues = xValues.map(x => a * Math.pow(x, 3) + b * Math.pow(x, 2) + c * x + d);
-
-      const trace = {
-        x: xValues,
-        y: yValues,
-        mode: 'lines',
-        name: functionText
-      };
-
-      const layout = {
-        title: 'Đồ thị hàm số bậc ba',
-        xaxis: {
-          title: 'x'
-        },
-        yaxis: {
-          title: 'y'
-        }
-      };
-
-      Plotly.newPlot('plot', [trace], layout);
+    // Giải phương trình đạo hàm bằng công thức nghiệm
+    let delta = 4 * b * b - 12 * a * c;
+    let x1, x2;
+    if (delta >= 0) {
+      x1 = (-2 * b + Math.sqrt(delta)) / (6 * a);
+      x2 = (-2 * b - Math.sqrt(delta)) / (6 * a);
+      result += `
+        <h4>Giải phương trình đạo hàm y' = 0:</h4>
+        `;
+      if (x1 === x2) {
+        result += `$x = ${x1.toFixed(2)}$`;
+      } else {
+        result += `$x_1 = ${x1.toFixed(2)}$, $x_2 = ${x2.toFixed(2)}$`;
+      }
+    } else {
+      result += `
+        <h4>Giải phương trình đạo hàm y' = 0:</h4>
+        Phương trình vô nghiệm.
+      `;
     }
-  </script>
+
+    // Xác định khoảng đơn điệu
+    let intervals = [];
+    if (delta >= 0) {
+      if (x1 < x2) {
+        intervals = [
+          { start: -Infinity, end: x1, increasing: a > 0, decreasing: a < 0 },
+          { start: x1, end: x2, increasing: a < 0, decreasing: a > 0 },
+          { start: x2, end: Infinity, increasing: a > 0, decreasing: a < 0 }
+        ];
+      } else {
+        intervals = [
+          { start: -Infinity, end: x2, increasing: a > 0, decreasing: a < 0 },
+          { start: x2, end: x1, increasing: a < 0, decreasing: a > 0 },
+          { start: x1, end: Infinity, increasing: a > 0, decreasing: a < 0 }
+        ];
+      }
+    } else {
+      intervals = [
+        { start: -Infinity, end: Infinity, increasing: a > 0, decreasing: a < 0 }
+      ];
+    }
+
+    result += `
+      <h4>Kết luận về tính đơn điệu:</h4>
+      `;
+    intervals.forEach((interval) => {
+      if (interval.increasing) {
+        result += `Hàm số đồng biến trên khoảng (${interval.start.toFixed(2)}, ${interval.end.toFixed(2)})$<br>`;
+      } else if (interval.decreasing) {
+        result += `Hàm số nghịch biến trên khoảng (${interval.start.toFixed(2)}, ${interval.end.toFixed(2)})$<br>`;
+      }
+    });
+
+    // Xác định cực trị
+    result += `
+      <h4>Kết luận về cực trị:</h4>
+      `;
+    if (delta >= 0) {
+      if (x1 === x2) {
+        result += `Hàm số đạt cực trị tại $x = ${x1.toFixed(2)}$<br>`;
+      } else {
+        result += `Hàm số đạt cực trị tại $x_1 = ${x1.toFixed(2)}$ và $x_2 = ${x2.toFixed(2)}$<br>`;
+      }
+    } else {
+      result += `Hàm số không có cực trị.<br>`;
+    }
+
+    // Tính giới hạn
+    result += `
+      <h4>Giới hạn:</h4>
+      $\\lim_{x \\rightarrow +\\infty} y = ${a > 0 ? "+\\infty" : "-\\infty"}$<br>
+      \\(\\lim_{x \\rightarrow -\\infty} y = ${a > 0 ? "-\\infty" : "+\\infty"}\\)<br>
+      `;
+
+    // Lập bảng biến thiên
+    result += `
+      <h4>Bảng biến thiên:</h4>
+      `;
+    result += `
+      <table border="1">
+        <tr>
+          <th>$x$</th>
+          <th>$-\infty$</th>
+          ${delta >= 0 ? `<th>${x1.toFixed(2)}</th>` : ''}
+          ${delta >= 0 ? `<th>${x2.toFixed(2)}</th>` : ''}
+          <th>$+\infty$</th>
+        </tr>
+        <tr>
+          <th>$y'$</th>
+          ${a > 0 ? `<th>+</th>` : `<th>-</th>`}
+          ${delta >= 0 ? `${a > 0 ? `<th>-</th>` : `<th>+</th>`} ` : ''}
+          ${delta >= 0 ? `${a > 0 ? `<th>+</th>` : `<th>-</th>`} ` : ''}
+          ${a > 0 ? `<th>+</th>` : `<th>-</th>`}
+        </tr>
+        <tr>
+          <th>$y$</th>
+          ${a > 0 ? `<th></th>` : `<th></th>`}
+          ${delta >= 0 ? `${a > 0 ? `<th></th>` : `<th></th>`} ` : ''}
+          ${delta >= 0 ? `${a > 0 ? `<th></th>` : `<th></th>`} ` : ''}
+          ${a > 0 ? `<th></th>` : `<th></th>`}
+        </tr>
+      </table>
+      `;
+
+    // Tính giao điểm với trục hoành, trục tung
+    result += `
+      <h4>Giao điểm với trục hoành:</h4>
+      `;
+    let y = d;
+    if (y === 0) {
+      result += `Hàm số đi qua gốc tọa độ (0, 0).<br>`;
+    } else {
+      result += `Hàm số cắt trục tung tại điểm (0, ${y}).<br>`;
+    }
+
+    // Vẽ đồ thị hàm số
+    let canvas = document.getElementById('graph');
+    let ctx = canvas.getContext('2d');
+    let width = canvas.width;
+    let height = canvas.height;
+    let centerX = width / 2;
+    let centerY = height / 2;
+    let scale = 20; // Tỷ lệ x, y trên đồ thị
+
+    // Xóa đồ thị cũ
+    ctx.clearRect(0, 0, width, height);
+
+    // Vẽ lưới mờ
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+    for (let i = -10; i <= 10; i++) {
+      ctx.beginPath();
+      ctx.moveTo(centerX + i * scale, 0);
+      ctx.lineTo(centerX + i * scale, height);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(0, centerY - i * scale);
+      ctx.lineTo(width, centerY - i * scale);
+      ctx.stroke();
+    }
+
+    // Vẽ trục tọa độ
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, centerY);
+    ctx.lineTo(width, centerY);
+    ctx.moveTo(centerX, 0);
+    ctx.lineTo(centerX, height);
+    ctx.stroke();
+
+    // Vẽ mũi tên cho trục OX
+    ctx.beginPath();
+    ctx.moveTo(width - 10, centerY);
+    ctx.lineTo(width, centerY - 5);
+    ctx.lineTo(width, centerY + 5);
+    ctx.stroke();
+    ctx.font = '14px Arial';
+    ctx.fillText('x', width - 5, centerY + 15);
+
+    // Vẽ mũi tên cho trục OY
+    ctx.beginPath();
+    ctx.moveTo(centerX, 10);
+    ctx.lineTo(centerX - 5, 0);
+    ctx.lineTo(centerX + 5, 0);
+    ctx.stroke();
+    ctx.fillText('y', centerX + 10, 10);
+
+    // Vẽ đồ thị hàm số
+    ctx.strokeStyle = 'blue';
+    ctx.beginPath();
+    for (let i = -10; i <= 10; i += 0.1) {
+      let x = centerX + i * scale;
+      let y = centerY - (a * i * i * i + b * i * i + c * i + d) * scale;
+      if (i === -10) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+      }
+    }
+    ctx.stroke();
+
+    document.getElementById("result").innerHTML = result;
+ MathJax.typeset();
+  }
+</script>
 </body>
 </html>
