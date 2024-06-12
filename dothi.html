@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VE DO THI HAM SO</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        canvas {
+            border: 1px solid black;
+        }
+        .controls {
+            margin-bottom: 20px;
+        }
+        .controls input, .controls select {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<h2> Chương trình vẽ đồ thị hàm số Toán 12</h2>
+    <div class="controls">
+        <label for="functionType">Function Type: </label>
+        <select id="functionType">
+            <option value="linear">y= ax + b (bậc 1)</option>
+            <option value="quadratic">y=ax²+bx+c (bậc 2)</option>
+            <option value="cubic">y=ax³+bx²+cx+d (bậc 3)</option>
+            <option value="quartic">y=ax⁴+bx²+c (bậc 4)</option>
+            <option value="rational1">y=(ax+b)/(cx+d) (bậc 1 trên bậc 1)</option>
+	    <option value="rational2">y=(ax²+bx+c)/(dx+e)(bậc 2 trên bậc 1)</option> 
+        </select>
+<label for="scale">Scale: </label>
+        <input type="range" id="scale" min="1" max="10" value="5" step="1" oninput="updateScale()"><br><br>        
+<label for="a">a: </label><input type="number" id="a" value="1">
+        <label for="b">b: </label><input type="number" id="b" value="-3">
+        <label for="c">c: </label><input type="number" id="c" value="0"><br>
+        <label for="d">d: </label><input type="number" id="d" value="2">
+        <label for="e">e: </label><input type="number" id="e" value="3">
+        <button onclick="drawGraph()">Draw Graph</button>
+        
+    </div>
+    <canvas id="cubicCanvas" width="500" height="500"></canvas>
+    <script>
+        const canvas = document.getElementById('cubicCanvas');
+        const ctx = canvas.getContext('2d');
+        let scale = 50; // Initialize scale to 50
+        const origin = { x: canvas.width / 2, y: canvas.height / 2 };
+
+        function drawGraph() {
+            const a = parseFloat(document.getElementById('a').value);
+            const b = parseFloat(document.getElementById('b').value);
+            const c = parseFloat(document.getElementById('c').value);
+            const d = parseFloat(document.getElementById('d').value);
+            const e = parseFloat(document.getElementById('e').value);
+            const functionType = document.getElementById('functionType').value;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGrid();
+            drawAxes();
+            drawFunction(functionType, a, b, c, d, e);
+	    drawEquation(functionType, a, b, c, d, e);	
+        }
+
+function drawEquation(type, a, b, c, d, e) {
+    let equation = '';
+    switch (type) {
+        case 'linear':
+            equation = `y = ${a}x + ${b}`;
+            break;
+        case 'quadratic':
+            equation = `y = ${a}x² + ${b}x + ${c}`;
+            break;
+        case 'cubic':
+            equation = `y = ${a}x³ + ${b}x² + ${c}x + ${d}`;
+            break;
+        case 'quartic':
+            equation = `y = ${a}x⁴ + ${b}x² + ${c}`;
+            break;
+        case 'rational1':
+            equation = `y = (${a}x + ${b}) / (${c}x + ${d})`;
+            break;
+	case 'rational2':
+            equation = `y = (${a}x² + ${b}x + ${c}) / (${d}x + ${e})`;
+            break;
+    }
+    ctx.font = '14px Arial';
+    ctx.fillStyle = 'red';
+    ctx.fillText(equation, 5, 30); // Adjust position as needed
+}
+
+        function computeFunction(x, a, b, c, d, e, type) {
+            switch (type) {
+                case 'linear':
+                    return a * x + b;
+                case 'quadratic':
+                    return a * x ** 2 + b * x + c;
+                case 'cubic':
+                    return a * x ** 3 + b * x ** 2 + c * x + d;
+                case 'quartic':
+                    return a * x ** 4 + b * x ** 2 + c;
+		case 'rational1':
+                    return (a * x + b) / (c * x + d);
+                case 'rational2':
+                    return (a * x ** 2 + b * x + c) / (d * x + e);
+                default:
+                    return 0;
+            }
+        }
+
+        function drawAxes() {
+            ctx.beginPath();
+            ctx.font = '14px Arial';
+            // X-axis
+            ctx.moveTo(0, origin.y);
+            ctx.lineTo(canvas.width, origin.y);
+            ctx.moveTo(canvas.width - 10, origin.y - 5);
+            ctx.lineTo(canvas.width, origin.y);
+            ctx.lineTo(canvas.width - 10, origin.y + 5);
+            ctx.fillText('x', canvas.width - 10, origin.y - 10);
+            // Y-axis
+            ctx.moveTo(origin.x, 0);
+            ctx.lineTo(origin.x, canvas.height);
+            ctx.moveTo(origin.x - 5, 10);
+            ctx.lineTo(origin.x, 0);
+            ctx.lineTo(origin.x + 5, 10);
+
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+            ctx.fillText('y', origin.x + 10, 15);
+            // Draw unit markers on x and y axes
+            for (let x = scale; x < canvas.width; x += scale) {
+                ctx.moveTo(origin.x + x, origin.y - 5);
+                ctx.lineTo(origin.x + x, origin.y + 5);
+                ctx.moveTo(origin.x - x, origin.y - 5);
+                ctx.lineTo(origin.x - x, origin.y + 5);
+            }
+
+            for (let y = scale; y < canvas.height; y += scale) {
+                ctx.moveTo(origin.x - 5, origin.y + y);
+                ctx.lineTo(origin.x + 5, origin.y + y);
+                ctx.moveTo(origin.x - 5, origin.y - y);
+                ctx.lineTo(origin.x + 5, origin.y - y);
+            }
+
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+
+            // Draw unit labels
+            ctx.font = '12px Arial';
+            ctx.fillStyle = 'black';
+            for (let x = scale; x < canvas.width; x += scale) {
+                ctx.fillText((x / scale).toFixed(0), origin.x + x - 5, origin.y + 15); 
+                ctx.fillText((-x / scale).toFixed(0), origin.x - x - 5, origin.y + 15);
+            }
+
+            for (let y = scale; y < canvas.height; y += scale) {
+                ctx.fillText((-y / scale).toFixed(0), origin.x + 5, origin.y + y + 3);
+                ctx.fillText((y / scale).toFixed(0), origin.x + 5, origin.y - y + 3);
+            }
+        }
+
+        function drawFunction(type, a, b, c, d, e) {
+            ctx.beginPath();
+
+            for (let x = -origin.x / scale; x <= origin.x / scale; x += 0.01) {
+                const canvasX = origin.x + x * scale;
+                const canvasY = origin.y - computeFunction(x, a, b, c, d, e, type) * scale;
+                if (x === -origin.x / scale) {
+                    ctx.moveTo(canvasX, canvasY);
+                } else {
+                    ctx.lineTo(canvasX, canvasY);
+                }
+            }
+            ctx.strokeStyle = 'blue';
+            ctx.stroke();
+        }
+
+        function drawGrid() {
+            const step = scale; // Use scale directly for grid step
+            ctx.strokeStyle = '#e0e0e0';
+
+            // Draw vertical grid lines
+            for (let x = step; x < canvas.width; x += step) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+
+            // Draw horizontal grid lines
+            for (let y = step; y < canvas.height; y += step) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+        }
+
+        function updateScale() {
+            scale = parseInt(document.getElementById('scale').value, 10) * 10;
+            drawGraph();
+        }
+
+        drawGraph();
+    </script>
+</body>
+</html>
