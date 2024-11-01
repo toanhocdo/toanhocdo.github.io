@@ -1,0 +1,1134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống kê tổng quát - Toán 12</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            width: 48%;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #555;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .textarea-container {
+            position: relative;
+            margin-top: 15px;
+        }
+
+        #result {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: Consolas, monospace;
+            resize: none;
+        }
+
+        .btn-copy {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-copy:hover {
+            background-color: #0056b3;
+        }
+        /* CSS for the menu */
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .menu a, .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        .menu a:hover, .dropbtn:hover {
+            background-color: #555;
+        }
+
+    </style>
+    <script>
+        MathJax = {
+        tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        svg: {
+        fontCache: 'global'
+        }
+        };
+        </script>
+        <script type="text/javascript" id="MathJax-script" async
+        src="https://math.booktoan.com/mathjax/es5/tex-mml-chtml.js">
+        </script>
+</head>
+
+<body>
+  
+    <div class="container">
+        <h1 class="custom-title">Giải Toán Thống Kê - Bảng</h1>
+        
+        <style>
+            .custom-title {
+                font-family: 'Montserrat', sans-serif;
+                /* Sử dụng font đẹp */
+                font-size: 36px;
+                /* Kích thước chữ lớn */
+                color: #333;
+                /* Màu chữ */
+                text-align: center;
+                /* Canh giữa */
+                text-transform: uppercase;
+                /* Chuyển chữ thường thành chữ in hoa */
+                letter-spacing: 2px;
+                /* Khoảng cách giữa các chữ */
+                background: linear-gradient(to right, #ff7e5f, #feb47b);
+                /* Hiệu ứng màu gradient */
+                background-clip: text;
+                /* Tiêu chuẩn */
+                -webkit-background-clip: text;
+                /* Để hỗ trợ trên WebKit */
+                color: transparent;
+                /* Ẩn màu chữ mặc định */
+                margin-bottom: 20px;
+                /* Khoảng cách dưới tiêu đề */
+                position: relative;
+                /* Để tạo hiệu ứng sau */
+            }
+        
+            .custom-title::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                bottom: -10px;
+                transform: translateX(-50%);
+                width: 50px;
+                height: 3px;
+                background-color: #feb47b;
+                /* Đường gạch chân màu gradient */
+                border-radius: 5px;
+            }
+        </style>
+
+
+        <form id="inputForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="start">Số bắt đầu:</label>
+                    <input type="number" id="start" name="start" required>
+                </div>
+                <div class="form-group">
+                    <label for="step">Khoảng cách:</label>
+                    <input type="number" id="step" name="step" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="ranges">Số khoảng:</label>
+                    <input type="number" id="ranges" name="ranges" required>
+                </div>
+                <div class="form-group">
+                    <label for="frequencies">Nhập tần số:</label>
+                    <input type="text" id="frequencies" name="frequencies" placeholder="Cách nhau bằng dấu phẩy"
+                        required>
+                </div>
+            </div>
+
+            <button type="button" class="btn" onclick="thongke()">Tính toán</button>
+        </form>
+
+        <div class="textarea-container">
+            <textarea id="result" readonly></textarea>
+            <button class="btn-copy" onclick="copyResult()">Sao chép</button>
+        </div>
+    </div>
+    <!-- Hộp thoại tùy chỉnh -->
+    <div id="copyDialog" class="dialog">
+        <div class="dialog-content">
+            <span class="close" onclick="closeDialog()">&times;</span>
+            <p>Đã sao chép kết quả!</p>
+        </div>
+    </div>
+    
+    <style>
+        /* Phong cách cho hộp thoại tùy chỉnh */
+        .dialog {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .dialog-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            margin: auto;
+        }
+    
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #aaa;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+    </style>
+    <script>
+        function thongke() {
+            // let startInput = document.getElementById("start").value;
+            // const step = parseInt(document.getElementById("step").value);
+            const ranges = parseInt(document.getElementById("ranges").value);
+            const frequenciesInput = document.getElementById("frequencies").value;
+            const frequencies = frequenciesInput.split(/[\s,]+/).map(Number);
+
+            let startInput = document.getElementById("start").value;
+            let stepInput = document.getElementById("step").value;
+
+            // Chuẩn hóa startInput và stepInput: Thay thế dấu phẩy bằng dấu chấm
+            startInput = startInput.replace(',', '.');
+            stepInput = stepInput.replace(',', '.');
+
+            // Chuyển đổi startInput thành số (có thể là số nguyên hoặc số thực)
+            const start = startInput.includes('.') ? parseFloat(startInput) : parseInt(startInput);
+
+            // Chuyển đổi step thành số với 1 chữ số thập phân nếu có dấu . hoặc , ngược lại thành số nguyên
+            const step = stepInput.includes('.') ? parseFloat(stepInput) : parseInt(stepInput);
+            if (frequencies.length !== ranges) {
+                alert("Số lượng tần số phải bằng số khoảng!");
+                return;
+            }
+
+            const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
+            const nMod4 = totalStudents % 4;
+
+            let result;
+
+            if (nMod4 === 0) {
+                result = thongke_4k_0tuchon(start, ranges, step, frequencies);
+            } else if (nMod4 === 1) {
+                result = thongke_4k_1tuchon(start, ranges, step, frequencies);
+            } else if (nMod4 === 2) {
+                result = thongke_4k_2tuchon(start, ranges, step, frequencies);
+            } else if (nMod4 === 3) {
+                result = thongke_4k_3tuchon(start, ranges, step, frequencies);
+            } else {
+                alert("Tổng số học sinh không thỏa mãn điều kiện n = 4k, 4k+1, 4k+2 hoặc 4k+3. Vui lòng kiểm tra lại.");
+                return;
+            }
+
+            document.getElementById("result").value = result;
+        }
+
+        // Hàm cho các trường hợp n = 4k, 4k+1, 4k+2, 4k+3
+        function thongke_4k_0tuchon(start, ranges, step, frequencies) {
+            const heightRanges = [];
+            const isStartDecimal = start % 1 !== 0;  // Kiểm tra xem start có phải là số thập phân
+            const isStepDecimal = step % 1 !== 0;  // Kiểm tra xem step có phải là số thập phân
+
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+
+                // Nếu start hoặc step là thập phân, định dạng giá trị với 1 chữ số thập phân
+                if (isStartDecimal || isStepDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    // Nếu cả start và step đều là số nguyên, làm tròn giá trị
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
+                }
+            }
+
+
+                let totalStudents = 0;
+
+                frequencies.forEach(freq => totalStudents += freq);
+
+                const representativeValues = heightRanges.map(range => {
+                    const parts = range.split(";");
+                    const lowerBound = parseInt(parts[0].replace("[", ""));
+                    const upperBound = parseInt(parts[1].replace(")", ""));
+                    return (lowerBound + upperBound) / 2;
+                });
+
+                const mean = representativeValues.reduce((acc, value, index) => acc + value * frequencies[index], 0) / totalStudents;
+
+                const variance = representativeValues.reduce((acc, value, index) => acc + frequencies[index] * Math.pow(value, 2), 0) / totalStudents - Math.pow(mean, 2);
+
+                const standardDeviation = Math.sqrt(variance);
+
+                const positionQ1 = totalStudents / 4;
+                let cumulativeFrequency = 0;
+                let Q1, Q3, Q2;
+                let Q1Range, Q1Frequency, Q1PreviousCumulative;
+                let Q1BoundaryUsed = false;
+                let Q1GroupA, Q1GroupB;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ1 && !Q1) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const parts = heightRanges[i].split(";");
+                        const u_m = parseInt(parts[0].replace("[", ""));
+                        const u_m1 = parseInt(parts[1].replace(")", ""));
+                        if (Math.ceil(positionQ1) - 1 <= previousCumulative || Math.ceil(positionQ1) > cumulativeFrequency) {
+                            Q1 = u_m;
+                            Q1BoundaryUsed = true;
+                            Q1GroupA = heightRanges[i - 1] || heightRanges[i];
+                            Q1GroupB = heightRanges[i];
+                        } else {
+                            Q1 = u_m + ((positionQ1 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        }
+                        Q1Range = heightRanges[i];
+                        Q1Frequency = frequencies[i];
+                        Q1PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                const positionQ2a = totalStudents / 2;
+                const positionQ2b = positionQ2a + 1;
+                cumulativeFrequency = 0;
+                let Q2RangeA, Q2RangeB, Q2FrequencyA, Q2FrequencyB;
+                let Q2PreviousCumulativeA, Q2PreviousCumulativeB;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ2a && !Q2RangeA) {
+                        Q2RangeA = heightRanges[i];
+                        Q2FrequencyA = frequencies[i];
+                        Q2PreviousCumulativeA = cumulativeFrequency - frequencies[i];
+                    }
+                    if (cumulativeFrequency >= positionQ2b && !Q2RangeB) {
+                        Q2RangeB = heightRanges[i];
+                        Q2FrequencyB = frequencies[i];
+                        Q2PreviousCumulativeB = cumulativeFrequency - frequencies[i];
+                    }
+                }
+
+                if (Q2RangeA === Q2RangeB) {
+                    const parts = Q2RangeA.split(";");
+                    const u_m = parseInt(parts[0].replace("[", ""));
+                    const u_m1 = parseInt(parts[1].replace(")", ""));
+                    Q2 = u_m + ((positionQ2a - Q2PreviousCumulativeA) / Q2FrequencyA) * (u_m1 - u_m);
+                } else {
+                    const partsA = Q2RangeA.split(";");
+                    const partsB = Q2RangeB.split(";");
+                    const u_mA = parseInt(partsA[0].replace("[", ""));
+                    const u_m1A = parseInt(partsA[1].replace(")", ""));
+                    const u_mB = parseInt(partsB[0].replace("[", ""));
+                    const u_m1B = parseInt(partsB[1].replace(")", ""));
+                    const Q2A = u_mA + ((positionQ2a - Q2PreviousCumulativeA) / Q2FrequencyA) * (u_m1A - u_mA);
+                    const Q2B = u_mB + ((positionQ2b - Q2PreviousCumulativeB) / Q2FrequencyB) * (u_m1B - u_mB);
+                    Q2 = (Q2A + Q2B) / 2;
+                }
+
+                const positionQ3 = 3 * totalStudents / 4;
+                cumulativeFrequency = 0;
+                let Q3Range, Q3Frequency, Q3PreviousCumulative;
+                let Q3BoundaryUsed = false;
+                let Q3GroupA, Q3GroupB;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ3 && !Q3) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const parts = heightRanges[i].split(";");
+                        const u_m = parseInt(parts[0].replace("[", ""));
+                        const u_m1 = parseInt(parts[1].replace(")", ""));
+                        if (Math.ceil(positionQ3) <= previousCumulative || Math.ceil(positionQ3) + 1 > cumulativeFrequency) {
+                            Q3 = u_m;
+                            Q3BoundaryUsed = true;
+                            Q3GroupA = heightRanges[i - 1] || heightRanges[i];
+                            Q3GroupB = heightRanges[i];
+                        } else {
+                            Q3 = u_m + ((positionQ3 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        }
+                        Q3Range = heightRanges[i];
+                        Q3Frequency = frequencies[i];
+                        Q3PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                const IQR = Q3 - Q1;
+
+                const lowerOutlierBound = Q1 - 1.5 * IQR;
+                const upperOutlierBound = Q3 + 1.5 * IQR;
+
+                const maxFrequency = Math.max(...frequencies);
+                const modeIndex = frequencies.indexOf(maxFrequency);
+                let mode = null;
+                let modeFormula = '';
+
+                if (modeIndex >= 0) {
+                    const partsMode = heightRanges[modeIndex].split(";");
+                    const u_m_mode = parseInt(partsMode[0].replace("[", ""));
+                    const u_m1_mode = parseInt(partsMode[1].replace(")", ""));
+                    const n_m = frequencies[modeIndex];
+                    const n_m_1 = modeIndex > 0 ? frequencies[modeIndex - 1] : 0;
+                    const n_m_1_next = modeIndex < frequencies.length - 1 ? frequencies[modeIndex + 1] : 0;
+
+                    mode = u_m_mode + ((n_m - n_m_1) / ((n_m - n_m_1) + (n_m - n_m_1_next))) * (u_m1_mode - u_m_mode);
+                    modeFormula = `M_0 = ${u_m_mode} + \\dfrac{${n_m} - ${n_m_1}}{(${n_m} - ${n_m_1}) + (${n_m} - ${n_m_1_next})} \\cdot (${u_m1_mode} - ${u_m_mode}) \\approx ${mode.toFixed(2)}`;
+                }
+
+                let result = `\\begin{ex}%[2D4H2-2]\n`;
+                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `\\loigiai{\n`;
+                result += `Ta có bảng sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Giá trị đại diện & ${representativeValues.map(val => val.toFixed(1)).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `Ta có cỡ mẫu $ n=${totalStudents} $.\\\\\n`;
+                result += `Số trung bình của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$\n`;
+                result += `Phương sai của mẫu số liệu ghép nhóm là  \n`;
+                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$\n`;
+                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. \n`;
+
+                result += `Gọi $x_1$; $x_2$; \\ldots; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có \n`;
+                result += `\\begin{itemize}\n`;
+                cumulativeFrequency = 0;
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    result += `\\item $x_{${cumulativeFrequency - frequencies[i] + 1}}$, \\ldots, $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; \n`;
+                }
+                result = result.trim();
+                result += `\n\\end{itemize}\n`;
+
+                if (Q1BoundaryUsed) {
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{${Math.ceil(positionQ1)}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
+                    result += `$$Q_1=${Q1GroupB.split(";")[0].replace("[", "")}$$\n`;
+                } else {
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{${Math.ceil(positionQ1)}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
+                }
+
+                if (Q2RangeA === Q2RangeB) {
+                    result += `Trung vị của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ2a)}}}$ và $x_{{${Math.ceil(positionQ2b)}}}$ mà $x_{{${Math.ceil(positionQ2a)}}}, x_{{${Math.ceil(positionQ2b)}}}$ đều thuộc cùng nhóm $[${Q2RangeA.split(";")[0].replace("[", "")};${Q2RangeA.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là \n`;
+                    result += `$$Q_2=${Q2RangeA.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulativeA}}{${Q2FrequencyA}} \\cdot(${Q2RangeA.split(";")[1].replace(")", "")}-${Q2RangeA.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
+                } else {
+                    result += `Trung vị của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ2a)}}}$ và $x_{{${Math.ceil(positionQ2b)}}}$ mà $x_{{${Math.ceil(positionQ2a)}}}$ thuộc nhóm $[${Q2RangeA.split(";")[0].replace("[", "")};${Q2RangeA.split(";")[1].replace(")", "")})$ và $x_{{${Math.ceil(positionQ2b)}}}$ thuộc nhóm $[${Q2RangeB.split(";")[0].replace("[", "")};${Q2RangeB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_2=${Q2.toFixed(2)}$$\n`;
+                }
+
+                if (Q3BoundaryUsed) {
+                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ3)}}}$ và $x_{{${Math.ceil(positionQ3) + 1}}}$ mà $x_{{${Math.ceil(positionQ3)}}} \\in [${Q3GroupA.split(";")[0].replace("[", "")};${Q3GroupA.split(";")[1].replace(")", "")})$, $x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3GroupB.split(";")[0].replace("[", "")};${Q3GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
+                    result += `$$Q_3=${Q3GroupB.split(";")[0].replace("[", "")}$$\n`;
+                } else {
+                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ3)}}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$\n`;
+                }
+
+                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.\\\\\n`;
+
+                if (mode !== null) {
+                    result += `Mốt của mẫu số liệu ghép nhóm là \n`;
+                    result += `$$ ${modeFormula} $$\n`;
+                }
+
+                result += `}\n`;
+                result += `\\end{ex}`;
+
+                return result;
+            }
+
+        function thongke_4k_1tuchon(start, ranges, step, frequencies) {
+                const heightRanges = [];
+            const isStartDecimal = start % 1 !== 0;  // Kiểm tra xem start có phải là số thập phân
+            const isStepDecimal = step % 1 !== 0;  // Kiểm tra xem step có phải là số thập phân
+
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+
+                // Nếu start hoặc step là thập phân, định dạng giá trị với 1 chữ số thập phân
+                if (isStartDecimal || isStepDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    // Nếu cả start và step đều là số nguyên, làm tròn giá trị
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
+                }
+            }
+
+
+                const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
+
+                // Giá trị đại diện
+                const representativeValues = heightRanges.map(range => {
+                    const lowerBound = parseInt(range.split(";")[0].replace("[", ""));
+                    const upperBound = parseInt(range.split(";")[1].replace(")", ""));
+                    return (lowerBound + upperBound) / 2;
+                });
+
+                // Số trung bình của mẫu số liệu ghép nhóm
+                const mean = representativeValues.reduce((acc, value, index) => acc + value * frequencies[index], 0) / totalStudents;
+
+                // Phương sai của mẫu số liệu ghép nhóm
+                const variance = representativeValues.reduce((acc, value, index) => acc + frequencies[index] * Math.pow(value, 2), 0) / totalStudents - Math.pow(mean, 2);
+
+                // Độ lệch chuẩn của mẫu số liệu ghép nhóm
+                const standardDeviation = Math.sqrt(variance);
+
+                // Tính toán tứ phân vị thứ nhất (Q1)
+                const positionQ1 = totalStudents / 4;
+                let cumulativeFrequency = 0;
+                let Q1, Q3, Q2;
+                let Q1Range, Q1Frequency, Q1PreviousCumulative;
+                let Q1BoundaryUsed = false;
+                let Q3BoundaryUsed = false; // Định nghĩa biến Q3BoundaryUsed
+                let Q1GroupA, Q1GroupB;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ1 && !Q1) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        if (Math.ceil(positionQ1) - 1 <= previousCumulative || Math.ceil(positionQ1) > cumulativeFrequency) {
+                            Q1 = u_m;
+                            Q1BoundaryUsed = true;
+                            Q1GroupA = heightRanges[i - 1] || heightRanges[i];
+                            Q1GroupB = heightRanges[i];
+                        } else {
+                            Q1 = u_m + ((positionQ1 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        }
+                        Q1Range = heightRanges[i];
+                        Q1Frequency = frequencies[i];
+                        Q1PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                // Tính toán trung vị (Q2)
+                const positionQ2 = totalStudents / 2;
+                cumulativeFrequency = 0;
+                let Q2Range, Q2Frequency, Q2PreviousCumulative;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ2 && !Q2) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q2 = u_m + ((positionQ2 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q2Range = heightRanges[i];
+                        Q2Frequency = frequencies[i];
+                        Q2PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                // Tính toán tứ phân vị thứ ba (Q3)
+                const positionQ3 = 3 * totalStudents / 4;
+                cumulativeFrequency = 0;
+                let Q3Range, Q3Frequency, Q3PreviousCumulative;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ3 && !Q3) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q3 = u_m + ((positionQ3 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q3Range = heightRanges[i];
+                        Q3Frequency = frequencies[i];
+                        Q3PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                // Khoảng tứ phân vị (IQR)
+                const IQR = Q3 - Q1;
+
+                // Giá trị ngoại lai
+                const lowerOutlierBound = Q1 - 1.5 * IQR;
+                const upperOutlierBound = Q3 + 1.5 * IQR;
+
+                // Tính toán mốt (Mode)
+                const maxFrequency = Math.max(...frequencies);
+                const modeIndex = frequencies.indexOf(maxFrequency);
+                const u_m_mode = parseInt(heightRanges[modeIndex].split(";")[0].replace("[", ""));
+                const u_m1_mode = parseInt(heightRanges[modeIndex].split(";")[1].replace(")", ""));
+                const n_m = frequencies[modeIndex];
+                const n_m_1 = modeIndex > 0 ? frequencies[modeIndex - 1] : 0;
+                const n_m_1_next = modeIndex < frequencies.length - 1 ? frequencies[modeIndex + 1] : 0;
+                const mode = u_m_mode + ((n_m - n_m_1) / ((n_m - n_m_1) + (n_m - n_m_1_next))) * (u_m1_mode - u_m_mode);
+
+                // Tạo kết quả định dạng tương tự bài giải
+                let result = `\\begin{ex}%[2D4H2-2]\n`;
+                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `\\loigiai{\n`;
+                result += `Ta có bảng sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Giá trị đại diện & ${representativeValues.map(val => val.toFixed(1)).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `Ta có cỡ mẫu $ n=${totalStudents} $.\\\\\n`;
+                result += `Số trung bình của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$\n`;
+                result += `Phương sai của mẫu số liệu ghép nhóm là  \n`;
+                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$\n`;
+                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. \n`;
+
+                result += `Gọi $x_1$; $x_2$; \\ldots; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có \n`;
+                result += `\\begin{itemize}\n`;
+                cumulativeFrequency = 0;
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    result += `\\item $x_{${cumulativeFrequency - frequencies[i] + 1}}$, \\ldots, $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; \n`;
+                }
+                result = result.trim();
+                result += `\n\\end{itemize}\n`;
+
+                // Xác định tứ phân vị thứ nhất (Q1)
+                if (Q1BoundaryUsed) {
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{${Math.ceil(positionQ1)}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
+                    result += `$$Q_1=${Q1GroupB.split(";")[0].replace("[", "")}$$\n`;
+                } else {
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{${Math.ceil(positionQ1)}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
+                }
+
+                // Xác định trung vị (Q2)
+                result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_2=${Q2Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency}} \\cdot(${Q2Range.split(";")[1].replace(")", "")}-${Q2Range.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
+
+                // Xác định tứ phân vị thứ ba (Q3)
+                if (Q3BoundaryUsed) {
+                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ3)}}$ và $x_{${Math.ceil(positionQ3) + 1}}$ mà $x_{{${Math.ceil(positionQ3)}}} \\in [${Q3GroupA.split(";")[0].replace("[", "")};${Q3GroupA.split(";")[1].replace(")", "")})$, $x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3GroupB.split(";")[0].replace("[", "")};${Q3GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
+                    result += `$$Q_3=${Q3GroupB.split(";")[0].replace("[", "")}$$\n`;
+                } else {
+                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $$x_{${Math.ceil(positionQ3)}}$ và $x_{${Math.ceil(positionQ3) + 1}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$\n`;
+                }
+
+                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.\\\\\n`;
+
+                result += `Mốt của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$\n`;
+
+                result += `}\n`;
+                result += `\\end{ex}`;
+
+                return result;
+            }
+
+        function thongke_4k_2tuchon(start, ranges, step, frequencies) {
+            const heightRanges = [];
+            const isStartDecimal = start % 1 !== 0;  // Kiểm tra xem start có phải là số thập phân
+            const isStepDecimal = step % 1 !== 0;  // Kiểm tra xem step có phải là số thập phân
+
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+
+                // Nếu start hoặc step là thập phân, định dạng giá trị với 1 chữ số thập phân
+                if (isStartDecimal || isStepDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    // Nếu cả start và step đều là số nguyên, làm tròn giá trị
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
+                }
+            }
+
+
+                const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
+                if (totalStudents % 4 !== 2) {
+                    alert("Tổng số học sinh phải có dạng 4k+2!");
+                    return "";
+                }
+
+                const representativeValues = heightRanges.map(range => {
+                    const lowerBound = parseInt(range.split(";")[0].replace("[", ""));
+                    const upperBound = parseInt(range.split(";")[1].replace(")", ""));
+                    return (lowerBound + upperBound) / 2;
+                });
+
+                const mean = representativeValues.reduce((acc, value, index) => acc + value * frequencies[index], 0) / totalStudents;
+
+                const variance = representativeValues.reduce((acc, value, index) => acc + frequencies[index] * Math.pow(value, 2), 0) / totalStudents - Math.pow(mean, 2);
+
+                const standardDeviation = Math.sqrt(variance);
+
+                const positionQ1 = totalStudents / 4;
+                let cumulativeFrequency = 0;
+                let Q1, Q3, Q2;
+                let Q1Range, Q1Frequency, Q1PreviousCumulative;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ1 && !Q1) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q1 = u_m + ((positionQ1 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q1Range = heightRanges[i];
+                        Q1Frequency = frequencies[i];
+                        Q1PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                const positionQ2 = totalStudents / 2;
+                cumulativeFrequency = 0;
+                let Q2Range1, Q2Range2, Q2Frequency1, Q2Frequency2, Q2PreviousCumulative;
+                let Q2Value1, Q2Value2;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ2 && !Q2Value1) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q2Value1 = u_m + ((positionQ2 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q2Range1 = heightRanges[i];
+                        Q2Frequency1 = frequencies[i];
+                        Q2PreviousCumulative = previousCumulative;
+                    }
+                    if (cumulativeFrequency >= positionQ2 + 1 && !Q2Value2) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q2Value2 = u_m + ((positionQ2 + 1 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q2Range2 = heightRanges[i];
+                        Q2Frequency2 = frequencies[i];
+                        break;
+                    }
+                }
+
+                if (Q2Range1 === Q2Range2) {
+                    Q2 = Q2Value1;
+                } else {
+                    Q2 = (Q2Value1 + Q2Value2) / 2;
+                }
+
+                const positionQ3 = 3 * totalStudents / 4;
+                cumulativeFrequency = 0;
+                let Q3Range, Q3Frequency, Q3PreviousCumulative;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ3 && !Q3) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q3 = u_m + ((positionQ3 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q3Range = heightRanges[i];
+                        Q3Frequency = frequencies[i];
+                        Q3PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                const IQR = Q3 - Q1;
+
+                const lowerOutlierBound = Q1 - 1.5 * IQR;
+                const upperOutlierBound = Q3 + 1.5 * IQR;
+
+                const maxFrequency = Math.max(...frequencies);
+                const modeIndex = frequencies.indexOf(maxFrequency);
+                const u_m_mode = parseInt(heightRanges[modeIndex].split(";")[0].replace("[", ""));
+                const u_m1_mode = parseInt(heightRanges[modeIndex].split(";")[1].replace(")", ""));
+                const n_m = frequencies[modeIndex];
+                const n_m_1 = modeIndex > 0 ? frequencies[modeIndex - 1] : 0;
+                const n_m_1_next = modeIndex < frequencies.length - 1 ? frequencies[modeIndex + 1] : 0;
+                const mode = u_m_mode + ((n_m - n_m_1) / ((n_m - n_m_1) + (n_m - n_m_1_next))) * (u_m1_mode - u_m_mode);
+
+                let result = `\\begin{ex}\n`;
+                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Tần số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `\\loigiai{\n`;
+                result += `Ta có bảng sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Giá trị đại diện & ${representativeValues.map(val => val.toFixed(1)).join(' & ')} \\\\\n`;
+                result += `\\hline Tần số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `Ta có cỡ mẫu $ n=${totalStudents} $.\\\\\n`;
+                result += `Số trung bình của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$\n`;
+                result += `Phương sai của mẫu số liệu ghép nhóm là  \n`;
+                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$\n`;
+                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. \n`;
+
+                result += `Gọi $x_1$; $x_2$; \\ldots; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có \n`;
+                result += `\\begin{itemize}\n`;
+                cumulativeFrequency = 0;
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    result += `\\item $x_{${cumulativeFrequency - frequencies[i] + 1}}$, \\ldots, $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; \n`;
+                }
+                result = result.trim();
+                result += `\n\\end{itemize}\n`;
+
+                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{${Math.ceil(positionQ1)}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
+
+                if (Q2Range1 === Q2Range2) {
+                    result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong nhóm có khoảng $[${Q2Range1.split(";")[0].replace("[", "")};${Q2Range1.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_2=${Q2Range1.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency1}} \\cdot(${Q2Range1.split(";")[1].replace(")", "")}-${Q2Range1.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
+                } else {
+                    result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong hai nhóm khác nhau.\\\\\n`;
+                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_2=${Q2Range1.split(";")[1].replace(")", "")}$$\n`;
+                }
+
+                result += `Tứ phân vị thứ ba của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ3)}}}$ nằm trong nhóm có khoảng $[${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$\n`;
+
+                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.\\\\\n`;
+
+                result += `Mốt của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$\n`;
+
+                result += `}\n`;
+                result += `\\end{ex}`;
+
+                return result;
+            }
+
+        function thongke_4k_3tuchon(start, ranges, step, frequencies) {
+                const heightRanges = [];
+            const isStartDecimal = start % 1 !== 0;  // Kiểm tra xem start có phải là số thập phân
+            const isStepDecimal = step % 1 !== 0;  // Kiểm tra xem step có phải là số thập phân
+
+            for (let i = 0; i < ranges; i++) {
+                const rangeStart = start + i * step;
+                const rangeEnd = rangeStart + step;
+
+                // Nếu start hoặc step là thập phân, định dạng giá trị với 1 chữ số thập phân
+                if (isStartDecimal || isStepDecimal) {
+                    heightRanges.push(`[${rangeStart.toFixed(1)};${rangeEnd.toFixed(1)})`);
+                } else {
+                    // Nếu cả start và step đều là số nguyên, làm tròn giá trị
+                    heightRanges.push(`[${Math.round(rangeStart)};${Math.round(rangeEnd)})`);
+                }
+            }
+
+
+                const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
+
+                // Giá trị đại diện
+                const representativeValues = heightRanges.map(range => {
+                    const lowerBound = parseInt(range.split(";")[0].replace("[", ""));
+                    const upperBound = parseInt(range.split(";")[1].replace(")", ""));
+                    return (lowerBound + upperBound) / 2;
+                });
+
+                // Số trung bình của mẫu số liệu ghép nhóm
+                const mean = representativeValues.reduce((acc, value, index) => acc + value * frequencies[index], 0) / totalStudents;
+
+                // Phương sai của mẫu số liệu ghép nhóm
+                const variance = representativeValues.reduce((acc, value, index) => acc + frequencies[index] * Math.pow(value, 2), 0) / totalStudents - Math.pow(mean, 2);
+
+                // Độ lệch chuẩn của mẫu số liệu ghép nhóm
+                const standardDeviation = Math.sqrt(variance);
+
+                // Tính toán tứ phân vị thứ nhất (Q1)
+                const positionQ1 = totalStudents / 4;
+                let cumulativeFrequency = 0;
+                let Q1, Q3, Q2;
+                let Q1Range, Q1Frequency, Q1PreviousCumulative;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ1 && !Q1) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q1 = u_m + ((positionQ1 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q1Range = heightRanges[i];
+                        Q1Frequency = frequencies[i];
+                        Q1PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                // Tính toán trung vị (Q2)
+                const positionQ2 = totalStudents / 2;
+                cumulativeFrequency = 0;
+                let Q2Range, Q2Frequency, Q2PreviousCumulative;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ2 && !Q2) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q2 = u_m + ((positionQ2 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q2Range = heightRanges[i];
+                        Q2Frequency = frequencies[i];
+                        Q2PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                // Tính toán tứ phân vị thứ ba (Q3)
+                const positionQ3 = 3 * totalStudents / 4;
+                cumulativeFrequency = 0;
+                let Q3Range, Q3Frequency, Q3PreviousCumulative;
+
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    if (cumulativeFrequency >= positionQ3 && !Q3) {
+                        const previousCumulative = cumulativeFrequency - frequencies[i];
+                        const u_m = parseInt(heightRanges[i].split(";")[0].replace("[", ""));
+                        const u_m1 = parseInt(heightRanges[i].split(";")[1].replace(")", ""));
+                        Q3 = u_m + ((positionQ3 - previousCumulative) / frequencies[i]) * (u_m1 - u_m);
+                        Q3Range = heightRanges[i];
+                        Q3Frequency = frequencies[i];
+                        Q3PreviousCumulative = previousCumulative;
+                    }
+                }
+
+                // Khoảng tứ phân vị (IQR)
+                const IQR = Q3 - Q1;
+
+                // Giá trị ngoại lai
+                const lowerOutlierBound = Q1 - 1.5 * IQR;
+                const upperOutlierBound = Q3 + 1.5 * IQR;
+
+                // Tính toán mốt (Mode)
+                const maxFrequency = Math.max(...frequencies);
+                const modeIndex = frequencies.indexOf(maxFrequency);
+                const u_m_mode = parseInt(heightRanges[modeIndex].split(";")[0].replace("[", ""));
+                const u_m1_mode = parseInt(heightRanges[modeIndex].split(";")[1].replace(")", ""));
+                const n_m = frequencies[modeIndex];
+                const n_m_1 = modeIndex > 0 ? frequencies[modeIndex - 1] : 0;
+                const n_m_1_next = modeIndex < frequencies.length - 1 ? frequencies[modeIndex + 1] : 0;
+                const mode = u_m_mode + ((n_m - n_m_1) / ((n_m - n_m_1) + (n_m - n_m_1_next))) * (u_m1_mode - u_m_mode);
+
+                // Tạo kết quả định dạng tương tự bài giải
+                let result = `\\begin{ex}%[2D4H2-2]\n`;
+                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `\\loigiai{\n`;
+                result += `Ta có bảng sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Giá trị đại diện & ${representativeValues.map(val => val.toFixed(1)).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `Ta có cỡ mẫu $ n=${totalStudents} $.\\\\\n`;
+                result += `Số trung bình của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$\n`;
+                result += `Phương sai của mẫu số liệu ghép nhóm là  \n`;
+                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$\n`;
+                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. \n`;
+
+                result += `Gọi $x_1$; $x_2$; \\ldots; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có \n`;
+                result += `\\begin{itemize}\n`;
+                cumulativeFrequency = 0;
+                for (let i = 0; i < frequencies.length; i++) {
+                    cumulativeFrequency += frequencies[i];
+                    result += `\\item $x_{${cumulativeFrequency - frequencies[i] + 1}}$, \\ldots, $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; \n`;
+                }
+                result = result.trim();
+                result += `\n\\end{itemize}\n`;
+
+                // Xác định tứ phân vị thứ nhất (Q1)
+                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{${Math.ceil(positionQ1)}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
+
+                // Xác định trung vị (Q2)
+                result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_2=${Q2Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency}} \\cdot(${Q2Range.split(";")[1].replace(")", "")}-${Q2Range.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
+
+                // Xác định tứ phân vị thứ ba (Q3)
+                result += `Tứ phân vị thứ ba của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ3)}}}$ nằm trong nhóm có khoảng $[${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$\n`;
+
+                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.\\\\\n`;
+
+                result += `Mốt của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$\n`;
+
+                result += `}\n`;
+                result += `\\end{ex}`;
+
+                return result;
+            }
+        
+
+
+        function copyResult() {
+                const resultText = document.getElementById("result");
+                resultText.select();
+                resultText.setSelectionRange(0, 99999);
+
+                document.execCommand("copy");
+
+                // Hiển thị hộp thoại tùy chỉnh
+                const dialog = document.getElementById("copyDialog");
+                dialog.style.display = "flex";
+
+                // Đóng hộp thoại sau 2 giây
+                setTimeout(closeDialog, 2000);
+            }
+
+            function closeDialog() {
+                const dialog = document.getElementById("copyDialog");
+                dialog.style.display = "none";
+            }
+    </script>
+</body>
+
+</html>
