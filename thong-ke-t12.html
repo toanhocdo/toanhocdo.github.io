@@ -5,17 +5,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thống kê tổng quát - Toán 12</title>
+    <title>Thống kê tổng quát</title>
     <style>
         body {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
             padding: 20px;
         }
 
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
         .container {
-            max-width: 80%;
+            max-width: 100%;
             margin: 0 auto;
             background: #fff;
             padding: 20px;
@@ -49,6 +55,7 @@
         }
 
         .btn {
+            width: 100%;
             padding: 10px;
             font-size: 16px;
             color: #fff;
@@ -70,78 +77,192 @@
             margin-top: 15px;
         }
 
-        .result {
-            margin-top: 40px;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        table {
+        #result {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
+            height: 200px;
+            padding: 10px;
             border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: Consolas, monospace;
+            resize: none;
         }
-        th {
-            background-color: #f2f2f2;
+
+        .btn-copy {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-      
-      
+
+        .btn-copy:hover {
+            background-color: #0056b3;
+        }
+        /* CSS for the menu */
+        .menu {
+            display: flex;
+            justify-content: center;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+        .menu a, .dropbtn {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: inline-block;
+        }
+
+        .menu a:hover, .dropbtn:hover {
+            background-color: #555;
+        }
+
     </style>
-   <script>
-    MathJax = {
-    tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-    },
-    svg: {
-    fontCache: 'global'
-    }
-    };
-    </script>
-    <script type="text/javascript" id="MathJax-script" async
-    src="https://math.booktoan.com/mathjax/es5/tex-mml-svg.js">
-    </script>
 </head>
 
 <body>
-   
+    <div class="menu">
+        <a href="index.html">Home</a>
+        <a href="giai_thong_ke_k10_new.html">Thống Kê 10</a>
+        <a href="giai_thongke_bangdon.html">Thống Kê 12-Bảng</a>
+        <a href="giai_thongke_hinhdon.html">Thống Kê 12-Cột Ghép</a>
+        <a href="giai_thongke_hinhkep.html">Thống Kê 12-Cột Đơn</a>
+    </div>
+
     <div class="container">
-        <h1>Giải Toán Thống Kê - Nhóm ghép Toán 12</h1>
+        <h1 class="custom-title">Giải Toán Thống Kê - Bảng</h1>
         
+        <style>
+            .custom-title {
+                font-family: 'Montserrat', sans-serif;
+                /* Sử dụng font đẹp */
+                font-size: 36px;
+                /* Kích thước chữ lớn */
+                color: #333;
+                /* Màu chữ */
+                text-align: center;
+                /* Canh giữa */
+                text-transform: uppercase;
+                /* Chuyển chữ thường thành chữ in hoa */
+                letter-spacing: 2px;
+                /* Khoảng cách giữa các chữ */
+                background: linear-gradient(to right, #ff7e5f, #feb47b);
+                /* Hiệu ứng màu gradient */
+                background-clip: text;
+                /* Tiêu chuẩn */
+                -webkit-background-clip: text;
+                /* Để hỗ trợ trên WebKit */
+                color: transparent;
+                /* Ẩn màu chữ mặc định */
+                margin-bottom: 20px;
+                /* Khoảng cách dưới tiêu đề */
+                position: relative;
+                /* Để tạo hiệu ứng sau */
+            }
         
+            .custom-title::after {
+                content: '';
+                position: absolute;
+                left: 50%;
+                bottom: -10px;
+                transform: translateX(-50%);
+                width: 50px;
+                height: 3px;
+                background-color: #feb47b;
+                /* Đường gạch chân màu gradient */
+                border-radius: 5px;
+            }
+        </style>
+
+
         <form id="inputForm">
             <div class="form-row">
                 <div class="form-group">
                     <label for="start">Số bắt đầu:</label>
-                    <input type="number" id="start" name="start" value="10" required>
+                    <input type="number" id="start" name="start" required>
                 </div>
                 <div class="form-group">
                     <label for="step">Khoảng cách:</label>
-                    <input type="number" id="step" name="step" value="5" required>
+                    <input type="number" id="step" name="step" required>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label for="ranges">Số khoảng:</label>
-                    <input type="number" id="ranges" name="ranges" value="5" required>
+                    <input type="number" id="ranges" name="ranges" required>
                 </div>
                 <div class="form-group">
                     <label for="frequencies">Nhập tần số:</label>
-                    <input type="text" id="frequencies" name="frequencies" placeholder="Cách nhau bằng dấu phẩy" value="2,3,5,7,3"
+                    <input type="text" id="frequencies" name="frequencies" placeholder="Cách nhau bằng dấu phẩy"
                         required>
                 </div>
             </div>
 
             <button type="button" class="btn" onclick="thongke()">Tính toán</button>
         </form>
-        <div id="result"></div>   
+
+        <div class="textarea-container">
+            <textarea id="result" readonly></textarea>
+            <button class="btn-copy" onclick="copyResult()">Sao chép</button>
+        </div>
     </div>
-      
+    <!-- Hộp thoại tùy chỉnh -->
+    <div id="copyDialog" class="dialog">
+        <div class="dialog-content">
+            <span class="close" onclick="closeDialog()">&times;</span>
+            <p>Đã sao chép kết quả!</p>
+        </div>
+    </div>
     
+    <style>
+        /* Phong cách cho hộp thoại tùy chỉnh */
+        .dialog {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .dialog-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            margin: auto;
+        }
+    
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #aaa;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    
+        .close:hover,
+        .close:focus {
+            color: #000;
+        }
+    </style>
     <script>
         function thongke() {
             // let startInput = document.getElementById("start").value;
@@ -181,12 +302,11 @@
             } else if (nMod4 === 3) {
                 result = thongke_4k_3tuchon(start, ranges, step, frequencies);
             } else {
-                alert("Tổng số liệu không thỏa mãn điều kiện n = 4k, 4k+1, 4k+2 hoặc 4k+3. Vui lòng kiểm tra lại.");
+                alert("Tổng số học sinh không thỏa mãn điều kiện n = 4k, 4k+1, 4k+2 hoặc 4k+3. Vui lòng kiểm tra lại.");
                 return;
             }
-            document.getElementById('result').innerHTML = result;
-    MathJax.typeset();
-            
+
+            document.getElementById("result").value = result;
         }
 
         // Hàm cho các trường hợp n = 4k, 4k+1, 4k+2, 4k+3
@@ -340,85 +460,84 @@
                     modeFormula = `M_0 = ${u_m_mode} + \\dfrac{${n_m} - ${n_m_1}}{(${n_m} - ${n_m_1}) + (${n_m} - ${n_m_1_next})} \\cdot (${u_m1_mode} - ${u_m_mode}) \\approx ${mode.toFixed(2)}`;
                 }
 
-                let result = `<br/><center><b>Bài toán Thống kê Toán 12</b></center> <br/>`;
-                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau: (n chẳn) <br/>`;
-                result += `<br/>`;
-                
-                result += `<div style="text-align: center;">`;
-result += `<table style="border-collapse: collapse;">`;
-result += `<tr><th style="border: 1px solid black;">Khoảng giá trị</th>${heightRanges.map(range => `<th style="border: 1px solid black;">${range}</th>`).join(' ')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Tần số</td>${frequencies.map(freq => `<td style="border: 1px solid black;">${freq}</td>`).join(' ')}</tr>`;
-result += `</table>`;
-result += `</div>`;
-                
-            result += `<br/><center><b>LỜI GIẢI</b></b></center> <br/>`;
-            result += `Ta có bảng sau <br/>`;
-            result += `<div style="text-align: center;">`;
-result += `<table style="border-collapse: collapse;">`;
-result += `<tr><th style="border: 1px solid black;">Khoảng giá trị</th>${heightRanges.map(range => `<th style="border: 1px solid black;">${range}</th>`).join(' ')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Giá trị đại diện</td>${representativeValues.map(val => `<td style="border: 1px solid black;">${val.toFixed(1)}</td>`).join('')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Tần số</td>${frequencies.map(freq => `<td style="border: 1px solid black;">${freq}</td>`).join(' ')}</tr>`;
-result += `</table>`;
-result += `</div> <br/>`;
-                
-              
-                
-                result += `Ta có cỡ mẫu $ n=${totalStudents} $.<br/>`;
-                result += `Số trung bình của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$<br/>`;
-                result += `Phương sai của mẫu số liệu ghép nhóm là  <br/>`;
-                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$<br/>`;
-                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. <br/>`;
+                let result = `\\begin{ex}%[2D4H2-2]\n`;
+                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `\\loigiai{\n`;
+                result += `Ta có bảng sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Giá trị đại diện & ${representativeValues.map(val => val.toFixed(1)).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `Ta có cỡ mẫu $ n=${totalStudents} $.\\\\\n`;
+                result += `Số trung bình của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$\n`;
+                result += `Phương sai của mẫu số liệu ghép nhóm là  \n`;
+                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$\n`;
+                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. \n`;
 
-                result += `Gọi $x_1$; $x_2$; ...; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có <br/>`;
-                
+                result += `Gọi $x_1$; $x_2$; \\ldots; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có \n`;
+                result += `\\begin{itemize}\n`;
                 cumulativeFrequency = 0;
                 for (let i = 0; i < frequencies.length; i++) {
                     cumulativeFrequency += frequencies[i];
-                    result += `* $x_{${cumulativeFrequency - frequencies[i] + 1}}$, ..., $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; <br/>`;
+                    result += `\\item $x_{${cumulativeFrequency - frequencies[i] + 1}}$, \\ldots, $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; \n`;
                 }
                 result = result.trim();
-                result += `<br/>`;
+                result += `\n\\end{itemize}\n`;
 
                 if (Q1BoundaryUsed) {
-                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{${Math.ceil(positionQ1)}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là biên của nhóm sau:<br/>`;
-                    result += `$$Q_1=${Q1GroupB.split(";")[0].replace("[", "")}$$<br/>`;
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{${Math.ceil(positionQ1)}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
+                    result += `$$Q_1=${Q1GroupB.split(";")[0].replace("[", "")}$$\n`;
                 } else {
-                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{${Math.ceil(positionQ1)}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là<br/>`;
-                    result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$<br/>`;
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ1) - 1}}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{${Math.ceil(positionQ1)}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
                 }
 
                 if (Q2RangeA === Q2RangeB) {
-                    result += `Trung vị của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ2a)}}}$ và $x_{{${Math.ceil(positionQ2b)}}}$ mà $x_{{${Math.ceil(positionQ2a)}}}, x_{{${Math.ceil(positionQ2b)}}}$ đều thuộc cùng nhóm $[${Q2RangeA.split(";")[0].replace("[", "")};${Q2RangeA.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là <br/>`;
-                    result += `$$Q_2=${Q2RangeA.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulativeA}}{${Q2FrequencyA}} \\cdot(${Q2RangeA.split(";")[1].replace(")", "")}-${Q2RangeA.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$<br/>`;
+                    result += `Trung vị của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ2a)}}}$ và $x_{{${Math.ceil(positionQ2b)}}}$ mà $x_{{${Math.ceil(positionQ2a)}}}, x_{{${Math.ceil(positionQ2b)}}}$ đều thuộc cùng nhóm $[${Q2RangeA.split(";")[0].replace("[", "")};${Q2RangeA.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là \n`;
+                    result += `$$Q_2=${Q2RangeA.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulativeA}}{${Q2FrequencyA}} \\cdot(${Q2RangeA.split(";")[1].replace(")", "")}-${Q2RangeA.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
                 } else {
-                    result += `Trung vị của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ2a)}}}$ và $x_{{${Math.ceil(positionQ2b)}}}$ mà $x_{{${Math.ceil(positionQ2a)}}}$ thuộc nhóm $[${Q2RangeA.split(";")[0].replace("[", "")};${Q2RangeA.split(";")[1].replace(")", "")})$ và $x_{{${Math.ceil(positionQ2b)}}}$ thuộc nhóm $[${Q2RangeB.split(";")[0].replace("[", "")};${Q2RangeB.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là<br/>`;
-                    result += `$$Q_2=${Q2.toFixed(2)}$$<br/>`;
+                    result += `Trung vị của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ2a)}}}$ và $x_{{${Math.ceil(positionQ2b)}}}$ mà $x_{{${Math.ceil(positionQ2a)}}}$ thuộc nhóm $[${Q2RangeA.split(";")[0].replace("[", "")};${Q2RangeA.split(";")[1].replace(")", "")})$ và $x_{{${Math.ceil(positionQ2b)}}}$ thuộc nhóm $[${Q2RangeB.split(";")[0].replace("[", "")};${Q2RangeB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_2=${Q2.toFixed(2)}$$\n`;
                 }
 
                 if (Q3BoundaryUsed) {
-                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ3)}}}$ và $x_{{${Math.ceil(positionQ3) + 1}}}$ mà $x_{{${Math.ceil(positionQ3)}}} \\in [${Q3GroupA.split(";")[0].replace("[", "")};${Q3GroupA.split(";")[1].replace(")", "")})$, $x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3GroupB.split(";")[0].replace("[", "")};${Q3GroupB.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là biên của nhóm sau:<br/>`;
-                    result += `$$Q_3=${Q3GroupB.split(";")[0].replace("[", "")}$$<br/>`;
+                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ3)}}}$ và $x_{{${Math.ceil(positionQ3) + 1}}}$ mà $x_{{${Math.ceil(positionQ3)}}} \\in [${Q3GroupA.split(";")[0].replace("[", "")};${Q3GroupA.split(";")[1].replace(")", "")})$, $x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3GroupB.split(";")[0].replace("[", "")};${Q3GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
+                    result += `$$Q_3=${Q3GroupB.split(";")[0].replace("[", "")}$$\n`;
                 } else {
-                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ3)}}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là<br/>`;
-                    result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$<br/>`;
+                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{{${Math.ceil(positionQ3)}}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$\n`;
                 }
 
-                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.<br/>`;
-                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.<br/>`;
-                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.<br/>`;
+                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.\\\\\n`;
 
                 if (mode !== null) {
-                    result += `Mốt của mẫu số liệu ghép nhóm là <br/>`;
-                    result += `$$ ${modeFormula} $$<br/>`;
+                    result += `Mốt của mẫu số liệu ghép nhóm là \n`;
+                    result += `$$ ${modeFormula} $$\n`;
                 }
+
+                result += `}\n`;
+                result += `\\end{ex}`;
 
                 return result;
             }
@@ -543,77 +662,79 @@ result += `</div> <br/>`;
                 const mode = u_m_mode + ((n_m - n_m_1) / ((n_m - n_m_1) + (n_m - n_m_1_next))) * (u_m1_mode - u_m_mode);
 
                 // Tạo kết quả định dạng tương tự bài giải
-                let result = `<center><h3>Bài toán Thống kê Toán 12 - n lẻ </h3></center><br/>`;
-                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau<br/>`;
-                result += `<div style="text-align: center;">`;
-result += `<table style="border-collapse: collapse;">`;
-result += `<tr><th style="border: 1px solid black;">Khoảng giá trị</th>${heightRanges.map(range => `<th style="border: 1px solid black;">${range}</th>`).join(' ')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Tần số</td>${frequencies.map(freq => `<td style="border: 1px solid black;">${freq}</td>`).join(' ')}</tr>`;
-result += `</table>`;
-result += `</div>`;
-                
-            result += `<br/><center><b>LỜI GIẢI</b></b></center> <br/>`;
-            result += `Ta có bảng sau <br/>`;
-            result += `<div style="text-align: center;">`;
-result += `<table style="border-collapse: collapse;">`;
-result += `<tr><th style="border: 1px solid black;">Khoảng giá trị</th>${heightRanges.map(range => `<th style="border: 1px solid black;">${range}</th>`).join(' ')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Giá trị đại diện</td>${representativeValues.map(val => `<td style="border: 1px solid black;">${val.toFixed(1)}</td>`).join('')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Tần số</td>${frequencies.map(freq => `<td style="border: 1px solid black;">${freq}</td>`).join(' ')}</tr>`;
-result += `</table>`;
-result += `</div> <br/>`;
+                let result = `\\begin{ex}%[2D4H2-2]\n`;
+                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `\\loigiai{\n`;
+                result += `Ta có bảng sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Giá trị đại diện & ${representativeValues.map(val => val.toFixed(1)).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `Ta có cỡ mẫu $ n=${totalStudents} $.\\\\\n`;
+                result += `Số trung bình của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$\n`;
+                result += `Phương sai của mẫu số liệu ghép nhóm là  \n`;
+                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$\n`;
+                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. \n`;
 
-                result += `Ta có cỡ mẫu $ n=${totalStudents} $.<br/>`;
-                result += `Số trung bình của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$<br/>`;
-                result += `Phương sai của mẫu số liệu ghép nhóm là  <br/>`;
-                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$<br/>`;
-                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. <br/>`;
-
-                result += `Gọi $x_1$; $x_2$; ...; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có <br/>`;
-                result += `<br/>`;
+                result += `Gọi $x_1$; $x_2$; \\ldots; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có \n`;
+                result += `\\begin{itemize}\n`;
                 cumulativeFrequency = 0;
                 for (let i = 0; i < frequencies.length; i++) {
                     cumulativeFrequency += frequencies[i];
-                    result += `* $x_{${cumulativeFrequency - frequencies[i] + 1}}$, ..., $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; <br/>`;
+                    result += `\\item $x_{${cumulativeFrequency - frequencies[i] + 1}}$, \\ldots, $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; \n`;
                 }
                 result = result.trim();
-                result += `<br/>`;
+                result += `\n\\end{itemize}\n`;
 
                 // Xác định tứ phân vị thứ nhất (Q1)
                 if (Q1BoundaryUsed) {
-                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{${Math.ceil(positionQ1)}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là biên của nhóm sau:<br/>`;
-                    result += `$$Q_1=${Q1GroupB.split(";")[0].replace("[", "")}$$<br/>`;
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}} \\in [${Q1GroupA.split(";")[0].replace("[", "")};${Q1GroupA.split(";")[1].replace(")", "")})$, $x_{${Math.ceil(positionQ1)}} \\in [${Q1GroupB.split(";")[0].replace("[", "")};${Q1GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
+                    result += `$$Q_1=${Q1GroupB.split(";")[0].replace("[", "")}$$\n`;
                 } else {
-                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{${Math.ceil(positionQ1)}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là<br/>`;
-                    result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$<br/>`;
+                    result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ1) - 1}}$ và $x_{${Math.ceil(positionQ1)}}$ mà $x_{{${Math.ceil(positionQ1) - 1}}}, x_{${Math.ceil(positionQ1)}} \\in [${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
                 }
 
                 // Xác định trung vị (Q2)
-                result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.<br/>`;
-                result += `Do đó, trung vị của mẫu số liệu ghép nhóm là<br/>`;
-                result += `$$Q_2=${Q2Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency}} \\cdot(${Q2Range.split(";")[1].replace(")", "")}-${Q2Range.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$<br/>`;
+                result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_2=${Q2Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency}} \\cdot(${Q2Range.split(";")[1].replace(")", "")}-${Q2Range.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
 
                 // Xác định tứ phân vị thứ ba (Q3)
                 if (Q3BoundaryUsed) {
-                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ3)}}$ và $x_{${Math.ceil(positionQ3) + 1}}$ mà $x_{{${Math.ceil(positionQ3)}}} \\in [${Q3GroupA.split(";")[0].replace("[", "")};${Q3GroupA.split(";")[1].replace(")", "")})$, $x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3GroupB.split(";")[0].replace("[", "")};${Q3GroupB.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là biên của nhóm sau:<br/>`;
-                    result += `$$Q_3=${Q3GroupB.split(";")[0].replace("[", "")}$$<br/>`;
+                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ3)}}$ và $x_{${Math.ceil(positionQ3) + 1}}$ mà $x_{{${Math.ceil(positionQ3)}}} \\in [${Q3GroupA.split(";")[0].replace("[", "")};${Q3GroupA.split(";")[1].replace(")", "")})$, $x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3GroupB.split(";")[0].replace("[", "")};${Q3GroupB.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là biên của nhóm sau:\n`;
+                    result += `$$Q_3=${Q3GroupB.split(";")[0].replace("[", "")}$$\n`;
                 } else {
-                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $x_{${Math.ceil(positionQ3)}}$ và $x_{${Math.ceil(positionQ3) + 1}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là<br/>`;
-                    result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$<br/>`;
+                    result += `Tứ phân vị thứ ba của mẫu số liệu gốc là trung bình cộng của $$x_{${Math.ceil(positionQ3)}}$ và $x_{${Math.ceil(positionQ3) + 1}}$ mà $x_{{${Math.ceil(positionQ3)}}}, x_{{${Math.ceil(positionQ3) + 1}}} \\in [${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$\n`;
                 }
 
-                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.<br/>`;
-                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.<br/>`;
-                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.<br/>`;
+                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.\\\\\n`;
 
-                result += `Mốt của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$<br/>`;
+                result += `Mốt của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$\n`;
 
+                result += `}\n`;
+                result += `\\end{ex}`;
 
                 return result;
             }
@@ -639,7 +760,7 @@ result += `</div> <br/>`;
 
                 const totalStudents = frequencies.reduce((acc, freq) => acc + freq, 0);
                 if (totalStudents % 4 !== 2) {
-                    alert("Tổng số liệu phải có dạng 4k+2!");
+                    alert("Tổng số học sinh phải có dạng 4k+2!");
                     return "";
                 }
 
@@ -737,70 +858,70 @@ result += `</div> <br/>`;
                 const n_m_1_next = modeIndex < frequencies.length - 1 ? frequencies[modeIndex + 1] : 0;
                 const mode = u_m_mode + ((n_m - n_m_1) / ((n_m - n_m_1) + (n_m - n_m_1_next))) * (u_m1_mode - u_m_mode);
 
-        let result = `<center><h3>Bài toán Thống kê Toán 12 - 3 </h3></center> <br/>`;
-                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau<br/>`;
-                result += `<div style="text-align: center;">`;
-result += `<table style="border-collapse: collapse;">`;
-result += `<tr><th style="border: 1px solid black;">Khoảng giá trị</th>${heightRanges.map(range => `<th style="border: 1px solid black;">${range}</th>`).join(' ')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Tần số</td>${frequencies.map(freq => `<td style="border: 1px solid black;">${freq}</td>`).join(' ')}</tr>`;
-result += `</table>`;
-result += `</div>`;
-                
-            result += `<br/><center><b>LỜI GIẢI</b></b></center> <br/>`;
-            result += `Ta có bảng sau <br/>`;
-            result += `<div style="text-align: center;">`;
-result += `<table style="border-collapse: collapse;">`;
-result += `<tr><th style="border: 1px solid black;">Khoảng giá trị</th>${heightRanges.map(range => `<th style="border: 1px solid black;">${range}</th>`).join(' ')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Giá trị đại diện</td>${representativeValues.map(val => `<td style="border: 1px solid black;">${val.toFixed(1)}</td>`).join('')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Tần số</td>${frequencies.map(freq => `<td style="border: 1px solid black;">${freq}</td>`).join(' ')}</tr>`;
-result += `</table>`;
-result += `</div> <br/>`;
+                let result = `\\begin{ex}\n`;
+                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Tần số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `\\loigiai{\n`;
+                result += `Ta có bảng sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Giá trị đại diện & ${representativeValues.map(val => val.toFixed(1)).join(' & ')} \\\\\n`;
+                result += `\\hline Tần số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `Ta có cỡ mẫu $ n=${totalStudents} $.\\\\\n`;
+                result += `Số trung bình của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$\n`;
+                result += `Phương sai của mẫu số liệu ghép nhóm là  \n`;
+                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$\n`;
+                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. \n`;
 
-
-result += `Ta có cỡ mẫu $ n=${totalStudents} $.<br/>`;
-                result += `Số trung bình của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$<br/>`;
-                result += `Phương sai của mẫu số liệu ghép nhóm là  <br/>`;
-                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$<br/>`;
-                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. <br/>`;
-
-                result += `Gọi $x_1$; $x_2$; ...; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có <br/>`;
-                result += `<br/>`;
+                result += `Gọi $x_1$; $x_2$; \\ldots; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có \n`;
+                result += `\\begin{itemize}\n`;
                 cumulativeFrequency = 0;
                 for (let i = 0; i < frequencies.length; i++) {
                     cumulativeFrequency += frequencies[i];
-                    result += `* $x_{${cumulativeFrequency - frequencies[i] + 1}}$, ..., $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; <br/>`;
+                    result += `\\item $x_{${cumulativeFrequency - frequencies[i] + 1}}$, \\ldots, $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; \n`;
                 }
                 result = result.trim();
-                result += `<br/>`;
+                result += `\n\\end{itemize}\n`;
 
-                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{${Math.ceil(positionQ1)}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.<br/>`;
-                result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là<br/>`;
-                result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$<br/>`;
+                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{${Math.ceil(positionQ1)}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
 
                 if (Q2Range1 === Q2Range2) {
-                    result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong nhóm có khoảng $[${Q2Range1.split(";")[0].replace("[", "")};${Q2Range1.split(";")[1].replace(")", "")})$.<br/>`;
-                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là<br/>`;
-                    result += `$$Q_2=${Q2Range1.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency1}} \\cdot(${Q2Range1.split(";")[1].replace(")", "")}-${Q2Range1.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$<br/>`;
+                    result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong nhóm có khoảng $[${Q2Range1.split(";")[0].replace("[", "")};${Q2Range1.split(";")[1].replace(")", "")})$.\\\\\n`;
+                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_2=${Q2Range1.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency1}} \\cdot(${Q2Range1.split(";")[1].replace(")", "")}-${Q2Range1.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
                 } else {
-                    result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong hai nhóm khác nhau.<br/>`;
-                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là<br/>`;
-                    result += `$$Q_2=${Q2Range1.split(";")[1].replace(")", "")}$$<br/>`;
+                    result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ và $x_{{${Math.ceil(positionQ2) + 1}}}$ nằm trong hai nhóm khác nhau.\\\\\n`;
+                    result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                    result += `$$Q_2=${Q2Range1.split(";")[1].replace(")", "")}$$\n`;
                 }
 
-                result += `Tứ phân vị thứ ba của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ3)}}}$ nằm trong nhóm có khoảng $[${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.<br/>`;
-                result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là<br/>`;
-                result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$<br/>`;
+                result += `Tứ phân vị thứ ba của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ3)}}}$ nằm trong nhóm có khoảng $[${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$\n`;
 
-                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.<br/>`;
-                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.<br/>`;
-                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.<br/>`;
+                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.\\\\\n`;
 
-                result += `Mốt của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$<br/>`;
+                result += `Mốt của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$\n`;
 
-               
+                result += `}\n`;
+                result += `\\end{ex}`;
 
                 return result;
             }
@@ -915,72 +1036,92 @@ result += `Ta có cỡ mẫu $ n=${totalStudents} $.<br/>`;
                 const mode = u_m_mode + ((n_m - n_m_1) / ((n_m - n_m_1) + (n_m - n_m_1_next))) * (u_m1_mode - u_m_mode);
 
                 // Tạo kết quả định dạng tương tự bài giải
-    let result = `<center><h3>Bài toán Thống kê Toán 12 - 4 </h3></center><br/>`;
-                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau<br/>`;
-               
-                result += `<div style="text-align: center;">`;
-result += `<table style="border-collapse: collapse;">`;
-result += `<tr><th style="border: 1px solid black;">Khoảng giá trị</th>${heightRanges.map(range => `<th style="border: 1px solid black;">${range}</th>`).join(' ')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Tần số</td>${frequencies.map(freq => `<td style="border: 1px solid black;">${freq}</td>`).join(' ')}</tr>`;
-result += `</table>`;
-result += `</div>`;
-                
-            result += `<br/><center><b>LỜI GIẢI</b></b></center> <br/>`;
-            result += `Ta có bảng sau <br/>`;
-            result += `<div style="text-align: center;">`;
-result += `<table style="border-collapse: collapse;">`;
-result += `<tr><th style="border: 1px solid black;">Khoảng giá trị</th>${heightRanges.map(range => `<th style="border: 1px solid black;">${range}</th>`).join(' ')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Giá trị đại diện</td>${representativeValues.map(val => `<td style="border: 1px solid black;">${val.toFixed(1)}</td>`).join('')}</tr>`;
-result += `<tr><td style="border: 1px solid black;">Tần số</td>${frequencies.map(freq => `<td style="border: 1px solid black;">${freq}</td>`).join(' ')}</tr>`;
-result += `</table>`;
-result += `</div> <br/>`;
+                let result = `\\begin{ex}%[2D4H2-2]\n`;
+                result += `Hãy tính giá trị trung bình, phương sai, độ lệch chuẩn, trung vị, mốt, khoảng biến thiên và giá trị ngoại lai của mẫu số liệu ghép nhóm sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `\\loigiai{\n`;
+                result += `Ta có bảng sau\n`;
+                result += `\\begin{center}\n`;
+                result += `\\begin{tabular}{|c|c|c|c|c|c${ranges > 5 ? '|c'.repeat(ranges - 5) : ''}|}\n`;
+                result += `\\hline Khoảng giá trị & ${heightRanges.map(range => `{${range}}`).join(' & ')} \\\\\n`;
+                result += `\\hline Giá trị đại diện & ${representativeValues.map(val => val.toFixed(1)).join(' & ')} \\\\\n`;
+                result += `\\hline Tần Số & ${frequencies.join(' & ')} \\\\\n`;
+                result += `\\hline\n`;
+                result += `\\end{tabular}\n`;
+                result += `\\end{center}\n`;
+                result += `Ta có cỡ mẫu $ n=${totalStudents} $.\\\\\n`;
+                result += `Số trung bình của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$\n`;
+                result += `Phương sai của mẫu số liệu ghép nhóm là  \n`;
+                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$\n`;
+                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. \n`;
 
-               
-               
-                result += `Ta có cỡ mẫu $ n=${totalStudents} $.<br/>`;
-                result += `Số trung bình của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ \\overline{x}=\\dfrac{${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}`).join('+')}}{${totalStudents}}=\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}}\\approx ${(mean).toFixed(2)}. $$<br/>`;
-                result += `Phương sai của mẫu số liệu ghép nhóm là  <br/>`;
-                result += `$$ S^2=\\dfrac{1}{${totalStudents}}(${frequencies.map((freq, index) => `${freq}\\cdot${representativeValues[index].toFixed(1)}^2`).join('+')})-\\left(\\dfrac{${frequencies.reduce((acc, freq, index) => acc + freq * representativeValues[index], 0)}}{${totalStudents}} \\right)^2\\approx ${(variance).toFixed(2)}.  $$<br/>`;
-                result += `Độ lệch chuẩn của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ S\\approx\\sqrt{${(variance).toFixed(2)}}\\approx ${(standardDeviation).toFixed(2)} $$. <br/>`;
-
-                result += `Gọi $x_1$; $x_2$; ...; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có <br/>`;
-                result += `<br/>`;
+                result += `Gọi $x_1$; $x_2$; \\ldots; $x_{${totalStudents}}$ là mẫu số liệu gốc gồm $${totalStudents}$ giá trị được xếp theo thứ tự không giảm. Ta có \n`;
+                result += `\\begin{itemize}\n`;
                 cumulativeFrequency = 0;
                 for (let i = 0; i < frequencies.length; i++) {
                     cumulativeFrequency += frequencies[i];
-                    result += `* $x_{${cumulativeFrequency - frequencies[i] + 1}}$, ..., $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; <br/>`;
+                    result += `\\item $x_{${cumulativeFrequency - frequencies[i] + 1}}$, \\ldots, $x_{${cumulativeFrequency}} \\in [${heightRanges[i].split(";")[0].replace("[", "")};${heightRanges[i].split(";")[1].replace(")", "")})$; \n`;
                 }
                 result = result.trim();
-                result += `<br/>`;
+                result += `\n\\end{itemize}\n`;
 
                 // Xác định tứ phân vị thứ nhất (Q1)
-                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{${Math.ceil(positionQ1)}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.<br/>`;
-                result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là<br/>`;
-                result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$<br/>`;
+                result += `Tứ phân vị thứ nhất của mẫu số liệu gốc là $x_{${Math.ceil(positionQ1)}}$ nằm trong nhóm có khoảng $[${Q1Range.split(";")[0].replace("[", "")};${Q1Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, tứ phân vị thứ nhất của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_1=${Q1Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{4}-${Q1PreviousCumulative}}{${Q1Frequency}} \\cdot(${Q1Range.split(";")[1].replace(")", "")}-${Q1Range.split(";")[0].replace("[", "")})\\approx ${(Q1).toFixed(2)}$$\n`;
 
                 // Xác định trung vị (Q2)
-                result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.<br/>`;
-                result += `Do đó, trung vị của mẫu số liệu ghép nhóm là<br/>`;
-                result += `$$Q_2=${Q2Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency}} \\cdot(${Q2Range.split(";")[1].replace(")", "")}-${Q2Range.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$<br/>`;
+                result += `Trung vị của mẫu số liệu gốc là $x_{${Math.ceil(positionQ2)}}$ nằm trong nhóm có khoảng $[${Q2Range.split(";")[0].replace("[", "")};${Q2Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, trung vị của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_2=${Q2Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{${totalStudents}}{2}-${Q2PreviousCumulative}}{${Q2Frequency}} \\cdot(${Q2Range.split(";")[1].replace(")", "")}-${Q2Range.split(";")[0].replace("[", "")})\\approx ${(Q2).toFixed(2)}$$\n`;
 
                 // Xác định tứ phân vị thứ ba (Q3)
-                result += `Tứ phân vị thứ ba của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ3)}}}$ nằm trong nhóm có khoảng $[${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.<br/>`;
-                result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là<br/>`;
-                result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$<br/>`;
+                result += `Tứ phân vị thứ ba của mẫu số liệu gốc là $x_{{${Math.ceil(positionQ3)}}}$ nằm trong nhóm có khoảng $[${Q3Range.split(";")[0].replace("[", "")};${Q3Range.split(";")[1].replace(")", "")})$.\\\\\n`;
+                result += `Do đó, tứ phân vị thứ ba của mẫu số liệu ghép nhóm là\n`;
+                result += `$$Q_3=${Q3Range.split(";")[0].replace("[", "")}+\\dfrac{\\dfrac{3\\cdot${totalStudents}}{4}-${Q3PreviousCumulative}}{${Q3Frequency}} \\cdot(${Q3Range.split(";")[1].replace(")", "")}-${Q3Range.split(";")[0].replace("[", "")})\\approx ${(Q3).toFixed(2)}$$\n`;
 
-                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.<br/>`;
-                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.<br/>`;
-                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.<br/>`;
+                result += `Vậy khoảng tứ phân vị của mẫu số liệu ghép nhóm là $\\Delta_Q=Q_3-Q_1 \\approx ${(Q3).toFixed(2)}-${(Q1).toFixed(2)}\\approx ${(IQR).toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai thấp hơn ngưỡng dưới là $<${lowerOutlierBound.toFixed(2)}$.\\\\\n`;
+                result += `Giá trị ngoại lai cao hơn ngưỡng trên là $>${upperOutlierBound.toFixed(2)}$.\\\\\n`;
 
-                result += `Mốt của mẫu số liệu ghép nhóm là <br/>`;
-                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$<br/>`;
+                result += `Mốt của mẫu số liệu ghép nhóm là \n`;
+                result += `$$ M_0=${u_m_mode}+\\dfrac{${n_m}-${n_m_1}}{(${n_m}-${n_m_1})+(${n_m}-${n_m_1_next})} \\cdot(${u_m1_mode}-${u_m_mode})\\approx ${(mode).toFixed(2)}$$\n`;
 
+                result += `}\n`;
+                result += `\\end{ex}`;
 
                 return result;
             }
         
+
+
+        function copyResult() {
+                const resultText = document.getElementById("result");
+                resultText.select();
+                resultText.setSelectionRange(0, 99999);
+
+                document.execCommand("copy");
+
+                // Hiển thị hộp thoại tùy chỉnh
+                const dialog = document.getElementById("copyDialog");
+                dialog.style.display = "flex";
+
+                // Đóng hộp thoại sau 2 giây
+                setTimeout(closeDialog, 2000);
+            }
+
+            function closeDialog() {
+                const dialog = document.getElementById("copyDialog");
+                dialog.style.display = "none";
+            }
     </script>
 </body>
 
