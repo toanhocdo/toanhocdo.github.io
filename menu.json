@@ -1,10 +1,11 @@
+
 {
     "Part": [
         {
             "name": "Câu Trắc Nghiệm",
             "K12": [
                 {
-                    "name": "K12-1",
+                    "name": "Khối 10",
                     "Chương": [
                         {
                             "name": "Chương 1",
@@ -15,20 +16,140 @@
                                         {
                                             "name": "Bài toán 1",
                                             "content": "y = {a}x^2 + {b}"
-                                        },
-                                        {
-                                            "name": "Bài toán 2",
-                                            "content": "def({a} + {A}*2)"
-                                        },
-                                        {
-                                            "name": "Bài toán 3",
-                                            "content": "math.pow({a}, {A})"
-                                        },
-                                        {
-                                            "name": "Bài toán với Algebrite",
-                                            "content": "alg(integrate(x^2, x))"
                                         }
                                     ]
+                                },
+                                {
+                                  "name": "Bài 2",
+                                  "baitoan": [
+                                    {
+                                      "name": "Bài toán 1",
+                                      "content": "y = {a}x^2 + {b}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Bài 3",
+                                  "baitoan": [
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 1 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_mot_tren_mot({Z})}"
+                                    },
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 2 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_hai_tren_mot({Z})}"
+                                    }
+                                  ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Khối 11",
+                    "Chương": [
+                        {
+                            "name": "Chương 1: Lượng Giác",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1: Giá Trị Lượng Giác Của 1 Góc",
+                                    "baitoan": [
+                                        {
+                                            "name": "Tính độ dài cung biết R và alpha theo radian",
+                                            "content": "${tinhdodaicungtheorad({e})}"
+                                        },
+                                        {
+                                            "name": "Tính độ dài cung biết R và alpha theo độ",
+                                            "content": "${tinhdodaicungtheodo({e})}"
+                                        },
+                                        {
+                                            "name": "Tính độ dài cung đồng hồ có bán kính,kim đồng hồ",
+                                            "content": "${tinhdodaicungtheokimgio({e})}"
+                                        },
+                                        {
+                                            "name": "Tính độ dài cung: quay bánh xe đạp",
+                                            "content": "${tinhdodaicungtheoquaybanhxe(e)}"
+                                        },
+                                        {
+                                            "name": "Tính thời gian đu quay",
+                                            "content": "${tinhthoigianduquay(e)}"
+                                        },
+                                        {
+                                            "name": "Tính góc kim đồng hồ quay trong x phút",
+                                            "content": "${tinhdodaicungkimdongho(e)}"
+                                        },
+                                        {
+                                            "name": "Tính số vong quay của bánh xe",
+                                            "content": "${tinhovongquaybanhxe(e)}"
+                                        },
+                                        {
+                                            "name": "Tính quãng đường kim phút quay",
+                                            "content": "${tinhquangduongkimphut(e)}"
+                                        }
+                                    ]
+                                },
+                                {
+                                  "name": "Bài 2",
+                                  "baitoan": [
+                                    {
+                                      "name": "Bài toán 1",
+                                      "content": "y = {a}x^2 + {b}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Bài 3",
+                                  "baitoan": [
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 1 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_mot_tren_mot({Z})}"
+                                    },
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 2 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_hai_tren_mot({Z})}"
+                                    }
+                                  ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Khối 12",
+                    "Chương": [
+                        {
+                            "name": "Chương 1",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1",
+                                    "baitoan": [
+                                        {
+                                            "name": "Bài toán 1",
+                                            "content": "y = {a}x^2 + {b}"
+                                        }
+                                    ]
+                                },
+                                {
+                                  "name": "Bài 2",
+                                  "baitoan": [
+                                    {
+                                      "name": "Bài toán 1",
+                                      "content": "y = {a}x^2 + {b}"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "name": "Bài 3",
+                                  "baitoan": [
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 1 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_mot_tren_mot({Z})}"
+                                    },
+                                    {
+                                      "name": "Tìm toạ độ nguyên hàm bậc 2 trên bậc 1",
+                                      "content": "${tim_toa_do_nguyen_hai_tren_mot({Z})}"
+                                    }
+                                  ]
                                 }
                             ]
                         }
@@ -39,6 +160,41 @@
         {
             "name": "Câu Đúng Sai",
             "K12": [
+                {
+                  "name": "Khối 11",
+                    "Chương": [
+                      {
+                            "name": "Chương 1",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1: Giá Trị Lượng Giác Cung Góc Lượng Giác",
+                                    "baitoan": [
+                                        {
+                                            "name": "TF-Đổi Radian Sang Độ",
+                                            "content": "${TFdoirad2do(e)}"
+                                        },
+                                        {
+                                            "name": "TF-Đổi Độ Sang Radian",
+                                            "content": "${TFdoido2rad(e)}"
+                                        },
+                                        {
+                                            "name": "TF-Hỗn Hợp Cung, Góc Đường Tròn",
+                                            "content": "${TFcunggocdtron(e)}"
+                                        },
+                                        {
+                                            "name": "TF-Hỗn Hợp Cung, Góc Bánh Xe Quay",
+                                            "content": "${TFcunggocbanhxe(e)}"
+                                        },
+                                        {
+                                            "name": "TF-Hỗn Hợp Thực Tế Về Vệ Tinh",
+                                            "content": "${TFthucteVeTinh(e)}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
                 {
                     "name": "Khối 12",
                     "Chương": [
@@ -55,18 +211,53 @@
                                         {
                                             "name": "Hs $y=f(x)=ax^4-bx^2+c$",
                                             "content": "${ham_bac4_dondieu_cb1({e})}"
-                                        },
-                                        {
-                                            "name": "Bài toán 3",
-                                            "content": "math.pow({a}, {A})"
-                                        },
-                                        {
-                                            "name": "Bài toán với Algebrite",
-                                            "content": "alg(integrate(x^2, x))"
                                         }
                                     ]
                                 }
                             ]
+                        },
+                        {
+                          "name": "Chương 3: Thống Kê",
+                          "Bài": [
+                            {
+                              "name": "Bài 2: Thống Kê Tổng Hợp Một Mẫu Số Liệu",
+                              "baitoan": [
+                                {
+                                  "name": "Thống Kê Mẫu 1",
+                                  "content": "${thongkeTF_mau1({d})}"
+                                },
+                                {
+                                  "name": "Thống Kê Mẫu 2",
+                                  "content": "${thongkeTF_mau2({d})}"
+                                },
+                                {
+                                  "name": "Thống Kê Mẫu 3",
+                                  "content": "${thongkeTF_mau3({d})}"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Bài 2: Thống Kê Tổng Hợp Hai Mẫu Số Liệu",
+                              "baitoan": [
+                                {
+                                  "name": "So Sánh Hai Mẫu Số Liệu 1",
+                                  "content": "${thongkeTF_4k_1({d})}"
+                                },
+                                {
+                                  "name": "So Sánh Hai Mẫu Số Liệu 2",
+                                  "content": "${thongkeTF_4k_3A({d})}"
+                                },
+                                {
+                                  "name": "So Sánh Hai Mẫu Số Liệu 3",
+                                  "content": "${thongkeTF_4k_3B({d})}"
+                                },
+                                {
+                                  "name": "So Sánh Hai Mẫu Số Liệu 4",
+                                  "content": "${thongkeTF_4k_2({d})}"
+                                }
+                              ]
+                            }
+                          ]
                         }
                     ]
                 }
@@ -76,20 +267,109 @@
             "name": "Câu Tự Luận",
             "K12": [
                 {
-                    "name": "Khối 10",
-                    "Chương": [
-                        {
-                            "name": "Chương 10: Xác Suất",
+                  "name": "Khối 10",
+                  "Chương": [
+                    {
+                      "name": "Chương 10: Xác Suất",
                             "Bài": [
                                 {
                                     "name": "Bài 2: Xác Suất Của Biến Cố",
                                     "baitoan": [
                                         {
-                                            "name": "Xác Suất Hai Người Hẹn Gặp Nhau",
-                                            "content": "${xs_hai_nguoi_gap_nhau({X+})}"
+                                          "name": "Xác Suất Hai Người Hẹn Gặp Nhau",
+                                          "content": "${xs_hai_nguoi_gap_nhau({X+})}"
                                         }
                                     ]
                                 }
+                            ]  
+                    },
+                    {
+                      "name": "Chương Thống Kê",
+                      "Bài": [
+                        {
+                          "name": "Bài Tập Tổng Hợp Thống Kê",
+                          "baitoan": [
+                            {
+                              "name": "TL: Thống Kê Tự Nhập Số",
+                              "content": "${thong_ke_dulieu_don(numMin, numMax, n, tần số nhỏ nhất, tần số lớn nhất, nhập 0 hoặc 1)}"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+
+                  ]
+                },
+                {
+                  "name": "Khối 11",
+                    "Chương": [
+                      {
+                            "name": "Chương 1: Lượng Giác",
+                            "Bài": [
+                                {
+                                    "name": "Bài 1: Giá Trị Lượng Giác Cung Góc Lượng Giác",
+                                    "baitoan": [                                        
+                                        {
+                                            "name": "TL-Đổi Độ Sang Radian",
+                                            "content": "${TLdoiDeg2Rad(e)}"
+                                        },
+                                        {
+                                            "name": "TL-Đổi Radian Sang Độ",
+                                            "content": "${TLdoiRad2Deg(e)}"
+                                        },
+                                        {
+                                            "name": "TL-Tính Độ Bánh Xe Quay",
+                                            "content": "${TLtinhdobanhxequay(e)}"
+                                        },
+                                        {
+                                            "name": "TL-Tính Góc Bánh Răng Xe Quay",
+                                            "content": "${TLtinhgocbanhrangxequay(e)}"
+                                        },
+                                        {
+                                            "name": "TL-Tính Quãng Đường Xe Chạy",
+                                            "content": "${TLthuctechayxedi(e)}"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                          "name": "Chương 3: Giới Hạn",
+                            "Bài": [
+                              {
+                                "name": "Bài 1: Giới Hạn Dãy Số",
+                                "baitoan": [                                        
+                                    {
+                                        "name": "Giới Hạn Dãy Dạng Mũ",
+                                        "content": "${gioihan_day_mu(e)}"
+                                    },
+                                    {
+                                      "name": "Giới Hạn Dãy Liên Hợp Căn Tử",
+                                      "content": "${gioihan_day_lienhop_can_tu(e)}"
+                                    },
+                                    {
+                                      "name": "Giới Hạn Dãy - Tổng Phân Thức Vô Hạn",
+                                      "content": "${gioihan_day_tong_vohan_phanthuc(e)}"
+                                    }
+                                ]
+                              },{
+                                "name": "Bài 2: Giới Hạn Hàm Số",
+                                "baitoan": [                                        
+                                    {
+                                        "name": "Dạng 0/0 Tử Bậc Hai, Mẫu Bậc Hai",
+                                        "content": "${gioihan_hamso_vodinh_hai_tren_hai(e)}"
+                                    },{
+                                      "name": "Dạng 0/0 với \\dfrac{sqrt(ax+b)-c}{x}",
+                                      "content": "${gioihan_hs_vodinh_can_tru_so_chia_x_to_ko(e)}"
+                                  },{
+                                    "name": "Dạng 0/0 với \\dfrac{sqrt(ax+b)-c}{cx^2+dx+e}",
+                                    "content": "${gioihan_hs_vodinh_can_tru_so_chia_bachai(e)}"
+                                },{
+                                  "name": "Dạng oo/oo với \\dfrac{mx+n}{sqrt(ax^2+b)+cx}",
+                                  "content": "${gioihan_ham_xTo_amvocung_mot_chia_mot(e)}"
+                              }
+                                ]
+                              }
                             ]
                         }
                     ]
@@ -153,8 +433,7 @@
                                         {
                                             "name": "Tìm m hàm phân thức đồng biến trên TKXĐ-1",
                                             "content": "${ham_phuc_thuc_db_tren_tap_xac_dinh({X+})}"
-                                        },
-                                        {
+                                        },{
                                             "name": "Tìm m hàm phân thức đồng biến trên TKXĐ-2",
                                             "content": "${ham_phuc_thuc_db_tren_tkxd({Y+})}"
                                         },
@@ -256,35 +535,48 @@
                                     ]
                                 },
                                 {
-                                    "name": "Bài 2: Min Max Thực Tế Chủ Đề Khối Tròn Xoay",
-                                    "baitoan": [
-                                        {
-                                            "name": "Tìm Bán Kính Min Khi Thể Tích Trụ Cố Định",
-                                            "content": "${min_R_thung_hinhtru_biet_V({S+})}"
-                                        },
-                                        {
-                                            "name": "Tìm chiều cao h Khi Thể Tích Trụ Cố Định",
-                                            "content": "${tim_h_thung_hinhtru_biet_V({S+})}"
-                                        },
-                                        {
-                                            "name": "Tìm S_xq Biết Thể Tích Trụ Cố Định",
-                                            "content": "${min_S_xq_biet_V({A+})}"
-                                        },
-                                        {
-                                            "name": "Tìm chiều cao chóp ngoại tiếp cầu",
-                                            "content": "${min_h_chop_ngoai_tiep_cau({R+})}"
-                                        },
-                                        {
-                                            "name": "Tìm thể tích chóp ngoại tiếp cầu",
-                                            "content": "${min_V_chop_ngoai_tiep_cau({R+})}"
-                                        }
-                                    ]
+                                  "name": "Bài 2: Min Max Thực Tế Chủ Đề Khối Tròn Xoay",
+                                  "baitoan": [
+                                    {
+                                      "name": "Tìm Bán Kính Min Khi Thể Tích Trụ Cố Định",
+                                      "content": "${min_R_thung_hinhtru_biet_V({S+})}"
+                                    },
+                                    {
+                                      "name": "Tìm chiều cao h Khi Thể Tích Trụ Cố Định",
+                                      "content": "${tim_h_thung_hinhtru_biet_V({S+})}"
+                                    },
+                                    {
+                                      "name": "Tìm S_xq Biết Thể Tích Trụ Cố Định",
+                                      "content": "${min_S_xq_biet_V({A+})}"
+                                    },
+                                    {
+                                      "name": "Tìm Chiều Cao Chóp Tgoại Tiếp Cầu",
+                                      "content": "${min_h_chop_ngoai_tiep_cau({R+})}"
+                                    },
+                                    {
+                                      "name": "Tìm Thể Tích Chóp Ngoại Tiếp Cầu",
+                                      "content": "${min_V_chop_ngoai_tiep_cau({R+})}"
+                                    },
+                                    {
+                                      "name": "Tìm S_xq Trụ Max Trong Cầu",
+                                      "content": "${max_tru_in_cau({R+})}"
+                                    }
+                                  ]
                                 }
                             ]
                         },
                         {
-                            "name": "Chương HH Oxyz",
+                            "name": "Chương 2: HH Oxyz",
                             "Bài": [
+                                {
+                                    "name": "Bài 1: Vectơ",
+                                    "baitoan": [
+                                        {
+                                          "name": "Phân Tích VecTo Trong Tứ Diện",
+                                          "content": "${phan_tich_vecto_trong_tudien({f})}"
+                                        }
+                                    ]
+                                },
                                 {
                                     "name": "Bài 2: Nhóm 1-Toạ Độ Vectơ",
                                     "baitoan": [
@@ -305,7 +597,15 @@
                                             "content": "${tinh_toado_D({a},{c},{e},{d},{a},{f},{g},{b},{i})}"
                                         },
                                         {
-                                            "name": "phân tích vecto",
+                                            "name": "Tìm D để vecto AB= k. vecto CD",
+                                            "content": "${tinh_toado_Dthoa_AB_kCD({a},{c},{e},{d},{a},{f},{g},{b},{i},{l+})}"
+                                        },
+                                        {
+                                            "name": "Tìm D để S_ACB= k. S_ACD",
+                                            "content": "${tinh_toado_Dthoa_S_ACB_kS_ACD({e},{c},{e},{a},{l},{f},{b},{b},{a},{k+})}"
+                                        },
+                                        {
+                                            "name": "Phân tích vecto d theo 3 vec to a,b,c",
                                             "content": "${phan_tich_vector({a},{c},{e},{d},{a},{f},{g},{b},{d},{a},{f},{i})}"
                                         },
                                         {
@@ -314,7 +614,7 @@
                                         },
                                         {
                                             "name": "Tìm M trên Ox cách đều AB",
-                                            "content": "${tinh_M_cachdeu_AB({c},{a},{d},{h},{i},{e})}"
+                                            "content": "${tinh_M_cachdeu_AB({c-},{a},{d},{c+},{i},{e})}"
                                         },
                                         {
                                             "name": "Tìm B trong hhcn",
@@ -363,11 +663,11 @@
                                             "content": "${tinhDuongCaoAH({a}, {c}, {b}, {e}, {g}, {k}, {b},{f},{h})}"
                                         },
                                         {
-                                            "name": "Tính diện tích hbh ABCD",
+                                             "name": "Tính diện tích hbh ABCD",
                                             "content": "${tinhDienTichHBH({a}, {e}, {g}, {d}, {b}, {l}, {c},{e},{d})}"
                                         },
                                         {
-                                            "name": "Tính thể tích tứ diện",
+                                             "name": "Tính thể tích tứ diện",
                                             "content": "${tinhTheTichTuDien({a},{g}, {e}, {b}, {e}, {g}, {d}, {b}, {l}, {c},{e},{d})}"
                                         },
                                         {
@@ -396,11 +696,11 @@
                                             "content": "${tinhChanDuongCao({e}, {g}, {a}, {b}, {c}, {h}, {b},{d},{m})}"
                                         },
                                         {
-                                            "name": "Tìm tâm ngoại tiếp ABC",
+                                             "name": "Tìm tâm ngoại tiếp ABC",
                                             "content": "${tinhTamDuongTronNgoaiTiep({b}, {f}, {g}, {i}, {b}, {e}, {c},{g},{s})}"
                                         },
                                         {
-                                            "name": "Tìm chân đường phân giác trong góc A",
+                                             "name": "Tìm chân đường phân giác trong góc A",
                                             "content": "${tinhChanDuongPhanGiac({b},{e}, {a}, {c}, {a}, {d}, {g}, {b}, {m})}"
                                         },
                                         {
@@ -412,24 +712,49 @@
                                             "content": "${tinhTamDuongTronNoiTiep({a},{g}, {k}, {b}, {e}, {g}, {d}, {b}, {l})}"
                                         }
                                     ]
-                                },
+                                }
+                                ,
                                 {
                                     "name": "Bài 2: Nhóm 5- Min,Max",
                                     "baitoan": [
                                         {
-                                            "name": "Tìm M để tổng bình phương min",
-                                            "content": "${Tim_M_min({b}, {a-}, {k}, {m}, {b+}, {l}, {s},{g},{b},{o+})}"
+                                            "name": "Tìm M trên Ox để tổng bình phương min",
+                                            "content": "${Tim_M_Ox_min({c}, {e-}, {l}, {m}, {a+}, {b}, {t},{h},{g},{p+})}"
                                         },
                                         {
-                                            "name": "Tìm chân đường cao đỉnh A",
-                                            "content": "${tinhChanDuongCao({e}, {g}, {a}, {b}, {c}, {h}, {b},{d},{m})}"
+                                          "name": "Tìm M trên Oxy để tổng bình phương min",
+                                          "content": "${Tim_M_Ox_min({m}, {n-}, {a}, {m}, {a+}, {c}, {t},{h},{g},{q+})}"
                                         },
                                         {
-                                            "name": "Tìm tâm ngoại tiếp ABC",
+                                          "name": "Tìm M để tổng bình phương min",
+                                          "content": "${Tim_M_min({b}, {a-}, {k}, {m}, {b+}, {l}, {s},{g},{b},{o+})}"
+                                        },
+                                        {
+                                          "name": "Tìm M trên Oxy sao cho MA+MB min - 2 phía",
+                                          "content": "${Tim_M_sumMA_MB_min({b}, {a-}, {k-}, {g},{b},{o+})}"
+                                        },
+                                        {
+                                          "name": "Tìm M trên Oxy sao cho MA+MB min - 1 phía",
+                                          "content": "${Tim_M_min_sumMA_MB_CungPhia({b}, {a-}, {G+}, {b},{e},{K+})}"
+                                        },
+                                        {
+                                          "name": "Tìm M trên Oxy sao cho |MA-MB| max - 1 phía",
+                                          "content": "${Tim_M_min_minusMA_MB_CungPhia({a}, {a-}, {H+}, {b},{e},{L+})}"
+                                        },
+                                        {
+                                          "name": "Tìm M trên Oxy sao cho |MA-MB| max - 2 phía",
+                                          "content": "${Tim_M_min_minusMA_MB_KhacPhia({a}, {a-}, {H-}, {b},{e},{M+})}"
+                                        },
+                                        {
+                                            "name": "Tìm B sao cho $AM=MN=NP=PB$",
+                                            "content": "${tinh_sum_a_b_c({e},{c},{b})}"
+                                        },
+                                        {
+                                             "name": "Tìm tâm ngoại tiếp ABC",
                                             "content": "${tinhTamDuongTronNgoaiTiep({b}, {f}, {g}, {i}, {b}, {e}, {c},{g},{s})}"
                                         },
                                         {
-                                            "name": "Tìm chân đường phân giác trong góc A",
+                                             "name": "Tìm chân đường phân giác trong góc A",
                                             "content": "${tinhChanDuongPhanGiac({b},{e}, {a}, {c}, {a}, {d}, {g}, {b}, {m})}"
                                         },
                                         {
@@ -443,7 +768,7 @@
                                     ]
                                 },
                                 {
-                                    "name": "Bài 3: Nhóm 1-PTMP Cơ Bản",
+                                "name": "Bài 3: Nhóm 1-PTMP Cơ Bản",
                                     "baitoan": [
                                         {
                                             "name": "MP qua điểm,vtpt",
@@ -466,9 +791,10 @@
                                             "content": "${mp_vuonggoc_AB_taiA({N},{M},{K},{I},{J},{H},1)}"
                                         }
                                     ]
-                                },
+                                }
+                                ,
                                 {
-                                    "name": "Bài 3: Nhóm 2-PTMP Dùng Tích Hướng",
+                                "name": "Bài 3: Nhóm 2-PTMP Dùng Tích Hướng",
                                     "baitoan": [
                                         {
                                             "name": "MP qua 3 điểm M,N,P",
@@ -493,7 +819,7 @@
                                     ]
                                 },
                                 {
-                                    "name": "Bài 3: Nhóm 3-PTMP Liên Quan Khoảng Cách",
+                                "name": "Bài 3: Nhóm 3-PTMP Liên Quan Khoảng Cách",
                                     "baitoan": [
                                         {
                                             "name": "MP song song (Q) cách A một khoảng k",
@@ -517,171 +843,358 @@
                                         }
                                     ]
                                 }
+
                             ]
                         },
                         {
-                            "name": "Chương 4: Xác Suất Có Điều Kiện",
-                            "Bài": [
+                            "name": "Chương 3: Thống Kê",
+                          "Bài": [
+                            {
+                                "name": "Bài Tập Tự Luận Tổng Hợp - Không Phải TLN",
+                                "baitoan":[
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 1",
+                                    "content": "${thongke_4k_1(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 2",
+                                    "content": "${thongke_4k_2(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 3",
+                                    "content": "${thongke_4k_3(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 1 Tự Chọn Số",
+                                    "content": "${thongke_4k_1_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 2 Tự Chọn Số",
+                                    "content": "${thongke_4k_2_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Bảng Loại 3 Tự Chọn Số",
+                                    "content": "${thongke_4k_3_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 1",
+                                    "content": "${thongke_4k_1_2mau(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 2",
+                                    "content": "${thongke_4k_2_2mau(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 3",
+                                    "content": "${thongke_4k_3_2mau(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 1 Tự CHọn Số",
+                                    "content": "${thongke_4k_1_2mau_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 2 Tự CHọn Số",
+                                    "content": "${thongke_4k_2_2mau_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-2 Bảng Loại 3 Tự CHọn Số",
+                                    "content": "${thongke_4k_3_2mau_tuchon(số bắt đầu,số khoảng,độ dài khoảng)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 1",
+                                    "content": "${thongke_4k_1hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 2",
+                                    "content": "${thongke_4k_2hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 3",
+                                    "content": "${thongke_4k_3hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 1 Tự Chọn Số",
+                                    "content": "${thongke_4k_1hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 2 Tự Chọn Số",
+                                    "content": "${thongke_4k_2hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê-1 Hình Cột Loại 3 Tự Chọn Số",
+                                    "content": "${thongke_4k_3hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 1",
+                                    "content": "${thongke_4k_1_2mau_hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 2",
+                                    "content": "${thongke_4k_2_2mau_hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 3",
+                                    "content": "${thongke_4k_3_2mau_hinh(2024)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 1 Tự Chọn Số",
+                                    "content": "${thongke_4k_1_2mau_hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 2 Tự Chọn Số",
+                                    "content": "${thongke_4k_2_2mau_hinh_tuchon(start,ranges,step)}"
+                                  },
+                                  {
+                                    "name": "Thống Kê Cột Ghép Loại 3 Tự Chọn Số",
+                                    "content": "${thongke_4k_3_2mau_hinh_tuchon(start,ranges,step)}"
+                                  }
+                                ]
+                            },
+                            {
+                                "name": "Bài 1: Khoảng Biến Thiên - Khoảng Tứ Phân Vị",
+                                "baitoan":[
+                                    {
+                                    "name": "Trái Cây-Tìm Khoảng Tứ Phân Vị-Đẹp",
+                                    "content": "${thongke_tim_deltaQ({e})}"
+                                    },
+                                    {
+                                      "name": "Trái Cây-Tìm Khoảng Tứ Phân Vị",
+                                      "content": "${thongke_tim_deltaQ_R({e})}"
+                                    }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "name": "Chương 4: Nguyên Hàm - Tích Phân - Ứng Dụng",
+                        "Bài": [
+                          {
+                              "name": "Bài Nguyên Hàm",
+                              "baitoan":[
                                 {
-                                    "name": "Bài 2: Xác Suất Cơ Bản",
-                                    "baitoan": [
-                                        {
-                                            "name": "Xác Suất Chọn Kẹo Có Hoàn Lại",
-                                            "content": "${xs_chon_keo({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Chọn Kẹo Không Hoàn Lại",
-                                            "content": "${xs_chon_keo_no_return({e})}"
-                                        }
-                                    ]
+                                  "name": "Nguyên Hàm Phân Thức Bậc Một Trên Một",
+                                  "content": "${nguyenham_phan_thuc_mot_mot(2024)}"
                                 },
                                 {
-                                    "name": "Bài 2: Công Thức Xác Suất Toàn Phần",
-                                    "baitoan": [
-                                        {
-                                            "name": "Xác Suất Người Bệnh Bị Dương Tính",
-                                            "content": "${xs_duong_tinh({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Sản Phẩm A,B Kiểm Tra Bị Lỗi",
-                                            "content": "${xs_sanpham_AB_hong({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Học Sinh Trả Lời Đúng",
-                                            "content": "${xs_hocsinh_traloi_dung({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Học Sinh Đi Học Được Điểm Cao",
-                                            "content": "${xs_hoc_sinh_diem_cao({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Học Sinh Làm Bài Tập Về Nhà",
-                                            "content": "${xs_hocsinh_lam_btvn({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Click Quảng Cáo Mua Sản Phẩm",
-                                            "content": "${xs_click_quangcao({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Khảo Sát Bán Sản Phẩm",
-                                            "content": "${xs_khao_sat_thi_truong({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Bị Bệnh",
-                                            "content": "${xs_bi_benh({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Trúng Bầu Cử",
-                                            "content": "${xs_trung_bau_cu({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Nhân Viên Hoàn Thành Tốt",
-                                            "content": "${xs_nhanvien_hoanthanh_tot({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Tiêm Thuốc Khỏi Bệnh",
-                                            "content": "${xs_tiem_thuoc_khoibenh({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Chiến Thắng Trò Chơi",
-                                            "content": "${xs_thang_tro_choi({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Trời Mưa Ngập Đường",
-                                            "content": "${xs_mua_ngap_duong({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Chi Trả Bảo Hiểm Khách Hàng",
-                                            "content": "${xs_chi_boi_thuong_bao_hiem({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Đầu Tư Chứng Khoán",
-                                            "content": "${xs_thang_chung_khoan({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Sinh Viên Thi Qua Môn",
-                                            "content": "${xs_thi_qua_mon({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Trúng Thưởng Khuyến Mãi",
-                                            "content": "${xs_trung_thuong_khuyen_mai({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Khỏi Bệnh",
-                                            "content": "${xs_khoi_benh({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Mua Hàng Sau Khi Dự Hội Thảo",
-                                            "content": "${xs_tham_du_hoithao({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Khách Hàng Quay Lại",
-                                            "content": "${xs_khach_hang_quay_lai({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Khảo Sát Mua Sản Phẩm",
-                                            "content": "${xs_khao_sat_mua_sanpham({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Bảo Hành Sản Phẩm Điện Tử",
-                                            "content": "${xs_baohanh_san_pham({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Mua Sản Phẩm Hữu Cơ, Vô Cơ",
-                                            "content": "${xs_mua_sp_huuco_voco({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Học Sinh Thi Qua Môn",
-                                            "content": "${xs_hs_tb_gioi_quamon({e})}"
-                                        }
-                                    ]
+                                  "name": "Nguyên Hàm Phân Thức Bậc Hai Trên Một",
+                                  "content": "${nguyenham_phan_thuc_hai_mot(2024)}"
                                 },
                                 {
-                                    "name": "Bài 2: Xác Suất Nâng Cao",
-                                    "baitoan": [
-                                        {
-                                            "name": "Xác Suất Chọn Ứng Viên Tốt",
-                                            "content": "${xs_chon_nhan_vien_tot({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Người Bị Bệnh",
-                                            "content": "${xs_nguoi_bi_benh({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Sản Phẩm Chất Lượng",
-                                            "content": "${xs_sp_chat_luong({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Đánh Giá Phim",
-                                            "content": "${xs_danh_gia_phim({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Kinh Doanh Thành Công",
-                                            "content": "${xs_kinh_doanh_thanhcong({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Khách Hàng Hài Lòng",
-                                            "content": "${xs_khach_hang_hai_long({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Dự Án Thành Công",
-                                            "content": "${xs_du_an_thanh_cong({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Trúng Thưởng",
-                                            "content": "${xs_trung_thuong({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Thí Nghiệm Thành Công",
-                                            "content": "${xs_thinghiem_thanhcong({e})}"
-                                        },
-                                        {
-                                            "name": "Xác Suất Mua Sản Phẩm",
-                                            "content": "${xs_mua_sp({e})}"
-                                        }
-                                    ]
+                                  "name": "Nguyên Hàm Phân Thức 1/(ax+b)(cx+d)",
+                                  "content": "${nguyenham_phan_thuc_mau_bac2_2nghiem(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm Phân Thức Tử Bậc 1 Mẫu Bậc 2 - Hai Nghiệm",
+                                  "content": "${nguyenham_phan_thuc_tu_bac_nhat_mau_bac_hai_2nghiem(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm Phân Thức Tử Bậc 2 Mẫu Bậc 2 - Hai Nghiệm",
+                                  "content": "${nguyenham_phan_thuc_tu_mau_bac_hai(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm Phân Thức Tử Bậc 1 Mẫu Bậc 3 - Ba Nghiệm",
+                                  "content": "${nguyenham_phan_thuc_tu_bac_nhat_mau_3nghiem(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm Phân Thức Tử Bậc 1 Mẫu Bậc 2 - Nghiệm Kép",
+                                  "content": "${nguyenham_phan_thuc_tu_bac_nhat_mau_bachai_nghiemkep(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm f(x)=sin ax. cos bx",
+                                  "content": "${nguyenham_sin_ax_cos_bx(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm f(x)=sin ax. sin bx",
+                                  "content": "${nguyenham_sin_ax_sin_bx(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm f(x)=cos ax. cos bx",
+                                  "content": "${nguyenham_cos_ax_cos_bx(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm f(x)=cos^2 ax",
+                                  "content": "${nguyenham_cos_ax_mu2(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm f(x)=sin^2 ax",
+                                  "content": "${nguyenham_sinax_mu2(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm f(x)=(ax^2+bx+c).e^{dx}",
+                                  "content": "${nguyenham_tich_bachai_nhan_mu(2024)}"
+                                },
+                                {
+                                  "name": "Nguyên Hàm f(x)=(ax^2+bx+c).e^{dx} ngược",
+                                  "content": "${nguyenham_tich_bachai_nhan_mu_nguoc(2024)}"
                                 }
-                            ]
+                              ]
+                          }
+                        ]
+                      }
+                      ,
+                        {
+                          "name": "Chương 5: Xác Suất Có Điều Kiện",
+                          "Bài": [
+                            {
+                            "name": "Bài 2: Xác Suất Cơ Bản",
+                              "baitoan":[
+                                {
+                                  "name": "Xác Suất Chọn Kẹo Có Hoàn Lại",
+                                  "content": "${xs_chon_keo({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Chọn Kẹo Không Hoàn Lại",
+                                  "content": "${xs_chon_keo_no_return({e})}"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Bài 2: Công Thức Xác Suất Toàn Phần",
+                              "baitoan": [
+                                {
+                                  "name": "Xác Suất Người Bệnh Bị Dương Tính",
+                                  "content": "${xs_duong_tinh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Sản Phẩm A,B Kiểm Tra Bị Lỗi",
+                                  "content": "${xs_sanpham_AB_hong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Học Sinh Trả Lời Đúng",
+                                  "content": "${xs_hocsinh_traloi_dung({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Học Sinh Đi Học Được Điểm Cao",
+                                  "content": "${xs_hoc_sinh_diem_cao({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Học Sinh Làm Bài Tập Về Nhà",
+                                  "content": "${xs_hocsinh_lam_btvn({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Click Quảng Cáo Mua Sản Phẩm",
+                                  "content": "${xs_click_quangcao({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khảo Sát Bán Sản Phẩm",
+                                  "content": "${xs_khao_sat_thi_truong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Bị Bệnh",
+                                  "content": "${xs_bi_benh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Trúng Bầu Cử",
+                                  "content": "${xs_trung_bau_cu({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Nhân Viên Hoàn Thành Tốt",
+                                  "content": "${xs_nhanvien_hoanthanh_tot({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Tiêm Thuốc Khỏi Bệnh",
+                                  "content": "${xs_tiem_thuoc_khoibenh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Chiến Thắng Trò Chơi",
+                                  "content": "${xs_thang_tro_choi({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Trời Mưa Ngập Đường",
+                                  "content": "${xs_mua_ngap_duong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Chi Trả Bảo Hiểm Khách Hàng",
+                                  "content": "${xs_chi_boi_thuong_bao_hiem({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Đầu Tư Chứng Khoán",
+                                  "content": "${xs_thang_chung_khoan({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Sinh Viên Thi Qua Môn",
+                                  "content": "${xs_thi_qua_mon({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Trúng Thưởng Khuyến Mãi",
+                                  "content": "${xs_trung_thuong_khuyen_mai({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khỏi Bệnh",
+                                  "content": "${xs_khoi_benh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Mua Hàng Sau Khi Dự Hội Thảo",
+                                  "content": "${xs_tham_du_hoithao({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khách Hàng Quay Lại",
+                                  "content": "${xs_khach_hang_quay_lai({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khảo Sát Mua Sản Phẩm",
+                                  "content": "${xs_khao_sat_mua_sanpham({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Bảo Hành Sản Phẩm Điện Tử",
+                                  "content": "${xs_baohanh_san_pham({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Mua Sản Phẩm Hữu Cơ, Vô Cơ",
+                                  "content": "${xs_mua_sp_huuco_voco({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Học Sinh Thi Qua Môn",
+                                  "content": "${xs_hs_tb_gioi_quamon({e})}"
+                                }
+                              ]
+                            },
+                            {
+                              "name": "Bài 2: Xác Suất Nâng Cao",
+                              "baitoan": [
+                                {
+                                  "name": "Xác Suất Chọn Ứng Viên Tốt",
+                                  "content": "${xs_chon_nhan_vien_tot({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Người Bị Bệnh",
+                                  "content": "${xs_nguoi_bi_benh({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Sản Phẩm Chất Lượng",
+                                  "content": "${xs_sp_chat_luong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Đánh Giá Phim",
+                                  "content": "${xs_danh_gia_phim({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Kinh Doanh Thành Công",
+                                  "content": "${xs_kinh_doanh_thanhcong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Khách Hàng Hài Lòng",
+                                  "content": "${xs_khach_hang_hai_long({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Dự Án Thành Công",
+                                  "content": "${xs_du_an_thanh_cong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Trúng Thưởng",
+                                  "content": "${xs_trung_thuong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Thí Nghiệm Thành Công",
+                                  "content": "${xs_thinghiem_thanhcong({e})}"
+                                },
+                                {
+                                  "name": "Xác Suất Mua Sản Phẩm",
+                                  "content": "${xs_mua_sp({e})}"
+                                }
+                              ]
+                            }
+                          ]
                         }
                     ]
                 }
