@@ -7,9 +7,34 @@ function gcd(a, b) {
 }
 // Hàm xử lý dấu + -, - - và - +
 function cleanUpOutput(output) {
-    return output.replace(/\+\s*-/g, '-').replace(/-\s*-/g, '+').replace(/-\s*\+/g, '-');
+    // Tách biểu thức thành các dòng riêng biệt
+    let lines = output.split('\n');
+
+    // Duyệt qua từng dòng và áp dụng các thay thế nếu không bắt đầu bằng các từ khóa cần tránh
+    lines = lines.map(line => {
+        // Kiểm tra nếu dòng bắt đầu với \draw, \patch, hoặc \fill
+        if (/^\s*(\\draw|barChart|\\patch|\\fill)/.test(line)) {
+            return line; // Giữ nguyên dòng này
+        }
+
+        // Áp dụng các thay thế cho các dòng khác
+        line = line
+            .replace(/=\s*\+\s*/g, ' = ') // Remove "+ " right after "="
+            .replace(/\+\s*-/g, '-') // Change "+ -" to "-"
+            .replace(/-\s*-/g, '+') // Change "- -" to "+"
+            .replace(/-\s*\+/g, '-') // Change "- +" to "-"
+            .replace(/\+\s*\+/g, '+') // Change "+ +" to "+"
+            .replace(/\{\s*\+\s*/g, '{') // Remove "+" right after "{"
+            .replace(/^\+\s*/g, ''); // Remove leading "+"
+
+        return line; // Trả về dòng đã xử lý
+    });
+
+    // Ghép các dòng lại với nhau
+    return lines.join('\n');
 }
-function lamdeppm(expression) {
+
+function lamdeppmG(expression) {
     // Xóa các hệ số 1 và 0 cho bất kỳ biến nào
     expression = expression.replace(/\b1([a-zA-Z])/g, '$1'); // 1x, 1m -> x, m
     expression = expression.replace(/\b0[a-zA-Z]\^?\d*/g, ''); // 0x, 0x^n, 0m -> ''
@@ -25,7 +50,43 @@ function lamdeppm(expression) {
     
     return expression;
 }
+function lamdeppm(expression) {
+    // Tách biểu thức thành các dòng riêng biệt
+    let lines = expression.split('\n');
 
+    // Duyệt qua từng dòng và áp dụng các thay thế nếu không bắt đầu bằng các từ khóa cần tránh
+    lines = lines.map(line => {
+        // Kiểm tra nếu dòng bắt đầu với \draw, \patch, hoặc \fill
+        if (/^\s*(\\draw|\\patch|\\fill)/.test(line)) {
+            return line; // Giữ nguyên dòng này
+        }
+
+        // Áp dụng các thay thế cho các dòng khác
+        line = line.replace(/\b1([a-zA-Z])/g, '$1'); // 1x, 1m -> x, m
+        line = line.replace(/\b0[a-zA-Z]\^?\d*/g, ''); // 0x, 0x^n, 0m -> ''
+        line = line.replace(/\+\+/g, '+'); // ++ -> +
+        line = line.replace(/--/g, '+'); // -- -> +
+        line = line.replace(/\+-/g, '-'); // +- -> -
+        line = line.replace(/-\+/g, '-'); // -+ -> -
+        line = line.replace(/^\+/, ''); // Xóa dấu + ở đầu biểu thức nếu có
+
+        return line; // Trả về dòng đã xử lý
+    });
+
+    // Ghép các dòng lại với nhau
+    return lines.join('\n');
+}
+
+function cleanUpOutput2(output) {
+    return output
+        .replace(/=\s*\+\s*/g, ' = ') // Remove "+ " right after "="
+        .replace(/\+\s*-/g, '-') // Change "+ -" to "-"
+        .replace(/-\s*-/g, '+') // Change "- -" to "+"
+        .replace(/-\s*\+/g, '-') // Change "- +" to "-"
+        .replace(/\+\s*\+/g, '+') // Change "+ +" to "+"
+        .replace(/\{\s*\+\s*/g, '{') // Remove "+" right after "{"
+        .replace(/^\+\s*/g, ''); // Remove leading "+"
+}
 
 // Hàm chuyển phân số ra LaTeX và tối giản phân số
 function formatFraction(numerator, denominator) {
@@ -59,26 +120,27 @@ function tinh_vecto_AB(OAx, OAy, OAz, OBx, OBy, OBz) {
         OBz - OAz
     ];
 
-    // Helper function to format vectors properly
     function formatVectorComponent(value, component) {
-        if (value < 0) {
-            return `${value}\\vec{${component}}`;
-        } else {
-            return `+ ${value}\\vec{${component}}`;
-        }
+    // Nếu giá trị nhỏ hơn 0 (âm), định dạng với dấu - trước giá trị
+    if (value < 0) {
+        return `${value}\\vec{${component}}`;
+    } else if (value > 0) {
+        // Nếu giá trị lớn hơn 0 (dương), định dạng với dấu + trước giá trị
+        return `+ ${value}\\vec{${component}}`;
+    } else {
+        // Nếu giá trị là 0, bỏ qua giá trị này (không hiển thị)
+        return '';
     }
-
-  
-
+    }
     // Create the problem statement
     const problemStatement = `
         Cho $ \\overrightarrow{OA} = ${formatVectorComponent(OAx, 'i')} ${formatVectorComponent(OAy, 'j')} ${formatVectorComponent(OAz, 'k')} $, 
         $ \\overrightarrow{OB} = ${formatVectorComponent(OBx, 'i')} ${formatVectorComponent(OBy, 'j')} ${formatVectorComponent(OBz, 'k')} $. 
-        Tìm vecto $\\overrightarrow{AB}$.`;
+        Tìm tổng các toạ độ của vecto $\\overrightarrow{AB}$.`;
 
     // Create the answer statement
     const answerStatement = `
-        (${vectorAB[0]}; ${vectorAB[1]}; ${vectorAB[2]})
+        ${vectorAB[0]+vectorAB[1]+vectorAB[2]}
     `;
 
     // Format the output in the required LaTeX format
@@ -91,40 +153,48 @@ function tinh_vecto_AB(OAx, OAy, OAz, OBx, OBy, OBz) {
     }
 \\end{ex}
     `;
-
     // Clean up the LaTeX output
-    latexOutput = cleanUpOutput(latexOutput);
-    
+    latexOutput = cleanUpOutput2(latexOutput);    
     return latexOutput;
 }
-function tinh_trongtam(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
-    
-    // Calculate the centroid G
-    const Gx = formatFraction(Ax + Bx + Cx, 3);
-    const Gy = formatFraction(Ay + By + Cy, 3);
-    const Gz = formatFraction(Az + Bz + Cz, 3);
 
-    // Helper function to clean up the final output
-    function cleanUpOutput(output) {
-        return output.replace(/\+\s*-/g, '-').replace(/-\s*-/g, '+').replace(/-\s*\+/g, '-');
+function tinh_trongtam(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
+    // Helper function to format fractions
+    function formatFraction(numerator, denominator) {
+        return (numerator / denominator).toFixed(3);
     }
 
+    // Calculate the centroid G
+    const Gx = parseFloat(formatFraction(Ax + Bx + Cx, 3));
+    const Gy = parseFloat(formatFraction(Ay + By + Cy, 3));
+    const Gz = parseFloat(formatFraction(Az + Bz + Cz, 3));
+    // Helper function to clean up the number format (remove .0 if necessary)
+    function cleanNumber(num) {
+        if (num.endsWith('.0')) {
+            return num.slice(0, -2);
+        }
+        return num;
+    }
+    // Calculate the sum of the coordinates of the centroid G
+    const sumOfCoordinates = (Gx + Gy + Gz).toFixed(1);
+     // Clean up the sum of coordinates
+    const cleanedSum = cleanNumber(sumOfCoordinates);
     // Create the problem statement
     const problemStatement = `
         Cho $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. 
-        Khi đó tọa độ trọng tâm $G$ của tam giác $ABC$ là gì?
+        Khi đó tổng các tọa độ của trọng tâm $G$ trong tam giác $ABC$ bằng bao nhiêu? (làm tròn đến hàng phần mười).
     `;
 
     // Create the answer statement
     const answerStatement = `
-        Tọa độ trọng tâm $G$ của tam giác $ABC$ là \\(G\\left(${Gx}; ${Gy}; ${Gz}\\right)\\).
+        ${cleanedSum}
     `;
 
     // Format the output in the required LaTeX format
     let latexOutput = `
 \\begin{ex}
-    ${problemStatement.trim()},
-    \\shortans{$G\\left(${Gx}; ${Gy}; ${Gz}\\right)$}
+    ${problemStatement.trim()}
+    \\shortans{$${answerStatement.trim()}$}
     \\loigiai{
         Ta có tọa độ trọng tâm $G$ của tam giác $ABC$ được tính bằng trung bình cộng tọa độ các đỉnh: \\\\
         $G\\left(\\dfrac{${Ax} + ${Bx} + ${Cx}}{3}; \\dfrac{${Ay} + ${By} + ${Cy}}{3}; \\dfrac{${Az} + ${Bz} + ${Cz}}{3}\\right) = G\\left(${Gx}; ${Gy}; ${Gz}\\right)$.
@@ -137,30 +207,50 @@ function tinh_trongtam(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
     
     return latexOutput;
 }
-function tinh_trongtam_tudien(Ox, Oy, Oz, Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
-    // Calculate the centroid G
-    const Gx = formatFraction(Ox + Ax + Bx + Cx, 4);
-    const Gy = formatFraction(Oy + Ay + By + Cy, 4);
-    const Gz = formatFraction(Oz + Az + Bz + Cz, 4);
+
+function tinh_trongtam_tudien(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, Dx, Dy, Dz) {
+    // Helper function to format fractions
+    function formatFraction(numerator, denominator) {
+        return (numerator / denominator).toFixed(1);
+    }
+
+    // Helper function to clean up the number format (remove .0 if necessary)
+    function cleanNumber(num) {
+        if (num.endsWith('.0')) {
+            return num.slice(0, -2);
+        }
+        return num;
+    }
+
+    // Calculate the centroid G of the tetrahedron
+    const Gx = formatFraction(Ax + Bx + Cx + Dx, 4);
+    const Gy = formatFraction(Ay + By + Cy + Dy, 4);
+    const Gz = formatFraction(Az + Bz + Cz + Dz, 4);
+
+    // Calculate the sum of the coordinates of the centroid G
+    const sumOfCoordinates = (parseFloat(Gx) + parseFloat(Gy) + parseFloat(Gz)).toFixed(1);
+
+    // Clean up the sum of coordinates
+    const cleanedSum = cleanNumber(sumOfCoordinates);
+
     // Create the problem statement
     const problemStatement = `
-        Cho $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. 
-        Khi đó tọa độ trọng tâm $G$ của tứ diện $OABC$ là gì?
+        Gọi $G$ là tọa độ trọng tâm tứ diện $ABCD$ biết $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$ và $D(${Dx}; ${Dy}; ${Dz})$. Tính tổng các toạ độ điểm $G$, kết quả làm tròn đến hàng phần mười (nếu có)?
     `;
 
     // Create the answer statement
     const answerStatement = `
-        Tọa độ trọng tâm $G$ của tứ diện $OABC$ là \\(G\\left(${Gx}; ${Gy}; ${Gz}\\right)\\).
+        ${cleanedSum}
     `;
 
     // Format the output in the required LaTeX format
     let latexOutput = `
 \\begin{ex}
-    ${problemStatement.trim()},
-    \\shortans{$G\\left(${Gx}; ${Gy}; ${Gz}\\right)$}
+    ${problemStatement.trim()}
+    \\shortans{$${answerStatement.trim()}$}
     \\loigiai{
-        Ta có tọa độ trọng tâm $G$ của tứ diện $OABC$ được tính bằng trung bình cộng tọa độ các đỉnh: \\\\
-        $G\\left(\\dfrac{${Ox} + ${Ax} + ${Bx} + ${Cx}}{4}; \\dfrac{${Oy} + ${Ay} + ${By} + ${Cy}}{4}; \\dfrac{${Oz} + ${Az} + ${Bz} + ${Cz}}{4}\\right) = G\\left(${Gx}; ${Gy}; ${Gz}\\right)$.
+        Ta có tọa độ trọng tâm $G$ của tứ diện $ABCD$ được tính bằng trung bình cộng tọa độ các đỉnh: \\\\
+        $G\\left(\\dfrac{${Ax} + ${Bx} + ${Cx} + ${Dx}}{4}; \\dfrac{${Ay} + ${By} + ${Cy} + ${Dy}}{4}; \\dfrac{${Az} + ${Bz} + ${Cz} + ${Dz}}{4}\\right) = G\\left(${Gx}; ${Gy}; ${Gz}\\right)$.
     }
 \\end{ex}
     `;
@@ -170,47 +260,261 @@ function tinh_trongtam_tudien(Ox, Oy, Oz, Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
     
     return latexOutput;
 }
+
+
 function tinh_toado_D(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
-    // Calculate vector BC
+    // Tính vector BC
     const BCx = Cx - Bx;
     const BCy = Cy - By;
     const BCz = Cz - Bz;
 
-    // Calculate the coordinates of point D
+    // Tính tọa độ điểm D
     const Dx = Ax + BCx;
     const Dy = Ay + BCy;
     const Dz = Az + BCz;
-    // Create the problem statement
+
+    // Tính độ dài đoạn OD
+    const OD_length = Math.sqrt(Dx**2 + Dy**2 + Dz**2).toFixed(1); // Làm tròn đến 1 chữ số thập phân
+
+    // Tạo câu hỏi
     const problemStatement = `
-        Cho $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. 
-        Tìm tọa độ điểm $D$ sao cho $ABCD$ là hình bình hành.
+        Cho $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. Gọi $D$ là đỉnh thứ tư của hình bình hành $ABCD$. Tính độ dài đoạn $OD$, kết quả làm tròn đến hàng phần chục.
     `;
 
-    // Create the answer statement
+    // Tạo câu trả lời
     const answerStatement = `
-        Tọa độ điểm $D$ là $D(${Dx}; ${Dy}; ${Dz})$.
+        ${OD_length}
     `;
 
-    // Format the output in the required LaTeX format
+    // Format đầu ra theo LaTeX
     let latexOutput = `
 \\begin{ex}
     ${problemStatement.trim()},
-    \\shortans{$D(${Dx}; ${Dy}; ${Dz})$}
+    \\shortans{$${OD_length}$}
     \\loigiai{
-        Ta có $\overrightarrow{BC} = (${Cx} - ${Bx})\\vec{i} + (${Cy} - ${By})\\vec{j} + (${Cz} - ${Bz})\\vec{k} = (${BCx}\\vec{i} + ${BCy}\\vec{j} + ${BCz}\\vec{k})$. \\\\
-        Điểm $D$ có tọa độ $D$ sao cho $\overrightarrow{AD} = \overrightarrow{BC}$ là: \\\\
-        $D(${Ax} + ${BCx}; ${Ay} + ${BCy}; ${Az} + ${BCz}) = D(${Dx}; ${Dy}; ${Dz})$.
+        Ta có $\\overrightarrow{BC} = (${Cx} - ${Bx})\\vec{i} + (${Cy} - ${By})\\vec{j} + (${Cz} - ${Bz})\\vec{k} = (${BCx}\\vec{i} + ${BCy}\\vec{j} + ${BCz}\\vec{k})$. \\\\
+        Điểm $D$ có tọa độ $D$ sao cho $\\overrightarrow{AD} = \\overrightarrow{BC}$ là: \\\\
+        $D(${Ax} + ${BCx}; ${Ay} + ${BCy}; ${Az} + ${BCz}) = D(${Dx}; ${Dy}; ${Dz})$. \\\\
+        Độ dài đoạn $OD$ là $\\sqrt{${Dx}^2 + ${Dy}^2 + ${Dz}^2} \\approx ${OD_length}$.
     }
 \\end{ex}
     `;
-    
-    // Clean up the LaTeX output
+
+    // Làm sạch đầu ra LaTeX
     latexOutput = cleanUpOutput(latexOutput);
     
     return latexOutput;
 }
+
+function tinh_toado_Dthoa_AB_kCD(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, k) {
+    // Kiểm tra nếu k bằng 0 để tránh chia cho 0
+    if (k === 0) {
+        return "Hệ số tỉ lệ k không được bằng 0.";
+    }
+
+    // Tính tọa độ điểm D dựa trên điều kiện AB = k CD
+    const Dx = Cx + (Bx - Ax) / k;
+    const Dy = Cy + (By - Ay) / k;
+    const Dz = Cz + (Bz - Az) / k;
+
+    // Tính độ dài đoạn OD
+    const OD_length = Math.sqrt((Dx * Dx) + (Dy * Dy) + (Dz * Dz));
+    const OD_length_formatted = formatNumber(OD_length);
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Trong không gian $Oxyz$ cho ba điểm $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. Gọi $D$ là điểm sao cho $\\vec{AB} = ${k} \\vec{CD}$. Tính độ dài đoạn $OD$, kết quả làm tròn đến hàng phần mười.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `${OD_length_formatted}`;
+
+    // Tạo nội dung lời giải chi tiết
+    const solution = `
+        Để tìm tọa độ điểm $D$, ta có điều kiện $\\vec{AB} = ${k} \\vec{CD}$.\\\\
+        Ta có:
+        \\[
+            \\vec{AB} = (Bx - Ax, By - Ay, Bz - Az)
+        \\]
+        \\[
+            \\vec{CD} = (Dx - Cx, Dy - Cy, Dz - Cz)
+        \\]
+        Theo điều kiện trên:
+        \\[
+            (Bx - Ax, By - Ay, Bz - Az) = ${k}  (Dx - Cx, Dy - Cy, Dz - Cz)
+        \\]
+        Điều này cho ta ba phương trình:
+        \\[
+            Bx - Ax = ${k}  (Dx - Cx) \quad (1) \\
+            By - Ay = ${k}  (Dy - Cy) \quad (2) \\
+            Bz - Az = ${k}  (Dz - Cz) \quad (3)
+        \\]
+        Giải các phương trình trên, ta có:
+        \\[
+            Dx = Cx + \\frac{Bx - Ax}{${k}} \\
+            Dy = Cy + \\frac{By - Ay}{${k}} \\
+            Dz = Cz + \\frac{Bz - Az}{${k}}
+        \\]
+        Vậy, tọa độ điểm $D$ là $D(${Dx.toFixed(3)}; ${Dy.toFixed(3)}; ${Dz.toFixed(3)})$.\\\\
+        Độ dài đoạn $OD$ được tính bằng công thức:
+        \\[
+            OD = \\sqrt{Dx^2 + Dy^2 + Dz^2} = \\sqrt{${Dx.toFixed(3)}^2 + ${Dy.toFixed(3)}^2 + ${Dz.toFixed(3)}^2} = ${OD_length_formatted}
+        \\]
+    `;
+
+    // Định dạng đầu ra LaTeX hoàn chỉnh
+    const latexOutput = `
+    \\begin{ex}
+        ${problemStatement.trim()}
+        \\shortans{$${OD_length_formatted}$}
+        \\loigiai{
+            ${solution.trim()}
+        }
+    \\end{ex}
+    `;
+
+    return latexOutput;
+}
+function tinh_toado_Dthoa_AB_kCD_min(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, k) {
+    // Kiểm tra nếu k bằng 0 để tránh chia cho 0
+    if (k === 0) {
+        return "Hệ số tỉ lệ k không được bằng 0.";
+    }
+
+    // Tính tọa độ điểm D dựa trên điều kiện AB = k CD
+    const Dx = Cx + (Bx - Ax) / k;
+    const Dy = Cy + (By - Ay) / k;
+    const Dz = Cz + (Bz - Az) / k;
+
+    // Tính độ dài đoạn OD
+    const OD_length = Math.sqrt((Dx * Dx) + (Dy * Dy) + (Dz * Dz));
+    const OD_length_formatted = formatNumber(OD_length);
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Trong không gian $Oxyz$ cho ba điểm $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. Gọi $D$ là điểm sao cho $\\vec{AB} = ${k} \\vec{CD}$. Tính độ dài đoạn $OD$, kết quả làm tròn đến hàng phần mười.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `${OD_length_formatted}`;
+
+    // Tạo nội dung lời giải chi tiết
+    const solution = `
+        Để tìm tọa độ điểm $D$, ta có điều kiện $\\vec{AB} = ${k} \\vec{CD}$.\\\\
+        Ta có:
+        \\[
+            \\vec{AB} = (Bx - Ax, By - Ay, Bz - Az)
+        \\]
+        \\[
+            \\vec{CD} = (Dx - Cx, Dy - Cy, Dz - Cz)
+        \\]
+        Theo điều kiện trên:
+        \\[
+            (Bx - Ax, By - Ay, Bz - Az) = ${k}  (Dx - Cx, Dy - Cy, Dz - Cz)
+        \\]
+        Điều này cho ta ba phương trình:
+        \\[
+            Bx - Ax = ${k}  (Dx - Cx) \quad (1) \\
+            By - Ay = ${k}  (Dy - Cy) \quad (2) \\
+            Bz - Az = ${k}  (Dz - Cz) \quad (3)
+        \\]
+        Giải các phương trình trên, ta có:
+        \\[
+            Dx = Cx + \\frac{Bx - Ax}{${k}} \\
+            Dy = Cy + \\frac{By - Ay}{${k}} \\
+            Dz = Cz + \\frac{Bz - Az}{${k}}
+        \\]
+        Vậy, tọa độ điểm $D$ là $D(${Dx.toFixed(3)}; ${Dy.toFixed(3)}; ${Dz.toFixed(3)})$.\\\\
+        Độ dài đoạn $OD$ được tính bằng công thức:
+        \\[
+            OD = \\sqrt{Dx^2 + Dy^2 + Dz^2} = \\sqrt{${Dx.toFixed(3)}^2 + ${Dy.toFixed(3)}^2 + ${Dz.toFixed(3)}^2} = ${OD_length_formatted}
+        \\]
+    `;
+
+    // Định dạng đầu ra LaTeX hoàn chỉnh
+    const latexOutput = `
+    \\begin{ex}
+        ${problemStatement.trim()}
+        \\shortans{$${OD_length_formatted}$}
+        \\loigiai{
+            ${solution.trim()}
+        }
+    \\end{ex}
+    `;
+
+    return latexOutput;
+}
+function tinh_toado_Dthoa_S_ACB_kS_ACD(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, k) {
+    // Kiểm tra nếu k bằng 0 để tránh chia cho 0
+    if (k === 0) {
+        return "Hệ số tỉ lệ k không được bằng 0.";
+    }
+
+    // Tính tọa độ điểm D dựa trên điều kiện AB = k CD
+    const Dx = Cx + (Bx - Ax) / k;
+    const Dy = Cy + (By - Ay) / k;
+    const Dz = Cz + (Bz - Az) / k;
+
+    // Tính độ dài đoạn OD
+    const OD_length = Math.sqrt((Dx * Dx) + (Dy * Dy) + (Dz * Dz));
+    const OD_length_formatted = formatNumber(OD_length);
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Trong không gian $Oxyz$ cho hình thang $ABDC$ có $AB\\parallel CD$ biết $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. Biết $S_{\\triangle ACB} = ${k} S_{\\triangle ACD}$. Tính độ dài đoạn $OD$, kết quả làm tròn đến hàng phần mười.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `${OD_length_formatted}`;
+
+    // Tạo nội dung lời giải chi tiết
+    const solution = `
+        Do $S_{\\triangle ACB} = ${k} S_{\\triangle ACD}$ nên ta có điều kiện $\\vec{AB} = ${k} \\vec{CD}$.\\\\
+        Ta có:
+        \\[
+            \\vec{AB} = (Bx - Ax, By - Ay, Bz - Az)
+        \\]
+        \\[
+            \\vec{CD} = (Dx - Cx, Dy - Cy, Dz - Cz)
+        \\]
+        Theo điều kiện trên:
+        \\[
+            (Bx - Ax, By - Ay, Bz - Az) = k (Dx - Cx, Dy - Cy, Dz - Cz)
+        \\]
+        Điều này cho ta ba phương trình:
+        \\[
+            Bx - Ax = k (Dx - Cx) \quad (1) \\\\
+            By - Ay = k (Dy - Cy) \quad (2) \\\\
+            Bz - Az = k (Dz - Cz) \quad (3)
+        \\]
+        Giải các phương trình trên, ta có:
+        \\[
+            Dx = Cx + \\dfrac{Bx - Ax}{k} \\\\
+            Dy = Cy + \\dfrac{By - Ay}{k} \\\\
+            Dz = Cz + \\dfrac{Bz - Az}{k}
+        \\]
+        Vậy, tọa độ điểm $D$ là $D(${Dx.toFixed(3)}; ${Dy.toFixed(3)}; ${Dz.toFixed(3)})$.\\\\
+        Độ dài đoạn $OD$ được tính bằng công thức:
+        \\[
+            OD = \\sqrt{Dx^2 + Dy^2 + Dz^2} = \\sqrt{${Dx.toFixed(3)}^2 + ${Dy.toFixed(3)}^2 + ${Dz.toFixed(3)}^2} = ${OD_length_formatted}
+        \\]
+    `;
+
+    // Định dạng đầu ra LaTeX hoàn chỉnh
+    const latexOutput = `
+    \\begin{ex}
+        ${problemStatement.trim()}
+        \\shortans{$${OD_length_formatted}$}
+        \\loigiai{
+            ${solution.trim()}
+        }
+    \\end{ex}
+    `;
+
+    return latexOutput;
+}
 function phan_tich_vector(dx, dy, dz, ax, ay, az, bx, by, bz, cx, cy, cz) {
-    // Solve the system of equations using matrix algebra
+    // Giải hệ phương trình bằng đại số ma trận
     const A = [
         [ax, bx, cx],
         [ay, by, cy],
@@ -218,11 +522,14 @@ function phan_tich_vector(dx, dy, dz, ax, ay, az, bx, by, bz, cx, cy, cz) {
     ];
     const D = [dx, dy, dz];
 
-    // Solve the linear system
+    // Giải hệ tuyến tính
     const coefficients = math.lusolve(A, D);
-    const [x, y, z] = coefficients.map(coef => coef[0]);
+    const [m, n, p] = coefficients.map(coef => coef[0]);
 
-    // Helper function to format fractions for LaTeX
+    // Tính tổng m + n + p và làm tròn đến 1 chữ số thập phân
+    const sum_mnp = parseFloat((m + n + p).toFixed(1));
+
+    // Hàm phụ để định dạng phân số trong LaTeX
     function formatFraction(value) {
         const fraction = math.fraction(value);
         if (fraction.d === 1) {
@@ -232,39 +539,41 @@ function phan_tich_vector(dx, dy, dz, ax, ay, az, bx, by, bz, cx, cy, cz) {
         }
     }
 
-    // Create the problem statement
+    // Tạo đề bài
     const problemStatement = `
-        Phân tích $\\vec{d}=(${dx}; ${dy}; ${dz})$ theo các vecto $\\vec{a}=(${ax}; ${ay}; ${az}), \\vec{b}=(${bx}; ${by}; ${bz}), \\vec{c}=(${cx}; ${cy}; ${cz})$.
+        Cho $\\vec{d}=(${dx}; ${dy}; ${dz})$ và các vecto $\\vec{a}=(${ax}; ${ay}; ${az})$, $\\vec{b}=(${bx}; ${by}; ${bz})$, $\\vec{c}=(${cx}; ${cy}; ${cz})$. Phân tích $\\vec{d}$ theo $\\vec{a}$, $\\vec{b}$, $\\vec{c}$ sao cho $\\vec{d} = m \\vec{a} + n \\vec{b} + p \\vec{c}$. Tính tổng $m + n + p$, kết quả làm tròn một chữ số thập phân.
     `;
 
-    // Create the answer statement
-    const answerStatement = `
-        $\\vec{d} = ${formatFraction(x)} \\vec{a} + ${formatFraction(y)} \\vec{b} + ${formatFraction(z)} \\vec{c}$.
+    // Tạo câu trả lời
+    const answerStatement = `$${sum_mnp}$.
     `;
 
-    // Format the output in the required LaTeX format
+    // Định dạng đầu ra theo LaTeX
     let latexOutput = `
 \\begin{ex}
     ${problemStatement.trim()}
-    \\shortans{${answerStatement.trim()}}
+    \\shortans{${answerStatement}}
     \\loigiai{
         Ta có hệ phương trình: \\\\
-        \\heva{
+        $$\\heva{
         &${ax}x + ${bx}y + ${cx}z = ${dx} \\\\
         &${ay}x + ${by}y + ${cy}z = ${dy} \\\\
-        &${az}x + ${bz}y + ${cz}z = ${dz}}\\\\
+        &${az}x + ${bz}y + ${cz}z = ${dz}}$$
         Giải hệ phương trình này ta được: \\\\
-        $x = ${formatFraction(x)}, y = ${formatFraction(y)}, z = ${formatFraction(z)}$\\\\
-        Vậy $\\vec{d} = ${formatFraction(x)} \\vec{a} + ${formatFraction(y)} \\vec{b} + ${formatFraction(z)} \\vec{c}$.
+        $m = ${formatFraction(m)}, n = ${formatFraction(n)}, p = ${formatFraction(p)}$ \\\\
+        Vậy $\\vec{d} = ${formatFraction(m)} \\vec{a} + ${formatFraction(n)} \\vec{b} + ${formatFraction(p)} \\vec{c}$. \\\\
+        Tổng $m + n + p = ${sum_mnp}$.
     }
 \\end{ex}
     `;
-    
-    // Clean up the LaTeX output
+
+    // Làm sạch đầu ra LaTeX
     latexOutput = latexOutput.replace(/\+\s*-/g, '-').replace(/-\s*-/g, '+').replace(/-\s*\+/g, '-');
     
     return latexOutput;
 }
+
+
 function tinh_xy_ABCthanghang(Ax, Ay, Az, Bx, By, Bz, Cx_expr, Cy_expr, Cz) {
     // Parse expressions for Cx and Cy
     const Cx = math.parse(`x + ${Cx_expr}`).compile();
@@ -287,7 +596,7 @@ function tinh_xy_ABCthanghang(Ax, Ay, Az, Bx, By, Bz, Cx_expr, Cy_expr, Cz) {
 
     // Create the problem statement
     const problemStatement = `
-        Cho ba điểm $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(x + ${Cx_expr}; y + ${Cy_expr}; ${Cz})$ thẳng hàng. Tổng $x + y$ bằng bao nhiêu?
+        Cho ba điểm $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(x + ${Cx_expr}; y + ${Cy_expr}; ${Cz})$ thẳng hàng. Tổng $x + y$ bằng bao nhiêu, kết quả làm tròn đến hàng phần mười?
     `;
 
     // Create the answer statement
@@ -299,13 +608,13 @@ function tinh_xy_ABCthanghang(Ax, Ay, Az, Bx, By, Bz, Cx_expr, Cy_expr, Cz) {
     let latexOutput = `
 \\begin{ex}
     ${problemStatement.trim()}
-    \\shortans{$${sum}$}
+    \\shortans{$${sum.toFixed(1)}$}
     \\loigiai{
         Ta có vector $\\overrightarrow{AB} = (${ABx}; ${ABy}; ${ABz})$ và vector $\\overrightarrow{BC} = (x + ${Cx_expr} - ${Bx}; y + ${Cy_expr} - ${By}; ${Cz} - ${Bz})$.\\\\
         Để các điểm thẳng hàng, tồn tại $k$ sao cho $\\overrightarrow{BC} = k \\cdot \\overrightarrow{AB}$.\\\\
         Từ đó, $k = \\dfrac{${Cz} - ${Bz}}{${ABz}} = ${k}$.\\\\
         Tọa độ $x$ và $y$ của điểm $C$ là $x = k \\cdot ${ABx} + ${Bx} = ${x}$ và $y = k \\cdot ${ABy} + ${By} = ${y}$.\\\\
-        Vậy tổng $x + y$ bằng $${sum}$.
+        Vậy tổng $x + y$ bằng $${sum.toFixed(1)}$.
     }
 \\end{ex}
     `;
@@ -324,29 +633,29 @@ function tinh_M_cachdeu_AB(Ax, Ay, Az, Bx, By, Bz) {
     const a = 2 * (Bx - Ax);
     const b = Ax * Ax + dA2 - Bx * Bx - dB2;
 
-    // Tọa độ Mx
-    const Mx = b / a;
+    // Tính hoành độ của M và làm tròn đến hàng phần mười
+    const Mx = parseFloat((b / a).toFixed(1));
 
     // Tạo nội dung câu hỏi
     const problemStatement = `
-        Cho $A(${Ax}; ${Ay}; ${Az})$ và $B(${Bx}; ${By}; ${Bz})$. Biết $M$ thuộc trục hoành và cách đều $A$ và $B$. Khi đó tọa độ điểm $M$.
+        Cho $A(${Ax}; ${Ay}; ${Az})$ và $B(${Bx}; ${By}; ${Bz})$. Biết $M$ thuộc trục hoành và cách đều $A$ và $B$. Khi đó hoành độ điểm $M$ bằng bao nhiêu, kết quả làm tròn đến hàng phần mười?
     `;
 
     // Tạo nội dung đáp án
     const answerStatement = `
-        Tọa độ điểm $M$ là $(${formatFraction(b, a)}; 0; 0)$.
+        Tọa độ điểm $M$ là $(${Mx}; 0; 0)$.
     `;
 
     // Định dạng đầu ra LaTeX
     let latexOutput = `
 \\begin{ex}
     ${problemStatement.trim()}
-    \\shortans{$${answerStatement.trim()}$}
+    \\shortans{$${Mx}$}
     \\loigiai{
         Ta có khoảng cách từ $M$ đến $A$ và $B$ là bằng nhau, nghĩa là $AM = MB$.\\\\
         Giải phương trình $(Mx - ${Ax})^2 + ${Math.abs(Ay)}^2 + ${Math.abs(Az)}^2 = (Mx - ${Bx})^2 + ${Math.abs(By)}^2 + ${Math.abs(Bz)}^2$, ta có:\\\\
         $2Mx(${Bx} - ${Ax}) = ${Ax * Ax} + ${dA2} - ${Bx * Bx} - ${dB2}$\\\\
-        Tọa độ điểm $M$ là $(${formatFraction(b, a)}; 0; 0)$.
+        Tọa độ điểm $M$ là $(${Mx}; 0; 0)$.
     }
 \\end{ex}
     `;
@@ -356,6 +665,7 @@ function tinh_M_cachdeu_AB(Ax, Ay, Az, Bx, By, Bz) {
 
     return latexOutput;
 }
+
 // Hàm tính toán tọa độ điểm B
 function tinh_toa_do_B(Ax, Ay, Az, Cx, Cy, Cz, Bx_prime, By_prime, Bz_prime, Dx_prime, Dy_prime, Dz_prime) {
     // Tính vector AD'
@@ -400,7 +710,6 @@ function tinh_toa_do_B(Ax, Ay, Az, Cx, Cy, Cz, Bx_prime, By_prime, Bz_prime, Dx_
 
     return latexOutput;
 }
-// Hàm tính toán tọa độ điểm B
 function tinh_B_trongHHCN(Ax, Ay, Az, Cx, Cy, Cz, Bx_prime, By_prime, Bz_prime, Dx_prime, Dy_prime, Dz_prime) {
     // Tính trung điểm I của A và C
     const Ix = (Ax + Cx) / 2;
@@ -422,60 +731,77 @@ function tinh_B_trongHHCN(Ax, Ay, Az, Cx, Cy, Cz, Bx_prime, By_prime, Bz_prime, 
     const By = By_prime + JI_y;
     const Bz = Bz_prime + JI_z;
 
+    // Tính độ dài đoạn OB và làm tròn đến hàng phần mười
+    const OB_length = parseFloat(Math.sqrt(Bx ** 2 + By ** 2 + Bz ** 2).toFixed(1));
+
     // Tạo nội dung câu hỏi
     const problemStatement = `
-        Cho hình hộp $ABCD.A'B'C'D'$ biết $A(${Ax}; ${Ay}; ${Az})$, $C(${Cx}; ${Cy}; ${Cz})$, $B'(${Bx_prime}; ${By_prime}; ${Bz_prime})$, $D'(${Dx_prime}; ${Dy_prime}; ${Dz_prime})$. Khi đó tọa độ điểm $B$.
+        Cho hình hộp $ABCD.A'B'C'D'$ biết $A(${Ax}; ${Ay}; ${Az})$, $C(${Cx}; ${Cy}; ${Cz})$, $B'(${Bx_prime}; ${By_prime}; ${Bz_prime})$, $D'(${Dx_prime}; ${Dy_prime}; ${Dz_prime})$. 
+        Tính độ dài đoạn $OB$, kết quả làm tròn đến hàng phần mười.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `$${OB_length}$`;
+
+    // Định dạng đầu ra LaTeX với lời giải chi tiết
+    let latexOutput = `
+\\begin{ex}
+${problemStatement.trim()}
+\\shortans{${answerStatement.trim()}}
+\\loigiai{
+    Đầu tiên, ta tính tọa độ trung điểm $I$ của đoạn $AC$ như sau: \\\\
+    $I \\left( \\dfrac{${Ax} + ${Cx}}{2}; \\dfrac{${Ay} + ${Cy}}{2}; \\dfrac{${Az} + ${Cz}}{2} \\right) = I(${Ix.toFixed(1)}; ${Iy.toFixed(1)}; ${Iz.toFixed(1)})$. \\\\    Tiếp theo, ta tính tọa độ trung điểm $J$ của đoạn $B'D'$ như sau: \\\\
+    $J \\left( \\dfrac{${Bx_prime} + ${Dx_prime}}{2}; \\dfrac{${By_prime} + ${Dy_prime}}{2}; \\dfrac{${Bz_prime} + ${Dz_prime}}{2} \\right) = J(${Jx.toFixed(1)}; ${Jy.toFixed(1)}; ${Jz.toFixed(1)})$. \\\\
+    Từ đó, ta có vector $\\overrightarrow{JI}$ bằng: \\\\
+    $\\overrightarrow{JI} = I - J = (${Ix.toFixed(1)} - ${Jx.toFixed(1)}; ${Iy.toFixed(1)} - ${Jy.toFixed(1)}; ${Iz.toFixed(1)} - ${Jz.toFixed(1)}) = (${JI_x.toFixed(1)}; ${JI_y.toFixed(1)}; ${JI_z.toFixed(1)})$. \\\\    Suy ra tọa độ điểm $B$ là: \\\\
+    $B = B' + \\overrightarrow{JI} = (${Bx_prime} + ${JI_x.toFixed(1)}; ${By_prime} + ${JI_y.toFixed(1)}; ${Bz_prime} + ${JI_z.toFixed(1)}) = (${Bx.toFixed(1)}; ${By.toFixed(1)}; ${Bz.toFixed(1)})$. \\\\
+    Cuối cùng, độ dài đoạn $OB$ được tính bằng công thức: \\\\
+    $OB = \\sqrt{${Bx.toFixed(1)}^2 + ${By.toFixed(1)}^2 + ${Bz.toFixed(1)}^2} = ${OB_length}$.
+}
+\\end{ex}
+    `;
+
+    // Làm sạch đầu ra LaTeX
+    latexOutput = cleanUpOutput(latexOutput);
+
+    return latexOutput;
+}
+
+function tinh_m_vec_ab_vuong(ax, az, bx, by, bz) {
+    // Tính toán tử và mẫu số của m
+    const numerator = ax * bx + az * bz;
+    const denominator = -by;
+
+    // Tính m dưới dạng phân số
+    const m_fraction = formatFraction(numerator, denominator);
+
+    // Tính m làm tròn đến hàng phần mười
+    const m_decimal = parseFloat((numerator / denominator).toFixed(1));
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Cho hai véctơ $\\vec{a} = (${ax}; m; ${az})$, $\\vec{b} = (${bx}; ${by}; ${bz})$. Để $\\vec{a} \\perp \\vec{b}$ thì giá trị của $m$ bằng bao nhiêu, kết quả làm tròn đến hàng phần mười?
     `;
 
     // Tạo nội dung đáp án
     const answerStatement = `
-        Tọa độ điểm $B$ là $(${formatFraction(Bx, 1)}; ${formatFraction(By, 1)}; ${formatFraction(Bz, 1)})$.
+        Giá trị của $m$ là $${m_fraction}$ (hoặc xấp xỉ $${m_decimal}$).
     `;
 
-    // Định dạng đầu ra LaTeX
+    // Định dạng đầu ra LaTeX với lời giải chi tiết
     let latexOutput = `
 \\begin{ex}
 ${problemStatement.trim()}
-\\shortans{$${answerStatement.trim()}$}
-\\loigiai{
-Ta có trung điểm $I$ của $A$ và $C$ là $I(${formatFraction(Ix, 1)}; ${formatFraction(Iy, 1)}; ${formatFraction(Iz, 1)})$ và trung điểm $J$ của $B'$ và $D'$ là $J(${formatFraction(Jx, 1)}; ${formatFraction(Jy, 1)}; ${formatFraction(Jz, 1)})$.\\\\
-Vector $\\overrightarrow{JI} = (${formatFraction(JI_x, 1)}; ${formatFraction(JI_y, 1)}; ${formatFraction(JI_z, 1)})$.\\\\
-Tọa độ điểm $B = B' + \\overrightarrow{JI} = (${Bx_prime} + ${formatFraction(JI_x, 1)}; ${By_prime} + ${formatFraction(JI_y, 1)}; ${Bz_prime} + ${formatFraction(JI_z, 1)}) = (${formatFraction(Bx, 1)}; ${formatFraction(By, 1)}; ${formatFraction(Bz, 1)})$.
-}
-\\end{ex}
-    `;
-
-    // Làm sạch đầu ra LaTeX
-    latexOutput = cleanUpOutput(latexOutput);
-
-    return latexOutput;
-}
-function tinh_m_vec_ab_vuong(ax, az, bx, by, bz) {
-    // Tính tích vô hướng của hai vector
-    // ax * bx + ay * by + az * bz = 0
-    // Giải phương trình
-    const numerator = ax * bx + az * bz;
-    const denominator = -by;
-    const m = formatFraction(numerator, denominator);
-
-    // Tạo nội dung câu hỏi
-    const problemStatement = `
-        Cho hai vector $\\vec{a} = (${ax}; m; ${az})$, $\\vec{b} = (${bx}; ${by}; ${bz})$. Để $\\vec{a} \\perp \\vec{b}$ thì giá trị của $m$ bằng bao nhiêu?
-    `;
-
-    // Định dạng đầu ra LaTeX
-    let latexOutput = `
-\\begin{ex}
-${problemStatement.trim()}
-\\shortans{$${m}$}
+\\shortans{$${m_decimal}$}
 \\loigiai{
 Để hai vector vuông góc, tích vô hướng của chúng phải bằng $0$.\\\\
 $\\vec{a} \\cdot \\vec{b} = ${ax} \\cdot ${bx} + m \\cdot ${by} + ${az} \\cdot ${bz} = 0$\\\\
-$${ax} \\cdot ${bx} + m \\cdot ${by} + ${az} \\cdot ${bz} = 0$\\\\
+Từ đó, ta có phương trình: \\\\
 $${ax * bx} + m \\cdot (${by}) + ${az * bz} = 0$\\\\
 $${numerator} + m \\cdot (${by}) = 0$\\\\
-$m = \\dfrac{${numerator}}{${denominator}} = ${m}$\\\\
-Vậy giá trị của $m$ là $${m}$.
+Giải phương trình này, ta được:\\\\
+$m = \\dfrac{${numerator}}{${denominator}} = ${m_fraction} \\approx ${m_decimal}$\\\\
+Vậy giá trị của $m$ là $${m_fraction}$ hoặc xấp xỉ $${m_decimal}$.
 }
 \\end{ex}
     `;
@@ -485,6 +811,7 @@ Vậy giá trị của $m$ là $${m}$.
 
     return latexOutput;
 }
+
 // Hàm chuyển đổi góc từ độ sang radian
 function degreesToRadians(degrees) {
     return degrees * (Math.PI / 180);
@@ -548,11 +875,11 @@ function tinh_do_dai_a_tru_b(a_magnitude, b_magnitude, angle_degrees) {
     );
 
     // Làm tròn kết quả đến hai chữ số thập phân
-    const roundedMagnitude = magnitude_a_minus_b.toFixed(2);
+    const roundedMagnitude = magnitude_a_minus_b.toFixed(1);
 
     // Tạo nội dung câu hỏi
     const problemStatement = `
-        Cho $\\widehat(\\vec{a}, \\vec{b}) = ${angle_degrees}^{\\circ}$ và $|\\vec{a}| = ${a_magnitude}; |\\vec{b}| = ${b_magnitude}$. Khi đó $|\\vec{a} - \\vec{b}|$ có giá trị bằng bao nhiêu? (Làm tròn $2$ chữ số thập phân)
+        Cho $\\widehat{(\\vec{a}, \\vec{b})} = ${angle_degrees}^{\\circ}$ và $|\\vec{a}| = ${a_magnitude}; |\\vec{b}| = ${b_magnitude}$. Khi đó $|\\vec{a} - \\vec{b}|$ có giá trị bằng bao nhiêu? (Làm tròn $1$ chữ số thập phân)
     `;
 
     // Tạo nội dung đáp án
@@ -581,35 +908,44 @@ function tinh_do_dai_a_tru_b(a_magnitude, b_magnitude, angle_degrees) {
 
     return latexOutput;
 }
-function tinh_vecB_bang_k_vecA(ax, ay, az, scaleFactor) {
-    // Tính toán các thành phần của vector b
-    const bx = scaleFactor * ax;
-    const by = scaleFactor * ay;
-    const bz = scaleFactor * az;
 
-    // Tính tổng ba tọa độ của vector b
-    const sumOfCoordinates = bx + by + bz;
+function tinh_vecB_bang_k_vecA(ax, ay, az, scaleFactor) {
+    // Tính độ lớn của vector a với các tọa độ được đặt trong dấu ngoặc
+    const magnitudeA = Math.sqrt((ax) ** 2 + (ay) ** 2 + (az) ** 2);
+
+    
+    // Tính k để thỏa mãn |vec b| = scaleFactor
+    const k = scaleFactor / magnitudeA;
+
+    // Tính các thành phần của vector b
+    const bx = k * ax;
+    const by = k * ay;
+    const bz = k * az;
+
+    // Tính tổng ba tọa độ của vector b và chỉ làm tròn kết quả cuối cùng
+    const sumOfCoordinates = parseFloat((bx + by + bz).toFixed(1));
 
     // Tạo nội dung câu hỏi
     const problemStatement = `
-        Cho $\\vec{a} = (${ax}; ${ay}; ${az})$. Biết hai vector $\\vec{a}$ và $\\vec{b}$ cùng hướng và $|\\vec{b}| = ${scaleFactor}|\\vec{a}|$. Khi đó tọa độ vector $\\vec{b}$ là gì và tổng các tọa độ của nó bằng bao nhiêu?
+        Cho $\\vec{a} = (${ax}; ${ay}; ${az})$. Biết hai vector $\\vec{a}$ và $\\vec{b}$ cùng hướng và $|\\vec{b}| = ${scaleFactor}$. Tính tổng các tọa độ của $\\vec{b}$, kết quả làm tròn đến hàng phần mười.
     `;
 
     // Tạo nội dung đáp án
     const answerStatement = `
-        Tọa độ vector $\\vec{b}$ là $(${bx}; ${by}; ${bz})$ và tổng các tọa độ là $${sumOfCoordinates}$.
+        Tọa độ vector $\\vec{b}$ là $(${bx.toFixed(1)}; ${by.toFixed(1)}; ${bz.toFixed(1)})$ và tổng các tọa độ là $${sumOfCoordinates}$.
     `;
 
-    // Định dạng đầu ra LaTeX
+    // Định dạng đầu ra LaTeX với lời giải chi tiết
     let latexOutput = `
 \\begin{ex}
     ${problemStatement.trim()}
     \\shortans{$${sumOfCoordinates}$}
     \\loigiai{
-        Ta có $\\vec{b} = k\\vec{a}$ với $k = ${scaleFactor}$.\\\\
-        $\\vec{b} = ${scaleFactor} \\cdot (${ax}; ${ay}; ${az}) = (${bx}; ${by}; ${bz})$.\\\\
-        Vậy tọa độ vectơ $\\vec{b}$ là $(${bx}; ${by}; ${bz})$.\\\\
-        Tổng các tọa độ của vectơ $\\vec{b}$ là $${bx} + ${by} + ${bz} = ${sumOfCoordinates}$.
+        Để $|\\vec{b}| = ${scaleFactor}$ và $\\vec{b}$ cùng hướng với $\\vec{a}$, ta cần tìm $k$ sao cho $\\vec{b} = k \\vec{a}$ và $|\\vec{b}| = ${scaleFactor}$.\\\\
+        Ta có $|\\vec{a}| = \\sqrt{(${ax})^2 + (${ay})^2 + (${az})^2} = \\sqrt{${(ax * ax) + (ay * ay) + (az * az)}} = ${magnitudeA.toFixed(3)}$.\\\\
+        Do đó, $k = \\dfrac{${scaleFactor}}{|\\vec{a}|} = \\dfrac{${scaleFactor}}{${magnitudeA.toFixed(3)}} = ${k.toFixed(3)}$.\\\\
+        Suy ra $\\vec{b} = k \\cdot \\vec{a} = ${k.toFixed(3)} \\cdot (${ax}; ${ay}; ${az}) = (${bx.toFixed(3)}; ${by.toFixed(3)}; ${bz.toFixed(3)})$.\\\\
+        Tổng các tọa độ của $\\vec{b}$ là $${bx.toFixed(3)} + ${by.toFixed(3)} + ${bz.toFixed(3)} = ${sumOfCoordinates}$.
     }
 \\end{ex}
     `;
@@ -619,6 +955,10 @@ function tinh_vecB_bang_k_vecA(ax, ay, az, scaleFactor) {
 
     return latexOutput;
 }
+
+
+
+
 function tinh_vecB_cungphuong_vecA(ax, ay, az, scaleFactor) {
     // Tính toán các thành phần của vector b khi k > 0
     const bx1 = scaleFactor * ax;
@@ -631,12 +971,12 @@ function tinh_vecB_cungphuong_vecA(ax, ay, az, scaleFactor) {
     const bz2 = -scaleFactor * az;
 
     // Tính tổng bình phương của các tọa độ của vector b trong cả hai trường hợp
-    const sumOfSquares1 = bx1 * bx1 + by1 * by1 + bz1 * bz1;
-    const sumOfSquares2 = bx2 * bx2 + by2 * by2 + bz2 * bz2;
+    const sumOfSquares1 = bx1 * bx1 + by1 * by1 ;
+    const sumOfSquares2 = bx2 * bx2 + by2 * by2;
     const kq = sumOfSquares1 +sumOfSquares2
     // Tạo nội dung câu hỏi
     const problemStatement = `
-        Cho $\\vec{a} = (${ax}; ${ay}; ${az})$. Biết hai vector $\\vec{a}$ và $\\vec{b}$ cùng phương và $|\\vec{b}| = ${scaleFactor}|\\vec{a}|$. Khi đó tổng bình phương các tọa độ của vector $\\vec{b}$ bằng bao nhiêu?
+        Cho $\\vec{a} = (${ax}; ${ay}; ${az})$. Biết hai vector $\\vec{a}$ và $\\vec{b}$ cùng phương và $|\\vec{b}| = ${scaleFactor}|\\vec{a}|$. Khi đó tổng bình phương các hoành độ, tung độ của véctơ $\\vec{b}$ bằng bao nhiêu?
     `;
 
     // Tạo nội dung đáp án
@@ -654,16 +994,16 @@ function tinh_vecB_cungphuong_vecA(ax, ay, az, scaleFactor) {
         Ta có $\\vec{b} = k\\vec{a}$ với $k = \\pm ${scaleFactor}$.\\\\
         Trong trường hợp $k > 0$:\\\\
         $\\vec{b} = ${scaleFactor} \\cdot (${ax}; ${ay}; ${az}) = (${bx1}; ${by1}; ${bz1})$.\\\\
-        Tổng bình phương các tọa độ của vector $\\vec{b}$ là $${bx1}^2 + ${by1}^2 + ${bz1}^2 = ${sumOfSquares1}$.\\\\
+        Tổng bình phương các hoàng độ, tung độ của vector $\\vec{b}$ là $${bx1}^2 + ${by1}^2 = ${sumOfSquares1}$.\\\\
         Trong trường hợp $k < 0$:\\\\
         $\\vec{b} = -${scaleFactor} \\cdot (${ax}; ${ay}; ${az}) = (${bx2}; ${by2}; ${bz2})$.\\\\
-        Tổng bình phương các tọa độ của vector $\\vec{b}$ là $${bx2}^2 + ${by2}^2 + ${bz2}^2 = ${sumOfSquares2}$.\\\\
-        Suy ra tổng bình phương các tọa độ của vector $\\vec{b}$ trong từng trường hợp là:\\\\
+        Tổng bình phương các hoàng độ, tung độ của vector $\\vec{b}$ là $${bx2}^2 + ${by2}^2 = ${sumOfSquares2}$.\\\\
+        Suy ra tổng bình phương các hoàng độ, tung độ của vector $\\vec{b}$ trong từng trường hợp là:\\\\
         \\begin{itemize}
             \\item Trường hợp $k > 0$: $${sumOfSquares1}$
             \\item Trường hợp $k < 0$: $${sumOfSquares2}$
         \\end{itemize}
-        Vậy tổng bình phương các tọa độ của vector $\\vec{b}=${kq}$. 
+        Vậy tổng bình phương các hoàng độ, tung độ của vector $\\vec{b}=${kq}$. 
     }
 \\end{ex}
     `;
@@ -697,7 +1037,7 @@ function tinh_vecB_cungphuong_vecA(ax, ay, az, scaleFactor) {
     let mValue = math.evaluate(`${leftSideSimplified} / ${rightSideSimplified} + ${Nya}`);
     // Giải phương trình cho m
     //let mValue = math.evaluate(`${leftSideSimplified} / ${rightSideSimplified} + ${Ny} - ${a}`);
-    mValue = parseFloat(mValue.toFixed(2)); // Làm tròn đến 2 chữ số thập phân
+    mValue = parseFloat(mValue.toFixed(1)); // Làm tròn đến 1 chữ số thập phân
     if (mValue % 1 === 0) { // Nếu là số nguyên, bỏ phần thập phân
         mValue = Math.round(mValue);
     }
@@ -705,7 +1045,7 @@ function tinh_vecB_cungphuong_vecA(ax, ay, az, scaleFactor) {
     // Tạo nội dung câu hỏi
     const problemStatement = `
         Cho ba điểm $M(${Mx}; ${My}; ${Mz})$, $N(${Nx}; ${Ny}; ${Nz})$ và $P(${Px}; m+${a}; ${Pz})$. 
-        Tìm $m$ để tam giác $MNP$ vuông tại $N$, làm tròn $2$ chữ số thập phân (nếu có).
+        Tìm $m$ để tam giác $MNP$ vuông tại $N$, làm tròn $1$ chữ số thập phân (nếu có).
     `;
 
     // Tạo nội dung đáp án
@@ -829,7 +1169,7 @@ function tinhDienTichTamGiac(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
 
     // Tạo nội dung câu hỏi
     const problemStatement = `
-        Cho tam giác $\\triangle ABC$ biết $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. Tính diện tích tam giác $ABC$, làm tròn một chữu số thập phân (nếu có).
+        Cho tam giác $\\triangle ABC$ biết $A(${Ax}; ${Ay}; ${Az})$, $B(${Bx}; ${By}; ${Bz})$, $C(${Cx}; ${Cy}; ${Cz})$. Tính diện tích tam giác $ABC$, làm tròn một chữ số thập phân (nếu có).
     `;
 
     // Tạo nội dung đáp án
@@ -975,7 +1315,7 @@ function tinhDienTichHBH(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
     );
 
     // Tính diện tích tam giác
-    const area = (crossProductLength / 2).toFixed(3); // Làm tròn đến 1 chữ số thập phân
+    const area = (crossProductLength / 2).toFixed(1); // Làm tròn đến 1 chữ số thập phân
     if (area % 1 === 0) { // Nếu là số nguyên, bỏ phần thập phân
         area = Math.round(area);
     }
@@ -1066,7 +1406,7 @@ function tinhTheTichTuDien(Ox, Oy, Oz, Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
     ${problemStatement.trim()}
     \\shortans{$${roundedVolume}$}
     \\loigiai{
-        Ta có các vector $\\overrightarrow{OA} = (${vectorOA[0]}, ${vectorOA[1]}, ${vectorOA[2]})$, $\\overrightarrow{OB} = (${vectorOB[0]}, ${vectorOB[1]}, ${vectorOB[2]})$ và $\\overrightarrow{OC} = (${vectorOC[0]}, ${vectorOC[1]}, ${vectorOC[2]}).\\\\
+        Ta có các vector $\\overrightarrow{OA} = (${vectorOA[0]}, ${vectorOA[1]}, ${vectorOA[2]})$, $\\overrightarrow{OB} = (${vectorOB[0]}, ${vectorOB[1]}, ${vectorOB[2]})$ và $\\overrightarrow{OC} = (${vectorOC[0]}, ${vectorOC[1]}, ${vectorOC[2]})$.\\\\
         Tích có hướng của $\\overrightarrow{OB}$ và $\\overrightarrow{OC}$ là:
         \\[
             \\overrightarrow{OB} \\times \\overrightarrow{OC} = (${crossProductX}, ${crossProductY}, ${crossProductZ})
@@ -1366,7 +1706,13 @@ function tinhChanDuongCao(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz) {
     const Hz = Bz + t * BCz;
 
     // Tính tổng các tọa độ của điểm H
-    const totalH = (Hx + Hy + Hz).toFixed(1);
+    // Tính tổng các tọa độ của điểm H và làm tròn đến 1 chữ số thập phân
+    let totalH = (Hx + Hy + Hz).toFixed(1);
+
+    // Kiểm tra nếu kết quả kết thúc bằng '.0', chuyển thành số nguyên
+    totalH = totalH.endsWith('.0') ? parseInt(totalH) : parseFloat(totalH);
+
+
 
     // Tạo nội dung câu hỏi
     const problemStatement = `
@@ -1688,7 +2034,7 @@ function Tim_M_min(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, k) {
 
     // Tạo nội dung đáp án
     const answerStatement = `
-        Tọa độ điểm $M$ sao cho $k \\cdot AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất là $M(${Mx.toFixed(1)}, ${My.toFixed(1)}, ${Mz.toFixed(1)}).$ 
+        Tọa độ điểm $M$ sao cho $${k} \\cdot AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất là $M(${Mx.toFixed(1)}, ${My.toFixed(1)}, ${Mz.toFixed(1)}).$ 
         Tổng các tọa độ là $${sum_M}$.
     `;
 
@@ -1698,7 +2044,7 @@ function Tim_M_min(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, k) {
 ${problemStatement.trim()}
 \\shortans{$${sum_M}$}
 \\loigiai{
-    Tọa độ điểm $M$ sao cho $k \\cdot AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất là $M(${Mx.toFixed(1)}, ${My.toFixed(1)}, ${Mz.toFixed(1)}).$ 
+    Tọa độ điểm $M$ sao cho $${k} \\cdot AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất là $M(${Mx.toFixed(1)}, ${My.toFixed(1)}, ${Mz.toFixed(1)}).$ 
     Tổng các tọa độ là $${sum_M}$.
 }
 \\end{ex}
@@ -1709,8 +2055,380 @@ ${problemStatement.trim()}
 
     return latexOutput;
 }
+function Tim_M_Ox_min(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, k) {
+    // Tạo các biến cần thiết
+    const A = [
+        [2 * (1 + k + 1), 0, 0],
+        [0, 2 * (1 + k + 1), 0],
+        [0, 0, 2 * (1 + k + 1)]
+    ];
+    const B = [
+        -2 * (Ax + k * Bx + Cx),
+        -2 * (Ay + k * By + Cy),
+        -2 * (Az + k * Bz + Cz)
+    ];
 
+    // Giải hệ phương trình bằng phương pháp Gauss
+    const M = gaussJordanElimination(A, B);
 
+    const Mx = M[0];
+    const My = M[1];
+    const Mz = M[2];
+
+    // Tính tổng các tọa độ của điểm M
+    let sum_M = (M[0]).toFixed(1);
+    if (sum_M % 1 === 0) {
+        sum_M = Math.round(sum_M);
+    }
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Cho các điểm $A(${Ax}, ${Ay}, ${Az})$, $B(${Bx}, ${By}, ${Bz})$, $C(${Cx}, ${Cy}, ${Cz})$. 
+        Tìm tọa độ điểm $M$ sao cho $${k}AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất. Tính tổng các tọa độ của $M$, làm tròn một chữ số thập phân.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `
+        Tọa độ điểm $M$ sao cho $${k} \\cdot AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất là $M(${Mx.toFixed(1)}, ${My.toFixed(1)}, ${Mz.toFixed(1)}).$ 
+        Tổng các tọa độ là $${sum_M}$.
+    `;
+
+    // Định dạng đầu ra LaTeX
+    let latexOutput = `
+\\begin{ex}
+${problemStatement.trim()}
+\\shortans{$${sum_M}$}
+\\loigiai{
+    Tọa độ điểm $M$ sao cho $${k} \\cdot AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất là $M(${Mx.toFixed(1)}, ${My.toFixed(1)}, ${Mz.toFixed(1)}).$ 
+    Tổng các tọa độ là $${sum_M}$.
+}
+\\end{ex}
+    `;
+
+    // Làm sạch đầu ra LaTeX
+    latexOutput = cleanUpOutput(latexOutput);
+
+    return latexOutput;
+}
+function Tim_M_Oxy_min(Ax, Ay, Az, Bx, By, Bz, Cx, Cy, Cz, k) {
+    // Tạo các biến cần thiết
+    const A = [
+        [2 * (1 + k + 1), 0, 0],
+        [0, 2 * (1 + k + 1), 0],
+        [0, 0, 2 * (1 + k + 1)]
+    ];
+    const B = [
+        -2 * (Ax + k * Bx + Cx),
+        -2 * (Ay + k * By + Cy),
+        -2 * (Az + k * Bz + Cz)
+    ];
+
+    // Giải hệ phương trình bằng phương pháp Gauss
+    const M = gaussJordanElimination(A, B);
+
+    const Mx = M[0];
+    const My = M[1];
+    const Mz = M[2];
+
+    // Tính tổng các tọa độ của điểm M
+    let sum_M = (M[0]+M[1]).toFixed(1);
+    if (sum_M % 1 === 0) {
+        sum_M = Math.round(sum_M);
+    }
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Cho các điểm $A(${Ax}, ${Ay}, ${Az})$, $B(${Bx}, ${By}, ${Bz})$, $C(${Cx}, ${Cy}, ${Cz})$. 
+        Tìm tọa độ điểm $M$ sao cho $${k}AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất. Tính tổng các tọa độ của $M$, làm tròn một chữ số thập phân.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `
+        Tọa độ điểm $M$ sao cho $${k} \\cdot AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất là $M(${Mx.toFixed(1)}, ${My.toFixed(1)}, ${Mz.toFixed(1)}).$ 
+        Tổng các tọa độ là $${sum_M}$.
+    `;
+
+    // Định dạng đầu ra LaTeX
+    let latexOutput = `
+\\begin{ex}
+${problemStatement.trim()}
+\\shortans{$${sum_M}$}
+\\loigiai{
+    Tọa độ điểm $M$ sao cho $${k} \\cdot AM^2 + BM^2 + MC^2$ đạt giá trị nhỏ nhất là $M(${Mx.toFixed(1)}, ${My.toFixed(1)}, ${Mz.toFixed(1)}).$ 
+    Tổng các tọa độ là $${sum_M}$.
+}
+\\end{ex}
+    `;
+
+    // Làm sạch đầu ra LaTeX
+    latexOutput = cleanUpOutput(latexOutput);
+
+    return latexOutput;
+}
+function Tim_M_sumMA_MB_min(Ax, Ay, Az, Bx, By, Bz) {
+    // Kiểm tra xem Z_A và Z_B có dấu ngược nhau không
+    if ((Az > 0 && Bz > 0) || (Az < 0 && Bz < 0)) {
+        throw new Error("Z_A và Z_B phải có dấu ngược nhau để đảm bảo A và B nằm ở hai phía đối diện của mặt phẳng Oxy.");
+    }
+
+    // Tính hệ số t để tìm điểm M trên đoạn thẳng AB
+    const numerator = Az;
+    const denominator = Az - Bz; // Vì Az và Bz trái dấu, denominator không bằng 0
+
+    const t = numerator / denominator;
+
+    // Tính tọa độ của M
+    const Mx = Ax + t * (Bx - Ax);
+    const My = Ay + t * (By - Ay);
+    const Mz = 0; // M nằm trên Oxy
+
+    // Tính tổng các tọa độ của M và làm tròn 1 chữ số thập phân
+    let sum_M = (Mx + My).toFixed(1);
+    if (sum_M % 1 === 0) {
+        sum_M = Math.round(sum_M);
+    }
+
+    // Làm tròn tọa độ M đến một chữ số thập phân
+    const Mx_rounded = Mx.toFixed(3);
+    const My_rounded = My.toFixed(3);
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Cho các điểm $A(${Ax}, ${Ay}, ${Az})$, $B(${Bx}, ${By}, ${Bz})$. Tìm tọa độ điểm $M$ trên mặt phẳng $Oxy$ sao cho $MA + MB$ đạt giá trị nhỏ nhất. 
+        Tính tổng các tọa độ của $M$, làm tròn một chữ số thập phân.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `
+        Tọa độ điểm $M$ sao cho $MA + MB$ đạt giá trị nhỏ nhất là $M(${Mx_rounded}, ${My_rounded}, ${Mz})$. 
+        Tổng các tọa độ là $${sum_M}$.
+    `;
+
+    // Định dạng đầu ra LaTeX
+    let latexOutput = `
+\\begin{ex}
+${problemStatement.trim()}
+\\shortans{$${sum_M}$}
+\\loigiai{
+    Tọa độ điểm $M$ sao cho $MA + MB$ đạt giá trị nhỏ nhất là $M(${Mx_rounded}, ${My_rounded}, ${Mz})$. 
+    Tổng các tọa độ là $${sum_M}$.
+}
+\\end{ex}
+    `;
+
+    // Loại bỏ khoảng trắng thừa ở đầu và cuối
+    latexOutput = latexOutput.trim();
+
+    return latexOutput;
+}
+
+function Tim_M_min_sumMA_MB_CungPhia(Ax, Ay, Az, Bx, By, Bz) {
+    // Kiểm tra xem Z_A và Z_B có cùng dấu không
+    if (!((Az > 0 && Bz > 0) || (Az < 0 && Bz < 0))) {
+        throw new Error("Z_A và Z_B phải có cùng dấu để đảm bảo A và B nằm ở cùng phía của mặt phẳng Oxy.");
+    }
+
+    // Kiểm tra trường hợp A và B trùng nhau
+    if (Ax === Bx && Ay === By && Az === Bz) {
+        throw new Error("Điểm A và B trùng nhau, không thể xác định điểm M.");
+    }
+
+    // Phản xạ điểm B qua mặt phẳng Oxy để có điểm B'
+    const B_prime_z = -Bz;
+
+    // Tính hệ số t để tìm điểm M trên đoạn thẳng AB'
+    const numerator = Az;
+    const denominator = Az - B_prime_z; // = Az - Bz
+
+    // Do Z_A và Z_B cùng dấu, denominator không được bằng 0 trừ khi Az = Bz và z1 = -z2 (trường hợp đã kiểm tra)
+    if (denominator === 0) {
+        throw new Error("Az + (-Bz) = 0, không thể tính được điểm M.");
+    }
+
+    const t = numerator / denominator;
+
+    // Tính tọa độ của M
+    const Mx = Ax + t * (Bx - Ax);
+    const My = Ay + t * (By - Ay);
+    const Mz = 0; // M nằm trên Oxy
+
+    // Tính tổng các tọa độ của M và làm tròn 1 chữ số thập phân
+    let sum_M = (Mx + My).toFixed(1);
+    if (sum_M % 1 === 0) {
+        sum_M = Math.round(sum_M);
+    }
+
+    // Làm tròn tọa độ M đến một chữ số thập phân
+    const Mx_rounded = Mx.toFixed(3);
+    const My_rounded = My.toFixed(3);
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Cho các điểm $A(${Ax}, ${Ay}, ${Az})$, $B(${Bx}, ${By}, ${Bz})$. Tìm tọa độ điểm $M$ trên mặt phẳng $Oxy$ sao cho $MA + MB$ đạt giá trị nhỏ nhất. 
+        Tính tổng các tọa độ của $M$, làm tròn một chữ số thập phân.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `
+        Tọa độ điểm $M$ sao cho $MA + MB$ đạt giá trị nhỏ nhất là $M(${Mx_rounded}, ${My_rounded}, ${Mz})$. 
+        Tổng các tọa độ là $${sum_M}$.
+    `;
+
+    // Định dạng đầu ra LaTeX
+    let latexOutput = `
+\\begin{ex}
+${problemStatement.trim()}
+\\shortans{$${sum_M}$}
+\\loigiai{
+    Tọa độ điểm $M$ sao cho $MA + MB$ đạt giá trị nhỏ nhất là $M(${Mx_rounded}, ${My_rounded}, ${Mz})$. 
+    Tổng các tọa độ là $${sum_M}$.
+}
+\\end{ex}
+    `;
+
+    // Loại bỏ khoảng trắng thừa ở đầu và cuối
+    latexOutput = latexOutput.trim();
+
+    return latexOutput;
+}
+function Tim_M_min_minusMA_MB_CungPhia(Ax, Ay, Az, Bx, By, Bz) {
+    // Kiểm tra xem Z_A và Z_B có cùng dấu không
+    if (!((Az > 0 && Bz > 0) || (Az < 0 && Bz < 0))) {
+        throw new Error("Z_A và Z_B phải có cùng dấu để đảm bảo A và B nằm ở cùng phía của mặt phẳng Oxy.");
+    }
+
+    // Kiểm tra trường hợp A và B trùng nhau
+    if (Ax === Bx && Ay === By && Az === Bz) {
+        throw new Error("Điểm A và B trùng nhau, không thể xác định điểm M.");
+    }
+
+    // ko Phản xạ điểm B qua mặt phẳng Oxy để có điểm B'
+    const B_prime_z = Bz;
+
+    // Tính hệ số t để tìm điểm M trên đoạn thẳng AB'
+    const numerator = Az;
+    const denominator = Az - B_prime_z; // = Az - Bz
+
+    // Do Z_A và Z_B cùng dấu, denominator không được bằng 0 trừ khi Az = Bz và z1 = -z2 (trường hợp đã kiểm tra)
+    if (denominator === 0) {
+        throw new Error("Az + (-Bz) = 0, không thể tính được điểm M.");
+    }
+
+    const t = numerator / denominator;
+
+    // Tính tọa độ của M
+    const Mx = Ax + t * (Bx - Ax);
+    const My = Ay + t * (By - Ay);
+    const Mz = 0; // M nằm trên Oxy
+
+    // Tính tổng các tọa độ của M và làm tròn 1 chữ số thập phân
+    let sum_M = (Mx + My).toFixed(1);
+    if (sum_M % 1 === 0) {
+        sum_M = Math.round(sum_M);
+    }
+
+    // Làm tròn tọa độ M đến một chữ số thập phân
+    const Mx_rounded = Mx.toFixed(3);
+    const My_rounded = My.toFixed(3);
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Cho các điểm $A(${Ax}, ${Ay}, ${Az})$, $B(${Bx}, ${By}, ${Bz})$. Tìm tọa độ điểm $M$ trên mặt phẳng $Oxy$ sao cho $|MA - MB|$ đạt giá trị lớn nhất. 
+        Tính tổng các tọa độ của $M$, làm tròn một chữ số thập phân.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `
+        Tọa độ điểm $M$ sao cho $MA + MB$ đạt giá trị nhỏ nhất là $M(${Mx_rounded}, ${My_rounded}, ${Mz})$. 
+        Tổng các tọa độ là $${sum_M}$.
+    `;
+
+    // Định dạng đầu ra LaTeX
+    let latexOutput = `
+\\begin{ex}
+${problemStatement.trim()}
+\\shortans{$${sum_M}$}
+\\loigiai{
+    Tọa độ điểm $M$ sao cho $MA + MB$ đạt giá trị nhỏ nhất là $M(${Mx_rounded}, ${My_rounded}, ${Mz})$. 
+    Tổng các tọa độ là $${sum_M}$.
+}
+\\end{ex}
+    `;
+
+    // Loại bỏ khoảng trắng thừa ở đầu và cuối
+    latexOutput = latexOutput.trim();
+
+    return latexOutput;
+}
+function Tim_M_min_minusMA_MB_KhacPhia(Ax, Ay, Az, Bx, By, Bz) {
+    // Kiểm tra xem Z_A và Z_B có cùng dấu không
+    if (!((Az > 0 && Bz > 0) || (Az < 0 && Bz < 0))) {
+        throw new Error("Z_A và Z_B phải có cùng dấu để đảm bảo A và B nằm ở cùng phía của mặt phẳng Oxy.");
+    }
+
+    // Kiểm tra trường hợp A và B trùng nhau
+    if (Ax === Bx && Ay === By && Az === Bz) {
+        throw new Error("Điểm A và B trùng nhau, không thể xác định điểm M.");
+    }
+
+    // Phản xạ điểm B qua mặt phẳng Oxy để có điểm B'
+    const B_prime_z = -Bz;
+
+    // Tính hệ số t để tìm điểm M trên đoạn thẳng AB'
+    const numerator = Az;
+    const denominator = Az - B_prime_z; // = Az - Bz
+
+    // Do Z_A và Z_B cùng dấu, denominator không được bằng 0 trừ khi Az = Bz và z1 = -z2 (trường hợp đã kiểm tra)
+    if (denominator === 0) {
+        throw new Error("Az + (-Bz) = 0, không thể tính được điểm M.");
+    }
+
+    const t = numerator / denominator;
+
+    // Tính tọa độ của M
+    const Mx = Ax + t * (Bx - Ax);
+    const My = Ay + t * (By - Ay);
+    const Mz = 0; // M nằm trên Oxy
+
+    // Tính tổng các tọa độ của M và làm tròn 1 chữ số thập phân
+    let sum_M = (Mx + My).toFixed(1);
+    if (sum_M % 1 === 0) {
+        sum_M = Math.round(sum_M);
+    }
+
+    // Làm tròn tọa độ M đến một chữ số thập phân
+    const Mx_rounded = Mx.toFixed(3);
+    const My_rounded = My.toFixed(3);
+
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Cho các điểm $A(${Ax}, ${Ay}, ${Az})$, $B(${Bx}, ${By}, ${Bz})$. Tìm tọa độ điểm $M$ trên mặt phẳng $Oxy$ sao cho $|MA - MB|$ đạt giá trị lớn nhất. 
+        Tính tổng các tọa độ của $M$, làm tròn một chữ số thập phân.
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `
+        Tọa độ điểm $M$ sao cho $MA + MB$ đạt giá trị nhỏ nhất là $M(${Mx_rounded}, ${My_rounded}, ${Mz})$. 
+        Tổng các tọa độ là $${sum_M}$.
+    `;
+
+    // Định dạng đầu ra LaTeX
+    let latexOutput = `
+\\begin{ex}
+${problemStatement.trim()}
+\\shortans{$${sum_M}$}
+\\loigiai{
+    Tọa độ điểm $M$ sao cho $MA + MB$ đạt giá trị nhỏ nhất là $M(${Mx_rounded}, ${My_rounded}, ${Mz})$. 
+    Tổng các tọa độ là $${sum_M}$.
+}
+\\end{ex}
+    `;
+
+    // Loại bỏ khoảng trắng thừa ở đầu và cuối
+    latexOutput = latexOutput.trim();
+
+    return latexOutput;
+}
 ///PTMP
 // Hàm tính diện tích tam giác ABC
 function mp_diem_vtpt(Ax, Ay, Az, nx, ny, nz) {
@@ -5956,7 +6674,7 @@ Tỷ lệ nhà đầu tư chọn cổ phiếu là $${(stockSelectionRate * 100).
 
     return question;
 }
-function xs_chon_keo(e) {
+function xs_chon_keoG(e) {
     // Hàm tạo số ngẫu nhiên trong khoảng nhất định
     function generateRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -6002,7 +6720,506 @@ Xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên 
 
     return question;
 }
-function xs_chon_keo_no_return(e) {
+function xs_chon_keo(e) {
+    // Hàm tạo số ngẫu nhiên trong khoảng nhất định
+    function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Hàm tính xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam
+    function calculateProbability(totalStrawberry, totalOrange) {
+        const totalCandies = totalStrawberry + totalOrange;
+        const P_S = totalStrawberry / totalCandies;
+        return P_S.toFixed(4);
+    }
+
+    // Tổng số kẹo dâu và kẹo cam ngẫu nhiên trong khoảng 5 đến 20
+    const totalStrawberry = generateRandomNumber(5, 20);
+    const totalOrange = generateRandomNumber(5, 20);
+
+    // Tính xác suất
+    const P_S2 = calculateProbability(totalStrawberry, totalOrange);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX với giải chi tiết
+    let question = `
+\\begin{ex}
+Một hộp có \(${totalStrawberry}\) viên kẹo dâu và \(${totalOrange}\) viên kẹo cam. Một viên kẹo được chọn ngẫu nhiên và được trả lại hộp, sau đó một viên kẹo khác được chọn. Tính xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam.
+\\shortans{\(${(P_S2 * 100).toFixed(1)}\%\)}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item \(O_1\) là sự kiện viên kẹo đầu tiên là kẹo cam.
+    \\item \(S_2\) là sự kiện viên kẹo thứ hai là kẹo dâu.
+\\end{itemize}
+Chúng ta cần tìm xác suất có điều kiện \(P(S_2 \mid O_1)\), tức là xác suất viên kẹo thứ hai là kẹo dâu khi đã biết viên kẹo đầu tiên là kẹo cam.\\
+\\textbf{Bước 1: Xác định tổng số kẹo trong hộp}\\\\
+Số viên kẹo dâu: \(${totalStrawberry}\) viên.\\\\
+Số viên kẹo cam: \(${totalOrange}\) viên.\\\\
+Tổng số kẹo: \(${totalStrawberry + totalOrange}\) viên.\\\\
+\\textbf{Bước 2: Tính xác suất của sự kiện \(O_1\)}\\\\
+Vì viên kẹo được chọn đầu tiên là kẹo cam, xác suất xảy ra sự kiện \(O_1\) là:
+\[
+P(O_1) = \frac{${totalOrange}}{${totalStrawberry + totalOrange}} = ${(totalOrange / (totalStrawberry + totalOrange)).toFixed(4)} = ${(totalOrange / (totalStrawberry + totalOrange) * 100).toFixed(2)}\%
+\]
+\\textbf{Bước 3: Tính xác suất của sự kiện \(S_2\)}\\\\
+Sau khi viên kẹo đầu tiên được chọn và trả lại vào hộp, tổng số kẹo không thay đổi. Do đó, xác suất chọn viên kẹo dâu trong lần chọn thứ hai là:
+\[
+P(S_2) = \frac{${totalStrawberry}}{${totalStrawberry + totalOrange}} = ${(totalStrawberry / (totalStrawberry + totalOrange)).toFixed(4)} = ${(totalStrawberry / (totalStrawberry + totalOrange) * 100).toFixed(2)}\%
+\]
+\\textbf{Bước 4: Tính xác suất có điều kiện \(P(S_2 \mid O_1)\)}\\\\
+Trong trường hợp này, việc chọn viên kẹo đầu tiên là kẹo cam và sau đó trả lại không ảnh hưởng đến xác suất chọn viên kẹo dâu ở lần chọn thứ hai. Vì vậy, xác suất có điều kiện \(P(S_2 \mid O_1)\) bằng với \(P(S_2)\).
+\[
+P(S_2 \mid O_1) = P(S_2) = 0.6 = 60\%
+\]
+\\textbf{Kết luận}\\\\
+Xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam là \(${(P_S2 * 100).toFixed(1)}\%\).
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+function xs_chon_keo_no_returnNangCap(e) {
+    // Hàm tạo số ngẫu nhiên trong khoảng nhất định
+    function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Hàm tạo một số nguyên ngẫu nhiên từ 1 đến n
+    function chooseRandomType() {
+        // Có 6 loại câu hỏi
+        return generateRandomNumber(1, 6);
+    }
+
+    // Hàm tính xác suất với hoàn lại khi chọn nhiều viên
+    function calculateProbabilityWithReplacement(totalStrawberry, totalOrange, pickCount, desiredStrawberry) {
+        const totalCandies = totalStrawberry + totalOrange;
+        // Xác suất chọn một viên kẹo dâu
+        const P_S = totalStrawberry / totalCandies;
+        // Sử dụng công thức xác suất lũy thừa cho các sự kiện độc lập
+        const P_total = Math.pow(P_S, desiredStrawberry);
+        return P_total.toFixed(4);
+    }
+
+    // Hàm tính xác suất không hoàn lại khi chọn nhiều viên
+    function calculateProbabilityWithoutReplacement(totalStrawberry, totalOrange, pickCount, desiredStrawberry) {
+        const totalCandies = totalStrawberry + totalOrange;
+        if (desiredStrawberry > totalStrawberry || pickCount > totalCandies) {
+            return 0;
+        }
+        // Sử dụng công thức xác suất tổ hợp
+        const combination = (n, k) => {
+            if (k > n) return 0;
+            let res = 1;
+            for (let i = 1; i <= k; i++) {
+                res *= (n - i + 1) / i;
+            }
+            return res;
+        };
+        const P_total = combination(totalStrawberry, desiredStrawberry) * combination(totalOrange, pickCount - desiredStrawberry) / combination(totalCandies, pickCount);
+        return P_total.toFixed(4);
+    }
+
+    // Tổng số kẹo dâu và kẹo cam ngẫu nhiên trong khoảng 5 đến 20
+    const totalStrawberry = generateRandomNumber(5, 20);
+    const totalOrange = generateRandomNumber(5, 20);
+    const totalCandies = totalStrawberry + totalOrange;
+
+    // Chọn loại câu hỏi ngẫu nhiên
+    const questionType = chooseRandomType();
+
+    let question = '';
+    let shortAns = '';
+    let loigiai = '';
+
+    switch (questionType) {
+        case 1:
+            // Loại 1: Chọn một viên kẹo, hoàn lại
+            {
+                // Tính xác suất viên kẹo là dâu
+                const P_S = (totalStrawberry / totalCandies).toFixed(4);
+                shortAns = `\\(${(P_S * 100).toFixed(1)}\\%\\)`;
+
+                loigiai = `
+                Gọi:
+                \\begin{itemize}
+                    \\item \\(S\\) là sự kiện viên kẹo được chọn là kẹo dâu.
+                \\end{itemize}
+
+                Chúng ta cần tính xác suất \\(P(S)\\).
+
+                \\textbf{Bước 1: Xác định tổng số kẹo trong hộp}
+
+                Số viên kẹo dâu: \\(${totalStrawberry}\\) viên.\\\\
+                Số viên kẹo cam: \\(${totalOrange}\\) viên.\\\\
+                Tổng số kẹo: \\(${totalCandies}\\) viên.
+
+                \\textbf{Bước 2: Tính xác suất sự kiện \\(S\\)}
+
+                Vì viên kẹo được chọn ngẫu nhiên và được hoàn lại, xác suất chọn viên kẹo dâu là:
+                \[
+                P(S) = \\frac{${totalStrawberry}}{${totalCandies}} = ${(totalStrawberry / totalCandies).toFixed(4)} = ${( (totalStrawberry / totalCandies) * 100 ).toFixed(2)}\\%
+                \]
+
+                \\textbf{Kết luận}
+
+                Xác suất viên kẹo được chọn là kẹo dâu là \\(${(P_S * 100).toFixed(1)}\\%\\).
+                `;
+                
+                question = `
+    \\begin{ex}
+    Một hộp có \\(${totalStrawberry}\\) viên kẹo dâu và \\(${totalOrange}\\) viên kẹo cam. Một viên kẹo được chọn ngẫu nhiên và được hoàn lại vào hộp. Tính xác suất viên kẹo được chọn là kẹo dâu.
+    
+    \\shortans{${shortAns}}
+    
+    \\loigiai{
+    ${loigiai}
+    }
+    \\end{ex}
+                `;
+            }
+            break;
+        case 2:
+            // Loại 2: Chọn một viên kẹo, không hoàn lại
+            {
+                // Tính xác suất viên kẹo là dâu
+                const P_S = (totalStrawberry / totalCandies).toFixed(4);
+                shortAns = `\\(${(P_S * 100).toFixed(1)}\\%\\)`;
+
+                loigiai = `
+                Gọi:
+                \\begin{itemize}
+                    \\item \\(S\\) là sự kiện viên kẹo được chọn là kẹo dâu.
+                \\end{itemize}
+
+                Chúng ta cần tính xác suất \\(P(S)\\).
+
+                \\textbf{Bước 1: Xác định tổng số kẹo trong hộp}
+
+                Số viên kẹo dâu: \\(${totalStrawberry}\\) viên.\\\\
+                Số viên kẹo cam: \\(${totalOrange}\\) viên.\\\\
+                Tổng số kẹo: \\(${totalCandies}\\) viên.
+
+                \\textbf{Bước 2: Tính xác suất sự kiện \\(S\\)}
+
+                Vì viên kẹo được chọn ngẫu nhiên và không được hoàn lại, xác suất chọn viên kẹo dâu là:
+                \[
+                P(S) = \\frac{${totalStrawberry}}{${totalCandies}} = ${(totalStrawberry / totalCandies).toFixed(4)} = ${( (totalStrawberry / totalCandies) * 100 ).toFixed(2)}\\%
+                \]
+
+                \\textbf{Kết luận}
+
+                Xác suất viên kẹo được chọn là kẹo dâu là \\(${(P_S * 100).toFixed(1)}\\%\\).
+                `;
+                
+                question = `
+    \\begin{ex}
+    Một hộp có \\(${totalStrawberry}\\) viên kẹo dâu và \\(${totalOrange}\\) viên kẹo cam. Một viên kẹo được chọn ngẫu nhiên và không được hoàn lại vào hộp. Tính xác suất viên kẹo được chọn là kẹo dâu.
+    
+    \\shortans{${shortAns}}
+    
+    \\loigiai{
+    ${loigiai}
+    }
+    \\end{ex}
+                `;
+            }
+            break;
+        case 3:
+            // Loại 3: Chọn nhiều viên kẹo cùng lúc, hoàn lại
+            {
+                // Chọn 2 viên kẹo cùng lúc
+                const pickCount = 2;
+                const desiredStrawberry = 1; // Ví dụ: chọn 1 kẹo dâu và 1 kẹo cam
+
+                const P_total = calculateProbabilityWithReplacement(totalStrawberry, totalOrange, pickCount, desiredStrawberry);
+                shortAns = `\\(${(P_total * 100).toFixed(1)}\\%\\)`;
+
+                loigiai = `
+                Gọi:
+                \\begin{itemize}
+                    \\item \(S_1\) là sự kiện viên kẹo đầu tiên là kẹo dâu.
+                    \\item \(S_2\) là sự kiện viên kẹo thứ hai là kẹo cam.
+                \\end{itemize}
+
+                Chúng ta cần tìm xác suất để trong 2 viên kẹo được chọn, có 1 viên là kẹo dâu và 1 viên là kẹo cam.
+
+                \\textbf{Bước 1: Xác định tổng số kẹo trong hộp}
+
+                Số viên kẹo dâu: \\(${totalStrawberry}\\) viên.\\\\
+                Số viên kẹo cam: \\(${totalOrange}\\) viên.\\\\
+                Tổng số kẹo: \\(${totalCandies}\\) viên.
+
+                \\textbf{Bước 2: Tính xác suất của từng trường hợp}
+
+                Trường hợp 1: Viên đầu tiên là kẹo dâu và viên thứ hai là kẹo cam.
+                \[
+                P(S_1 \, \text{và} \, S_2) = \\frac{${totalStrawberry}}{${totalCandies}} \times \\frac{${totalOrange}}{${totalCandies}} = ${(totalStrawberry / totalCandies).toFixed(4)} \times ${(totalOrange / totalCandies).toFixed(4)} = ${( (totalStrawberry / totalCandies) * (totalOrange / totalCandies) ).toFixed(4)} = ${( ((totalStrawberry / totalCandies) * (totalOrange / totalCandies)) * 100 ).toFixed(2)}\\%
+                \]
+
+                Trường hợp 2: Viên đầu tiên là kẹo cam và viên thứ hai là kẹo dâu.
+                \[
+                P(S_2 \, \text{và} \, S_1) = \\frac{${totalOrange}}{${totalCandies}} \times \\frac{${totalStrawberry}}{${totalCandies}} = ${(totalOrange / totalCandies).toFixed(4)} \times ${(totalStrawberry / totalCandies).toFixed(4)} = ${( (totalOrange / totalCandies) * (totalStrawberry / totalCandies) ).toFixed(4)} = ${( ((totalOrange / totalCandies) * (totalStrawberry / totalCandies)) * 100 ).toFixed(2)}\\%
+                \]
+
+                \\textbf{Bước 3: Tính tổng xác suất cho các trường hợp}
+
+                \[
+                P(\text{1 kẹo dâu và 1 kẹo cam}) = P(S_1 \, \text{và} \, S_2) + P(S_2 \, \text{và} \, S_1) = ${(totalStrawberry / totalCandies * totalOrange / totalCandies).toFixed(4)} + ${(totalOrange / totalCandies * totalStrawberry / totalCandies).toFixed(4)} = ${(2 * (totalStrawberry / totalCandies * totalOrange / totalCandies)).toFixed(4)} = ${(2 * (totalStrawberry / totalCandies * totalOrange / totalCandies) * 100).toFixed(2)}\\%
+                \]
+
+                \\textbf{Kết luận}
+
+                Xác suất để trong 2 viên kẹo được chọn, có 1 viên là kẹo dâu và 1 viên là kẹo cam là \\(${(P_total * 100).toFixed(1)}\\%\\).
+                `;
+                
+                question = `
+    \\begin{ex}
+    Một hộp có \\(${totalStrawberry}\\) viên kẹo dâu và \\(${totalOrange}\\) viên kẹo cam. Hai viên kẹo được chọn ngẫu nhiên cùng lúc và được hoàn lại vào hộp. Tính xác suất trong hai viên kẹo được chọn, có 1 viên là kẹo dâu và 1 viên là kẹo cam.
+    
+    \\shortans{${shortAns}}
+    
+    \\loigiai{
+    ${loigiai}
+    }
+    \\end{ex}
+                `;
+            }
+            break;
+        case 4:
+            // Loại 4: Chọn nhiều viên kẹo cùng lúc, không hoàn lại
+            {
+                // Chọn 2 viên kẹo cùng lúc, không hoàn lại
+                const pickCount = 2;
+                const desiredStrawberry = 1; // Ví dụ: chọn 1 kẹo dâu và 1 kẹo cam
+
+                const P_total = calculateProbabilityWithoutReplacement(totalStrawberry, totalOrange, pickCount, desiredStrawberry);
+                shortAns = `\\(${(P_total * 100).toFixed(1)}\\%\\)`;
+
+                loigiai = `
+                Gọi:
+                \\begin{itemize}
+                    \\item \(S_1\) là sự kiện viên kẹo đầu tiên là kẹo dâu.
+                    \\item \(S_2\) là sự kiện viên kẹo thứ hai là kẹo cam.
+                \\end{itemize}
+
+                Chúng ta cần tìm xác suất để trong 2 viên kẹo được chọn, có 1 viên là kẹo dâu và 1 viên là kẹo cam.
+
+                \\textbf{Bước 1: Xác định tổng số kẹo trong hộp}
+
+                Số viên kẹo dâu: \\(${totalStrawberry}\\) viên.\\\\
+                Số viên kẹo cam: \\(${totalOrange}\\) viên.\\\\
+                Tổng số kẹo: \\(${totalCandies}\\) viên.
+
+                \\textbf{Bước 2: Tính xác suất của từng trường hợp}
+
+                Trường hợp 1: Viên đầu tiên là kẹo dâu và viên thứ hai là kẹo cam.
+                \[
+                P(S_1 \, \text{và} \, S_2) = \\frac{${totalStrawberry}}{${totalCandies}} \times \\frac{${totalOrange}}{${totalCandies - 1}} = ${(totalStrawberry / totalCandies).toFixed(4)} \times ${(totalOrange / (totalCandies - 1)).toFixed(4)} = ${( (totalStrawberry / totalCandies) * (totalOrange / (totalCandies - 1)) ).toFixed(4)} = ${( ((totalStrawberry / totalCandies) * (totalOrange / (totalCandies - 1)))).toFixed(4) * 100 }\\%
+                \]
+
+                Trường hợp 2: Viên đầu tiên là kẹo cam và viên thứ hai là kẹo dâu.
+                \[
+                P(S_2 \, \text{và} \, S_1) = \\frac{${totalOrange}}{${totalCandies}} \times \\frac{${totalStrawberry}}{${totalCandies - 1}} = ${(totalOrange / totalCandies).toFixed(4)} \times ${(totalStrawberry / (totalCandies - 1)).toFixed(4)} = ${( (totalOrange / totalCandies) * (totalStrawberry / (totalCandies - 1)) ).toFixed(4)} = ${( ((totalOrange / totalCandies) * (totalStrawberry / (totalCandies - 1)))).toFixed(4) * 100 }\\%
+                \]
+
+                \\textbf{Bước 3: Tính tổng xác suất cho các trường hợp}
+
+                \[
+                P(\text{1 kẹo dâu và 1 kẹo cam}) = P(S_1 \, \text{và} \, S_2) + P(S_2 \, \text{và} \, S_1) = ${(totalStrawberry / totalCandies * totalOrange / (totalCandies - 1)).toFixed(4)} + ${(totalOrange / totalCandies * totalStrawberry / (totalCandies - 1)).toFixed(4)} = ${(2 * (totalStrawberry / totalCandies * totalOrange / (totalCandies - 1))).toFixed(4)} = ${(2 * (totalStrawberry / totalCandies * totalOrange / (totalCandies - 1)) * 100).toFixed(2)}\\%
+                \]
+
+                \\textbf{Kết luận}
+
+                Xác suất để trong 2 viên kẹo được chọn, có 1 viên là kẹo dâu và 1 viên là kẹo cam là \\(${(P_total * 100).toFixed(1)}\\%\\).
+                `;
+                
+                question = `
+    \\begin{ex}
+    Một hộp có \\(${totalStrawberry}\\) viên kẹo dâu và \\(${totalOrange}\\) viên kẹo cam. Hai viên kẹo được chọn ngẫu nhiên và không được hoàn lại vào hộp. Tính xác suất trong hai viên kẹo được chọn, có 1 viên là kẹo dâu và 1 viên là kẹo cam.
+    
+    \\shortans{${shortAns}}
+    
+    \\loigiai{
+    ${loigiai}
+    }
+    \\end{ex}
+                `;
+            }
+            break;
+        case 5:
+            // Loại 5: Chọn liên tiếp nhiều viên kẹo, hoàn lại
+            {
+                // Chọn 2 viên kẹo liên tiếp, hoàn lại
+                const pickCount = 2;
+                const desiredStrawberry = 2; // Ví dụ: cả hai viên đều là kẹo dâu
+
+                const P_total = calculateProbabilityWithReplacement(totalStrawberry, totalOrange, pickCount, desiredStrawberry);
+                shortAns = `\\(${(P_total * 100).toFixed(1)}\\%\\)`;
+
+                loigiai = `
+                Gọi:
+                \\begin{itemize}
+                    \\item \(S_1\) là sự kiện viên kẹo đầu tiên là kẹo dâu.
+                    \\item \(S_2\) là sự kiện viên kẹo thứ hai là kẹo dâu.
+                \\end{itemize}
+
+                Chúng ta cần tìm xác suất để cả hai viên kẹo được chọn đều là kẹo dâu.
+
+                \\textbf{Bước 1: Xác định tổng số kẹo trong hộp}
+
+                Số viên kẹo dâu: \\(${totalStrawberry}\\) viên.\\\\
+                Số viên kẹo cam: \\(${totalOrange}\\) viên.\\\\
+                Tổng số kẹo: \\(${totalCandies}\\) viên.
+
+                \\textbf{Bước 2: Tính xác suất của từng sự kiện}
+
+                Xác suất chọn viên kẹo dâu đầu tiên là:
+                \[
+                P(S_1) = \\frac{${totalStrawberry}}{${totalCandies}} = ${(totalStrawberry / totalCandies).toFixed(4)} = ${( (totalStrawberry / totalCandies) * 100 ).toFixed(2)}\\%
+                \]
+
+                Vì hoàn lại, xác suất chọn viên kẹo dâu thứ hai cũng như vậy:
+                \[
+                P(S_2) = \\frac{${totalStrawberry}}{${totalCandies}} = ${(totalStrawberry / totalCandies).toFixed(4)} = ${( (totalStrawberry / totalCandies) * 100 ).toFixed(2)}\\%
+                \]
+
+                \\textbf{Bước 3: Tính xác suất cả hai sự kiện xảy ra}
+
+                \[
+                P(S_1 \, \text{và} \, S_2) = P(S_1) \times P(S_2) = ${(totalStrawberry / totalCandies).toFixed(4)} \times ${(totalStrawberry / totalCandies).toFixed(4)} = ${( (totalStrawberry / totalCandies) * (totalStrawberry / totalCandies) ).toFixed(4)} = ${( ((totalStrawberry / totalCandies) * (totalStrawberry / totalCandies)) * 100 ).toFixed(2)}\\%
+                \]
+
+                \\textbf{Kết luận}
+
+                Xác suất để cả hai viên kẹo được chọn đều là kẹo dâu là \\(${(P_total * 100).toFixed(1)}\\%\\).
+                `;
+                
+                question = `
+    \\begin{ex}
+    Một hộp có \\(${totalStrawberry}\\) viên kẹo dâu và \\(${totalOrange}\\) viên kẹo cam. Hai viên kẹo được chọn ngẫu nhiên liên tiếp, mỗi lần chọn đều được hoàn lại vào hộp. Tính xác suất cả hai viên kẹo được chọn đều là kẹo dâu.
+    
+    \\shortans{${shortAns}}
+    
+    \\loigiai{
+    ${loigiai}
+    }
+    \\end{ex}
+                `;
+            }
+            break;
+        case 6:
+            // Loại 6: Chọn liên tiếp nhiều viên kẹo, không hoàn lại
+            {
+                // Chọn 2 viên kẹo liên tiếp, không hoàn lại
+                const pickCount = 2;
+                const desiredStrawberry = 2; // Ví dụ: cả hai viên đều là kẹo dâu
+
+                const P_total = calculateProbabilityWithoutReplacement(totalStrawberry, totalOrange, pickCount, desiredStrawberry);
+                shortAns = `\\(${(P_total * 100).toFixed(1)}\\%\\)`;
+
+                loigiai = `
+                Gọi:
+                \\begin{itemize}
+                    \\item \(S_1\) là sự kiện viên kẹo đầu tiên là kẹo dâu.
+                    \\item \(S_2\) là sự kiện viên kẹo thứ hai là kẹo dâu.
+                \\end{itemize}
+
+                Chúng ta cần tìm xác suất để cả hai viên kẹo được chọn đều là kẹo dâu khi không hoàn lại.
+
+                \\textbf{Bước 1: Xác định tổng số kẹo trong hộp}
+
+                Số viên kẹo dâu: \\(${totalStrawberry}\\) viên.\\\\
+                Số viên kẹo cam: \\(${totalOrange}\\) viên.\\\\
+                Tổng số kẹo: \\(${totalCandies}\\) viên.
+
+                \\textbf{Bước 2: Tính xác suất của từng sự kiện}
+
+                Xác suất chọn viên kẹo dâu đầu tiên là:
+                \[
+                P(S_1) = \\frac{${totalStrawberry}}{${totalCandies}} = ${(totalStrawberry / totalCandies).toFixed(4)} = ${( (totalStrawberry / totalCandies) * 100 ).toFixed(2)}\\%
+                \]
+
+                Sau khi đã chọn viên kẹo dâu đầu tiên và không hoàn lại, số kẹo dâu còn lại là \\(${totalStrawberry - 1}\\) viên và tổng số kẹo còn lại là \\(${totalCandies - 1}\\) viên. Vậy xác suất chọn viên kẹo dâu thứ hai là:
+                \[
+                P(S_2 \mid S_1) = \\frac{${totalStrawberry - 1}}{${totalCandies - 1}} = ${( (totalStrawberry - 1) / (totalCandies - 1) ).toFixed(4)} = ${( ((totalStrawberry - 1) / (totalCandies - 1)) * 100 ).toFixed(2)}\\%
+                \]
+
+                \\textbf{Bước 3: Tính xác suất cả hai sự kiện xảy ra}
+
+                \[
+                P(S_1 \, \text{và} \, S_2) = P(S_1) \times P(S_2 \mid S_1) = ${(totalStrawberry / totalCandies).toFixed(4)} \times ${( (totalStrawberry - 1) / (totalCandies - 1) ).toFixed(4)} = ${( ((totalStrawberry / totalCandies) * ( (totalStrawberry - 1) / (totalCandies - 1) ))).toFixed(4) } = ${( ((totalStrawberry / totalCandies) * ( (totalStrawberry - 1) / (totalCandies - 1) )) * 100 ).toFixed(2) }\\%
+                \]
+
+                \\textbf{Kết luận}
+
+                Xác suất để cả hai viên kẹo được chọn đều là kẹo dâu khi không hoàn lại là \\(${(P_total * 100).toFixed(1)}\\%\\).
+                `;
+                
+                question = `
+    \\begin{ex}
+    Một hộp có \\(${totalStrawberry}\\) viên kẹo dâu và \\(${totalOrange}\\) viên kẹo cam. Hai viên kẹo được chọn ngẫu nhiên liên tiếp và không được hoàn lại vào hộp. Tính xác suất cả hai viên kẹo được chọn đều là kẹo dâu.
+    
+    \\shortans{${shortAns}}
+    
+    \\loigiai{
+    ${loigiai}
+    }
+    \\end{ex}
+                `;
+            }
+            break;
+        default:
+            // Loại mặc định: Chọn một viên kẹo, hoàn lại
+            {
+                const P_S = (totalStrawberry / totalCandies).toFixed(4);
+                shortAns = `\\(${(P_S * 100).toFixed(1)}\\%\\)`;
+
+                loigiai = `
+                Gọi:
+                \\begin{itemize}
+                    \\item \\(S\\) là sự kiện viên kẹo được chọn là kẹo dâu.
+                \\end{itemize}
+
+                Chúng ta cần tính xác suất \\(P(S)\\).
+
+                \\textbf{Bước 1: Xác định tổng số kẹo trong hộp}
+
+                Số viên kẹo dâu: \\(${totalStrawberry}\\) viên.\\\\
+                Số viên kẹo cam: \\(${totalOrange}\\) viên.\\\\
+                Tổng số kẹo: \\(${totalCandies}\\) viên.
+
+                \\textbf{Bước 2: Tính xác suất sự kiện \\(S\\)}
+
+                Vì viên kẹo được chọn ngẫu nhiên và được hoàn lại, xác suất chọn viên kẹo dâu là:
+                \[
+                P(S) = \\frac{${totalStrawberry}}{${totalCandies}} = ${(totalStrawberry / totalCandies).toFixed(4)} = ${( (totalStrawberry / totalCandies) * 100 ).toFixed(2)}\\%
+                \]
+
+                \\textbf{Kết luận}
+
+                Xác suất viên kẹo được chọn là kẹo dâu là \\(${(P_S * 100).toFixed(1)}\\%\\).
+                `;
+                
+                question = `
+    \\begin{ex}
+    Một hộp có \\(${totalStrawberry}\\) viên kẹo dâu và \\(${totalOrange}\\) viên kẹo cam. Một viên kẹo được chọn ngẫu nhiên và được hoàn lại vào hộp. Tính xác suất viên kẹo được chọn là kẹo dâu.
+    
+    \\shortans{${shortAns}}
+    
+    \\loigiai{
+    ${loigiai}
+    }
+    \\end{ex}
+                `;
+            }
+            break;
+    }
+
+    return question;
+}
+
+function xs_chon_keo_no_returnG(e) {
     // Hàm tạo số ngẫu nhiên trong khoảng nhất định
     function generateRandomNumber(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -6051,6 +7268,73 @@ Xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên 
 
     return question;
 }
+function xs_chon_keo_no_return(e) {
+    // Hàm tạo số ngẫu nhiên trong khoảng nhất định
+    function generateRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Tổng số kẹo dâu và kẹo cam ngẫu nhiên trong khoảng 5 đến 20
+    const totalStrawberry = generateRandomNumber(5, 20);
+    const totalOrange = generateRandomNumber(5, 20);
+    const totalCandies = totalStrawberry + totalOrange;
+
+    // Tính xác suất trong trường hợp không hoàn lại
+    function calculateProbabilityNoReplacement(totalStrawberry, totalOrange) {
+        // Sự kiện O1: viên kẹo đầu tiên là kẹo cam
+        const P_O1 = totalOrange / totalCandies;
+
+        // Sau khi chọn viên kẹo cam đầu tiên, số kẹo dâu không thay đổi,
+        // số kẹo cam giảm đi 1, tổng số kẹo giảm đi 1
+        const remainingStrawberry = totalStrawberry;
+        const remainingOrange = totalOrange - 1;
+        const remainingTotal = totalCandies - 1;
+
+        // Sự kiện S2: viên kẹo thứ hai là kẹo dâu
+        const P_S2_given_O1 = remainingStrawberry / remainingTotal;
+
+        // Trả về xác suất có điều kiện
+        return P_S2_given_O1.toFixed(4);
+    }
+
+    const P_S2_no_replacement = calculateProbabilityNoReplacement(totalStrawberry, totalOrange);
+
+    // Tạo bài toán và lời giải theo cấu trúc LaTeX với giải chi tiết
+    let question = `
+\\begin{ex}
+Một hộp có \\(${totalStrawberry}\\) viên kẹo dâu và \\(${totalOrange}\\) viên kẹo cam. Một viên kẹo được chọn ngẫu nhiên và không được trả lại vào hộp, sau đó một viên kẹo khác được chọn. Tính xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam.
+\\shortans{\\(${(P_S2_no_replacement * 100).toFixed(1)}\\%\\)}
+\\loigiai{
+Gọi:
+\\begin{itemize}
+    \\item \\(O_1\\) là sự kiện viên kẹo đầu tiên là kẹo cam.
+    \\item \\(S_2\\) là sự kiện viên kẹo thứ hai là kẹo dâu.
+\\end{itemize}
+Chúng ta cần tìm xác suất có điều kiện \\(P(S_2 \\mid O_1)\\), tức là xác suất viên kẹo thứ hai là kẹo dâu khi đã biết viên kẹo đầu tiên là kẹo cam.\\\\
+\\textbf{Bước 1: Xác định tổng số kẹo trong hộp}\\\\
+Số viên kẹo dâu: \\(${totalStrawberry}\\) viên.\\\\
+Số viên kẹo cam: \\(${totalOrange}\\) viên.\\\\
+Tổng số kẹo: \\(${totalCandies}\\) viên.\\\\
+\\textbf{Bước 2: Tính xác suất của sự kiện \\(O_1\\)}\\\\
+Xác suất chọn viên kẹo cam đầu tiên là:
+\\[
+P(O_1) = \\frac{${totalOrange}}{${totalCandies}} = ${(totalOrange / totalCandies).toFixed(4)} = ${( (totalOrange / totalCandies) * 100 ).toFixed(2)}\\%
+\\]
+\\textbf{Bước 3: Tính xác suất của sự kiện \\(S_2\\) khi \\(O_1\\) xảy ra}\\\\
+Sau khi viên kẹo đầu tiên là kẹo cam và không được trả lại, số lượng kẹo dâu vẫn còn \\(${totalStrawberry}\\) viên, số kẹo cam giảm xuống còn \\(${totalOrange - 1}\\) viên, và tổng số kẹo còn lại là \\(${totalCandies - 1}\\) viên.\\\\
+Xác suất chọn viên kẹo dâu trong lần chọn thứ hai là:
+\\[
+P(S_2 \\mid O_1) = \\frac{${totalStrawberry}}{${totalCandies - 1}} = ${(totalStrawberry / (totalCandies - 1)).toFixed(4)} = ${((totalStrawberry / (totalCandies - 1)) * 100).toFixed(2)}\\%
+\\]
+\\textbf{Kết luận}\\\\
+Xác suất viên kẹo thứ hai là kẹo dâu nếu viên kẹo đầu tiên là kẹo cam và không hoàn lại là \\(${(P_S2_no_replacement * 100).toFixed(1)}\\%\\).
+}
+\\end{ex}
+    `;
+
+    return question;
+}
+
 function xs_thi_qua_mon(e) {
     // Hàm tạo phần trăm ngẫu nhiên trong khoảng nhất định
     function generateRandomPercentage(base, range) {
@@ -8231,6 +9515,202 @@ Thể tích khối chóp là $$V = \\dfrac{\\sqrt{3}}{12} \\cdot a^2 \\cdot h \\
   return solve();
 }
  
-          
+function max_tru_in_cau(e) {
+  function solve() {
+    const min = 1;
+    const max = 10;
+    const step = 1;
+    const pi = Math.PI;
+
+    // Tạo giá trị ngẫu nhiên trong khoảng từ 1 đến 10 với bước là 1
+    const range = Math.floor((max - min) / step) + 1;
+    const radius = min + Math.floor(Math.random() * range) * step;
+
+    // Tính diện tích xung quanh lớn nhất của khối trụ
+    const maxSurfaceArea = Math.pow(radius, 2) * pi * 2;
+    const maxSurfaceAreaRounded = maxSurfaceArea.toFixed(0);
+    const debai = `
+\\begin{ex}
+\\immini{
+Cho mặt cầu $(S)$ bán kính $R=${radius}$. Một hình trụ có chiều cao $h$ và bán kính đáy $r$ thay đổi nội tiếp mặt cầu như hình vẽ. Tính diện tích xung quanh lớn nhất của khối trụ, kết quả làm tròn đến phần nguyên.
+}{\\begin{tikzpicture}[scale=0.8, font=\\footnotesize, line join=round, line cap=round, >=stealth]
+    \\def\\ax{1/sqrt(10)}
+    \\draw[dashed] (2,-2) arc (0:180:2 and {\\ax});
+    \\draw (2,-2) arc (0:-180:2 and {\\ax});
+    \\draw[dashed] (2,2) arc (0:180:2 and {\\ax});
+    \\draw (2,2) arc (0:-180:2 and {\\ax});
+    \\draw (0,0) circle (2.8465);
+    \\path (2,2) coordinate (A) (2,-2) coordinate (B) (-2,2) coordinate(C) (-2,-2) coordinate (D) (0,2) coordinate(M) node[left]{$O$} (0,-2) coordinate(N) node[left]{$O'$} (0,0) coordinate (O);
+    \\draw[dashed] (A)--(B) (C)--(D) (B)--(N)--(M);
+    \\foreach \\i in {A,B,C,D,M,N,O} \\fill (\\i) circle (1pt);
+\\end{tikzpicture}}
+\\shortans{$${maxSurfaceAreaRounded}$}
+\\loigiai{
+\\immini{
+Bán kính đáy hình trụ là $r=\\sqrt{R^2-\\dfrac{h^2}{4}}=\\sqrt{${radius}^2-\\dfrac{h^2}{4}}$.\\\\
+Diện tích xung quanh của khối trụ là 
+$$ \\mathrm{S}= 2\\pi r \\cdot h = \\pi \\cdot h \\sqrt{4R^2 - h^2} = \\pi \\cdot h \\sqrt{4 \\cdot ${radius}^2 - h^2}.$$
+Từ đó, ta có $h \\sqrt{4R^2 - h^2}$ đạt giá trị cực đại khi $h = \\sqrt{2}R$.\\\\
+Thay vào công thức, ta có:
+\\[
+\\mathrm{S} = \\pi \\cdot \\sqrt{2}R \\sqrt{4R^2 - (\\sqrt{2}R)^2} = \\pi \\cdot \\sqrt{2}R \\sqrt{2R^2} = 2\\pi R^2.
+\\]
+Nên $\\mathrm{S} \\le 2\\pi R^2$.\\\\
+Vậy giá trị lớn nhất cần tìm là $2\\pi \\cdot ${radius}^2 \\approx ${maxSurfaceAreaRounded}$.
+}{\\begin{tikzpicture}[scale=0.8, font=\\footnotesize, line join=round, line cap=round, >=stealth]
+    \\def\\ax{1/sqrt(10)}
+    \\draw[dashed] (2,-2) arc (0:180:2 and {\\ax});
+    \\draw (2,-2) arc (0:-180:2 and {\\ax});
+    \\draw[dashed] (2,2) arc (0:180:2 and {\\ax});
+    \\draw (2,2) arc (0:-180:2 and {\\ax});
+    \\draw (0,0) circle (2.8465);
+    \\path (2,2) coordinate (A) (2,-2) coordinate (B) node[right]{$M$}(-2,2) coordinate(C)(-2,-2) coordinate (D) (0,2) coordinate(M) node[left]{$O$} (0,-2) coordinate(N) node[left]{$O'$} (0,0) coordinate (O)node[left]{$I$};
+    \\draw[dashed] (A)--(B) (C)--(D) (B)--(N)--(M) (O)--(B);
+    \\foreach \\i in {A,B,C,D,M,N,O} \\fill (\\i) circle (1pt);
+\\end{tikzpicture}}
+}
+\\end{ex}
+    `;
+
+    return debai;
+  }
+
+  // Gọi hàm chính để giải
+  return solve();
+}
+//Phân tích vecto
+function phan_tich_vecto_trong_tudien(e) {
+    const values = [2, 3, 4, 5, -2, -3];
+    
+    // Random giá trị từ mảng values
+    const k = values[Math.floor(Math.random() * values.length)];
+    const n = values[Math.floor(Math.random() * values.length)];
+    
+    // Function tính toán tổng a + b + c
+    function calculateABC(k, n) {
+        // Tọa độ điểm M
+        const M = [1 / k, 0, 0];
+        // Tọa độ điểm N
+        const N = [0, (n - 1) / n, 1 / n];
+
+        // Vector MN
+        const MN = [N[0] - M[0], N[1] - M[1], N[2] - M[2]];
+
+        // Vector AB, AC, AD
+        const AB = [1, 0, 0];
+        const AC = [0, 1, 0];
+        const AD = [0, 0, 1];
+
+        // Hệ số phân tích a, b, c
+        const a = MN[0] / AB[0];
+        const b = MN[1] / AC[1];
+        const c = MN[2] / AD[2];
+
+        // Tổng a + b + c
+        const total = a + b + c;
+        return total.toFixed(1);
+    }
+
+    const result = calculateABC(k, n);
+    
+    // Tạo đề bài
+    const problem = `
+\\begin{ex}
+Cho tứ diện $ABCD$, điểm $M$ thoả $\\overrightarrow{AB}=${k}\\overrightarrow{AM}$, điểm $N$ thoả $\\overrightarrow{CD}=${n}\\overrightarrow{CN}$. Biết $\\overrightarrow{MN}=a\\overrightarrow{AB}+b\\overrightarrow{AC}+c\\overrightarrow{AD}$. Khi đó $a+b+c$ bằng bao nhiêu, làm tròn đến hàng phần mười.
+\\shortans{$${result}$}
+\\loigiai{
+
+}
+\\end{ex}
+    `;
+    
+    return problem;
+}
+
+//// Nâng cao từ 10.11.2024
+/**
+ * Hàm formatNumber để làm tròn số đến một chữ số thập phân và loại bỏ '.0' nếu cần
+ * @param {number} num - Số cần định dạng
+ * @returns {string|number} - Số đã được định dạng
+ */
+function formatNumber(num) {
+    const rounded = num.toFixed(1);
+    return rounded.endsWith('.0') ? parseInt(rounded) : parseFloat(rounded);
+}
+
+/**
+ * Hàm tính tổng a + b + c dựa trên tọa độ điểm A và điều kiện AM = MN = NP = PB
+ * @param {number} ax - Hoành độ điểm A
+ * @param {number} ay - Tung độ điểm A
+ * @param {number} az - Hàng độ điểm A
+ * @returns {string} - Chuỗi LaTeX hoàn chỉnh của bài toán, đáp án và lời giải
+ */
+function tinh_sum_a_b_c(ax, ay, az) {
+    // Tính tọa độ điểm B dựa trên điều kiện AM = MN = NP = PB
+    const a = -ax / 3;
+    const b = -ay;
+    const c = -3 * az;
+
+    // Tính tổng a + b + c
+    const sum = a + b + c;
+    let sumFormatted = formatNumber(sum).toFixed(1);
+    if (sumFormatted % 1 === 0) {
+        sumFormatted = Math.round(sumFormatted);
+    }
+    // Tạo nội dung câu hỏi
+    const problemStatement = `
+        Trong không gian $Oxyz$ cho hai điểm $A(${ax}, ${ay}, ${az})$, $B(a,b,c)$. Gọi $M$, $N$, $P$ lần lượt là giao điểm của đường thẳng $AB$ với các mặt phẳng tọa độ $Oxy$, $Oxz$, $Oyz$. Biết $M$, $N$, $P$ nằm trên đoạn thẳng $AB$ sao cho $AM=MN=NP=PB$. Tính tổng $a+b+c$, kết quả làm tròn đến hàng phần mười (nếu có).
+    `;
+
+    // Tạo nội dung đáp án
+    const answerStatement = `$${sumFormatted}$`;
+
+    // Tạo nội dung lời giải
+    const solution = `
+        Ta có $M(x_M;y_M;0) \\in Oxy$, $N(x_N;0;z_N) \\in Oxz$, $P(0;y_P;z_P) \\in Oyz$.\\
+        \\\\Từ $AM=MN=NP=PB$, ta suy ra $\\heva{
+            & \\overrightarrow{AM} = \\dfrac{1}{4}\\overrightarrow{AB} & (1) \\\\
+            & \\overrightarrow{AN} = \\dfrac{1}{2}\\overrightarrow{AB} & (2) \\\\
+            & \\overrightarrow{AP} = \\dfrac{3}{4}\\overrightarrow{AB} & (3).
+        }$\\\\
+        \\textbf{Phương trình từ (1)}:
+        $$\\\heva{
+            & x_M - ${ax} = \\dfrac{1}{4}(a - ${ax}) \\\\
+            & y_M - ${ay} = \\dfrac{1}{4}(b - ${ay}) \\\\
+            & 0 - ${az} = \\dfrac{1}{4}(c - ${az}).
+        }$$
+        Giải phương trình trên, ta được $c = -15$.\\\\
+        \\textbf{Phương trình từ (2)}:\\\\
+        $$\\heva{
+            & x_N - ${ax} = \\dfrac{1}{2}(a - ${ax}) \\\\
+            & 0 - ${ay} = \\dfrac{1}{2}(b - ${ay}) \\\\
+            & z_N - ${az} = \\dfrac{1}{2}(c - ${az}).
+        }$$
+        Giải phương trình trên, ta được $b = 3$.\\\\
+        \\textbf{Phương trình từ (3)}:
+        $$\\heva{
+            & 0 - ${ax} = \\dfrac{3}{4}(a - ${ax}) \\\\
+            & y_P - ${ay} = \\dfrac{3}{4}(b - ${ay}) \\\\
+            & z_P - ${az} = \\dfrac{3}{4}(c - ${az}).
+        }$$
+        Giải phương trình trên, ta được $a = -3$.\\\\
+        Vậy tổng $a + b + c = -3 + 3 + (-15) = -15$.
+    `;
+
+    // Định dạng đầu ra LaTeX hoàn chỉnh
+    const latexOutput = `
+\\begin{ex}
+    ${problemStatement.trim()}
+    \\shortans{$${sumFormatted}$}
+    \\loigiai{
+        ${solution.trim()}
+    }
+\\end{ex}
+    `;
+
+    return latexOutput;
+}
 
 
+
+/// vừa cập nhật
