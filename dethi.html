@@ -220,27 +220,7 @@
     <div class="menu">
         <a href="index.html">Home</a>
     </div>
-    <script>
-        function checkLoginStatus() {
-        const isLoggedIn = localStorage.getItem('isLoggedIn');
-        const storedIdentifier = localStorage.getItem('identifier');
-        if (!isLoggedIn || !storedIdentifier) {
-            Swal.fire({
-                title: 'Thông báo',
-                text: 'Bạn chưa nhập key',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location.href = 'index.html';
-            });
-        }
-    }
-
-        // Kiểm tra trạng thái đăng nhập khi tải trang
-        window.onload = function () {
-            checkLoginStatus();
-        };
-    </script>
+   
     <div class="container">
         <div class="sidebar">
             <div class="resizer" id="resizer"></div>
