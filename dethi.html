@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Bài Tập Hang Loạt</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.2.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/algebrite/1.3.2/algebrite.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="bank_functions.js"></script>
+    <script src="bank_func_forTF.js"></script>
+    <script src="bank_functionsK10.js"></script>
+    <script src="bank_func_forThongKe.js"></script>
+    <script src="bank_functions_k11.js"></script>
+    <script src="bank_tichphan.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        .menu {
+            width: 100%;
+            background-color: #007bff;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .menu a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .menu a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .container {
+            display: flex;
+            width: 100%;
+            height: calc(100% - 50px);
+            margin-top: 50px;
+            overflow: hidden;
+            position: relative;
+        }
+        .sidebar {
+            width: 55%; /* Thay đổi tỷ lệ kích thước ban đầu tại đây */
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            resize: horizontal;
+            overflow: auto;
+            min-width: 200px;
+        }
+        .resizer {
+            width: 5px;
+            cursor: ew-resize;
+            background-color: #007bff;
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            resize: vertical;
+            height: 300px;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="number"] {
+            width: 80px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .switch-button {
+            margin-left: 10px;
+            background-color: #28a745;
+        }
+        .switch-button:hover {
+            background-color: #218838;
+        }
+        .results {
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .result-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .result-item textarea {
+            width: 85%;
+            padding: 10px;
+            font-size: 16px;
+            margin-right: 10px;
+            resize: vertical;
+        }
+        .result-item button {
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .highlight {
+            color: red;
+        }
+        #instructions {
+            display: none;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-top: 20px;
+        }
+        .treeview ul {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        .treeview ul li {
+            cursor: pointer;
+            position: relative;
+            padding-left: 20px;
+            font-size: 14px;
+        }
+        .treeview ul li:before {
+            content: "\25B6";
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.3s ease;
+        }
+        .treeview ul li.open:before {
+            transform: translateY(-50%) rotate(90deg);
+        }
+        .treeview ul li ul {
+            display: none;
+            padding-left: 20px;
+        }
+        .treeview ul li.open > ul {
+            display: block;
+        }
+        .treeview ul li.level-1 {
+            color: red;
+        }
+        .treeview ul li.level-2 {
+            color: blue;
+        }
+        .treeview ul li.level-3 {
+            color: rgb(201, 28, 134);
+        }
+        .treeview ul li.level-4 {
+            color: rgb(12, 150, 49);
+        }
+        .no-triangle:before {
+            content: "";
+            position: relative;
+            left: -20px;
+        }
+        .final-level {
+            color: rgb(108, 9, 154);
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Home</a>
+    </div>
+    <script>
+        function checkLoginStatus() {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const storedIdentifier = localStorage.getItem('identifier');
+        if (!isLoggedIn || !storedIdentifier) {
+            Swal.fire({
+                title: 'Thông báo',
+                text: 'Bạn chưa nhập key',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = 'index.html';
+            });
+        }
+    }
+
+        // Kiểm tra trạng thái đăng nhập khi tải trang
+        window.onload = function () {
+            checkLoginStatus();
+        };
+    </script>
+    <div class="container">
+        <div class="sidebar">
+            <div class="resizer" id="resizer"></div>
+            <div class="treeview" id="treeview">
+                <!-- Nội dung sẽ được tải từ menu.json -->
+            </div>
+        </div>
+        <div class="content">
+            <div class="form-group">
+                <label for="function-input">Nhập hàm số (dùng ký tự {a}, {A} để chỉ định số ngẫu nhiên):</label>
+                <textarea id="function-input" rows="5" placeholder="Ví dụ: ${TFdoirad2do({e})}"></textarea>
+            </div>
+            <div class="form-group input-group">
+                <label for="number-of-functions">Số Đề Cần Tạo:</label>
+                <input type="number" id="number-of-functions" value="5" min="1">
+                <button onclick="generateRandomFunctions()">Tạo hàm số ngẫu nhiên</button>
+                <button onclick="toggleInstructions()">Hướng dẫn</button>
+                <button onclick="downloadResults()">Tải về kết quả</button>
+            </div>
+            <div id="instructions">
+                <p>Ký tự được quy ước:</p>
+                <ul>
+                    <li><span class="highlight">{a}</span>: Số ngẫu nhiên từ -10 đến 10</li>
+                    <li><span class="highlight">{A}</span>: Số ngẫu nhiên từ -10 đến 10</li>
+                    <li><span class="highlight">def(...)</span>: Thực hiện phép toán bên trong</li>
+                    <li><span class="highlight">fn(...)</span>: Thực hiện hàm JavaScript bên trong</li>
+                </ul>
+                <p>Chế độ hiển thị:</p>
+                <button onclick="toggleExact()">Chuyển đổi S<=>D</button>
+            </div>
+            <div class="results" id="results"></div>
+        </div>
+    </div>
+    <script>
+        const resizer = document.getElementById('resizer');
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.content');
+
+        resizer.addEventListener('mousedown', function(e) {
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopResize);
+        });
+
+        function resize(e) {
+            const newWidth = e.clientX - sidebar.getBoundingClientRect().left;
+            sidebar.style.width = newWidth + 'px';
+        }
+
+        function stopResize() {
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+
+        let exactMode = false;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('menu.json')
+                .then(response => response.json())
+                .then(data => populateTreeview(data))
+                .catch(error => console.error('Error loading menu:', error));
+        });
+
+        function populateTreeview(data) {
+            const treeview = document.getElementById('treeview');
+            let htmlContent = generateTreeviewHTML(data.Part, 1);
+            treeview.innerHTML = htmlContent;
+            attachTreeviewEventListeners();
+        }
+
+        function generateTreeviewHTML(data, level) {
+            let htmlContent = '<ul>';
+            data.forEach(item => {
+                let isFinalLevel = !item.K12 && !item.Chương && !item.Bài && !item.baitoan;
+                htmlContent += `<li class="level-${level} ${isFinalLevel ? 'no-triangle final-level' : ''}">${item.name}`;
+                if (item.K12) {
+                    htmlContent += generateTreeviewHTML(item.K12, level + 1);
+                }
+                if (item.Chương) {
+                    htmlContent += generateTreeviewHTML(item.Chương, level + 1);
+                }
+                if (item.Bài) {
+                    htmlContent += generateTreeviewHTML(item.Bài, level + 1);
+                }
+                if (item.baitoan) {
+                    htmlContent += '<ul>';
+                    item.baitoan.forEach(baitoan => {
+                        htmlContent += `<li class="level-${level + 1} no-triangle final-level" onclick="appendContent('${baitoan.content}')">${baitoan.name}</li>`;
+                    });
+                    htmlContent += '</ul>';
+                }
+                htmlContent += '</li>';
+            });
+            htmlContent += '</ul>';
+            return htmlContent;
+        }
+
+        function attachTreeviewEventListeners() {
+            const treeItems = document.querySelectorAll('.treeview ul li');
+            treeItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.classList.toggle('open');
+                });
+            });
+        }
+        let questionCounter = 1; // Biến đếm câu hỏi
+
+function appendContent(content) {
+    const functionInput = document.getElementById('function-input');
+    const cursorPosition = functionInput.selectionStart;
+    const textBeforeCursor = functionInput.value.substring(0, cursorPosition);
+    const textAfterCursor = functionInput.value.substring(cursorPosition);
+
+    // Thêm số thứ tự "Câu X. " trước nội dung
+    const newContent = `%Câu ${questionCounter}%\n${content}\n`;
+
+    // Ghép nội dung trước và sau, thêm nội dung mới vào vị trí con trỏ
+    functionInput.value = textBeforeCursor + newContent + textAfterCursor;
+
+    // Đặt lại con trỏ sau phần nội dung vừa thêm
+    functionInput.focus();
+    functionInput.setSelectionRange(cursorPosition + newContent.length, cursorPosition + newContent.length);
+
+    // Tăng số thứ tự câu hỏi sau mỗi lần thêm
+    questionCounter++;
+}
+
+        function appendContentGGG(content) {
+            const functionInput = document.getElementById('function-input');
+            const cursorPosition = functionInput.selectionStart;
+            const textBeforeCursor = functionInput.value.substring(0, cursorPosition);
+            const textAfterCursor = functionInput.value.substring(cursorPosition);
+            functionInput.value = textBeforeCursor + content + textAfterCursor;
+            functionInput.focus();
+            functionInput.setSelectionRange(cursorPosition + content.length, cursorPosition + content.length);
+        }
+
+        function generateCustomValue(char, variant = null) {
+            const specialValues = {
+                gocduong: [30, 45, 60, 90, 120, 150],
+                gocam: [-30, -45, -60, -90, -120, -150]
+            };
+
+            if (specialValues[char]) {
+                return specialValues[char][Math.floor(Math.random() * specialValues[char].length)];
+            } else if (char === "Z") {
+                return new Date().getFullYear();
+            } else if ("ABCDE".includes(char)) {
+                if (variant === '+') {
+                    return Math.floor(Math.random() * 10) + 1;
+                } else if (variant === '-') {
+                    return Math.floor(Math.random() * -10) - 1;
+                } else {
+                    return Math.floor(Math.random() * 21) - 10;
+                }
+            } else {
+                let choices;
+                if (variant === '+') {
+                    if ("GHIJ".includes(char)) {
+                        choices = [2, 4, 6, 8, 10];
+                    } else if ("KLMN".includes(char)) {
+                        choices = [1, 3, 5, 7, 9];
+                    } else if ("OPQR".includes(char)) {
+                        choices = [2, 3, 5, 7];
+                    } else if ("STUV".includes(char)) {
+                        choices = [1, 2, 3, 4, 5];
+                    } else if ("XY".includes(char)) {
+                        choices = [1, 2, 3];
+                    } else if ("abcd".includes(char)) {
+                        choices = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+                    } else {
+                        choices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+                    }
+                } else if (variant === '-') {
+                    if ("GHIJ".includes(char)) {
+                        choices = [-2, -4, -6, -8, -10];
+                    } else if ("KLMN".includes(char)) {
+                        choices = [-1, -3, -5, -7, -9];
+                    } else if ("OPQR".includes(char)) {
+                        choices = [-2, -3, -5, -7];
+                    } else if ("STUV".includes(char)) {
+                        choices = [-1, -2, -3, -4, -5];
+                    } else if ("XY".includes(char)) {
+                        choices = [-1, -2, -3];
+                    } else if ("abcd".includes(char)) {
+                        choices = [-1, -2, -3, -4, -5, -6, -7, -8, -9];
+                    } else {
+                        choices = [-1, -2, -3, -4, -5, -6, -7, -8, -9, -10];
+                    }
+                } else {
+                    if ("GHIJ".includes(char)) {
+                        choices = Array.from({ length: 21 }, (_, i) => i - 10).filter(i => i % 2 === 0);
+                    } else if ("KLMN".includes(char)) {
+                        choices = Array.from({ length: 19 }, (_, i) => i - 9).filter(i => i % 2 !== 0);
+                    } else if ("OPQR".includes(char)) {
+                        choices = [2, 3, 5, 7, -2, -3, -5, -7];
+                    } else if ("STUV".includes(char)) {
+                        choices = [1, 2, 3, 4, 5, -1, -2, -3, -4, -5];
+                    } else if ("XY".includes(char)) {
+                        choices = [1, 2, 3, -1, -2, -3];
+                    } else if ("abcd".includes(char)) {
+                        choices = [1, 2, 3, 4, 5, 6, 7, 8, 9,-1, -2, -3, -4, -5, -6, -7, -8, -9];
+                    } else {
+                        choices = Array.from({ length: 21 }, (_, i) => i - 10);
+                    }
+                }
+                return choices[Math.floor(Math.random() * choices.length)];
+            }
+        }
+
+        function replaceVariablesWithValues(str, variables) {
+            return str.replace(/{([A-Za-z]+)([+-])?}/g, (match, char, variant) => {
+                if (!variables[match]) {
+                    variables[match] = generateCustomValue(char, variant);
+                }
+                return variables[match];
+            });
+        }
+
+        function evaluateExpressions(str, variables) {
+            // Thay thế các biến trước khi thực hiện các hàm JavaScript
+            str = replaceVariablesWithValues(str, variables);
+
+            str = str.replace(/def\(([^()]+)\)/g, (match, expr) => {
+                try {
+                    let evaluatedExpr = expr.replace(/{([A-Za-z])}/g, (m, v) => variables[v] || 0);
+                    return exactMode ? math.format(math.evaluate(evaluatedExpr), { fraction: 'ratio' }) : math.evaluate(evaluatedExpr);
+                } catch {
+                    return match;
+                }
+            }).replace(/math\.([a-zA-Z0-9]+)\(([^)]+)\)/g, (match, func, args) => {
+                try {
+                    const result = math[func](...args.split(',').map(arg => math.evaluate(arg.trim())));
+                    return exactMode ? math.format(result, { fraction: 'ratio' }) : result;
+                } catch {
+                    return match;
+                }
+            });
+
+            // Sử dụng Algebrite để xử lý các trường hợp đặc biệt
+            str = str.replace(/alg\(([^()]+)\)/g, (match, expr) => {
+                try {
+                    return Algebrite.run(expr).toString();
+                } catch {
+                    return match;
+                }
+            });
+
+            // Thực hiện các hàm JavaScript được định nghĩa trong bank_functions.js
+            str = str.replace(/\${(\w+)\(([^)]+)\)}/g, (match, fnName, params) => {
+                try {
+                    params = params.split(',').map(param => {
+                        param = param.trim();
+                        if (param.match(/^{([A-Za-z])}$/)) {
+                            const variableName = param.replace(/[{}]/g, '');
+                            return variables[variableName];
+                        } else if (!isNaN(parseFloat(param))) {
+                            return parseFloat(param);
+                        } else {
+                            return math.parse(param); // Xử lý ký hiệu
+                        }
+                    });
+                    const result = executeFunction(fnName, params);
+                    return result.isSymbolNode ? result.toString() : result;
+                } catch {
+                    return match;
+                }
+            });
+
+            return str;
+        }
+
+        function generateRandomFunctionsG() {
+            const functionInput = document.getElementById('function-input').value;
+            const numberOfFunctions = parseInt(document.getElementById('number-of-functions').value);
+            const resultsContainer = document.getElementById('results');
+            resultsContainer.innerHTML = ''; // Clear previous results
+
+            const lines = functionInput.split('\n'); // Split input into lines
+            for (let i = 0; i < numberOfFunctions; i++) {
+                let variables = {};
+                let replacedVariables = lines.map(line => replaceVariablesWithValues(line, variables)).join('\n');
+                let evaluatedExpression = evaluateExpressions(replacedVariables, variables);
+
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                resultItem.innerHTML = `
+                    <textarea rows="2">${evaluatedExpression}</textarea>
+                    <h3>File ${i + 1}<br>
+                    <button onclick="copyToClipboard(this)">Copy</button> </h3>
+                `;
+                resultsContainer.appendChild(resultItem);
+            }
+        }
+        function generateRandomFunctions() {
+    const functionInput = document.getElementById('function-input').value;
+    const numberOfFunctions = parseInt(document.getElementById('number-of-functions').value);
+    const resultsContainer = document.getElementById('results');
+    resultsContainer.innerHTML = ''; // Clear previous results
+
+    const lines = functionInput.split('\n'); // Split input into lines
+    for (let i = 0; i < numberOfFunctions; i++) {
+        let variables = {};
+        let replacedVariables = lines.map(line => replaceVariablesWithValues(line, variables)).join('\n');
+        let evaluatedExpression = evaluateExpressions(replacedVariables, variables);
+
+        const resultItem = document.createElement('div');
+        resultItem.className = 'result-item';
+        resultItem.innerHTML = `
+            <textarea rows="2">${evaluatedExpression}</textarea>
+            <h3>File ${i + 1}<br>
+            <button onclick="copyToClipboard(this)">Copy</button> </h3>
+        `;
+        resultsContainer.appendChild(resultItem);
+    }
+}
+
+function copyToClipboard(button) {
+        const resultItem = button.closest('.result-item');
+        const textarea = resultItem.querySelector('textarea');
+        if (textarea) {
+            navigator.clipboard.writeText(textarea.value)
+                .then(() => {
+                    Swal.fire('Đã sao chép');
+                })
+                .catch(err => {
+                    console.error('Không thể sao chép: ', err);
+                    Swal.fire('Không thể sao chép');
+                });
+        } else {
+            console.error('Không tìm thấy phần tử textarea');
+        }
+    }
+
+
+        function copy1ToClipboard(button) {
+            const textarea = button.previousElementSibling;
+            textarea.select();
+            document.execCommand('copy');
+            alert('Đã sao chép');
+        }
+
+        function downloadResults() {
+            const resultsContainer = document.getElementById('results');
+            let text = '';
+            resultsContainer.querySelectorAll('.result-item textarea').forEach(item => {
+                text += item.value + '\n';
+            });
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'results.tex';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function toggleInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleExact() {
+        exactMode = !exactMode;
+        Swal.fire({
+            title: 'Chế độ hiển thị',
+            text: exactMode ? "Chuyển sang chế độ phân số" : "Chuyển sang chế độ số thập phân",
+            icon: 'info',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    /* ... (existing JavaScript) ... */
+    function generateTreeviewHTML(data, level) {
+        let htmlContent = '<ul>';
+        data.forEach(item => {
+            let isFinalLevel = !item.K12 && !item.Chương && !item.Bài && !item.baitoan;
+            htmlContent += `<li class="level-${level} ${isFinalLevel ? 'no-triangle final-level' : ''}">${item.name}`;
+            if (item.K12) {
+                htmlContent += generateTreeviewHTML(item.K12, level + 1);
+            }
+            if (item.Chương) {
+                htmlContent += generateTreeviewHTML(item.Chương, level + 1);
+            }
+            if (item.Bài) {
+                htmlContent += generateTreeviewHTML(item.Bài, level + 1);
+            }
+            if (item.baitoan) {
+                htmlContent += '<ul>';
+                item.baitoan.forEach(baitoan => {
+                    htmlContent += `<li class="level-${level + 1} no-triangle final-level" onclick="appendContent('${baitoan.content}')">${baitoan.name}</li>`;
+                });
+                htmlContent += '</ul>';
+            }
+            htmlContent += '</li>';
+        });
+        htmlContent += '</ul>';
+        return htmlContent;
+    }
+
+    </script>
+</body>
+</html>
