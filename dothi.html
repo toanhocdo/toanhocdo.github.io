@@ -1,213 +1,264 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VE DO THI HAM SO</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-        canvas {
-            border: 1px solid black;
-        }
-        .controls {
-            margin-bottom: 20px;
-        }
-        .controls input, .controls select {
-            margin: 0 5px;
-        }
-    </style>
+<title>Vẽ Đồ Thị Hàm Số</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.5.0/math.min.js"></script>
+<style>
+  body {
+    font-family: sans-serif;
+  }
+  #result {
+    margin-top: 20px;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  #graph {
+    border: 1px solid black;
+  }
+  input[type="number"] {
+    width: 30px;
+  }
+  .container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  #instructions {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-left: 20px;
+  }
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+    #instructions {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 20px;
+    }
+  }
+</style>
 </head>
 <body>
-<h2> Chương trình vẽ đồ thị hàm số Toán 12</h2>
-    <div class="controls">
-        <label for="functionType">Function Type: </label>
-        <select id="functionType">
-            <option value="linear">y= ax + b (bậc 1)</option>
-            <option value="quadratic">y=ax²+bx+c (bậc 2)</option>
-            <option value="cubic">y=ax³+bx²+cx+d (bậc 3)</option>
-            <option value="quartic">y=ax⁴+bx²+c (bậc 4)</option>
-            <option value="rational1">y=(ax+b)/(cx+d) (bậc 1 trên bậc 1)</option>
-	    <option value="rational2">y=(ax²+bx+c)/(dx+e)(bậc 2 trên bậc 1)</option> 
-        </select>
-<label for="scale">Scale: </label>
-        <input type="range" id="scale" min="1" max="10" value="5" step="1" oninput="updateScale()"><br><br>        
-<label for="a">a: </label><input type="number" id="a" value="1">
-        <label for="b">b: </label><input type="number" id="b" value="-3">
-        <label for="c">c: </label><input type="number" id="c" value="0"><br>
-        <label for="d">d: </label><input type="number" id="d" value="2">
-        <label for="e">e: </label><input type="number" id="e" value="3">
-        <button onclick="drawGraph()">Draw Graph</button>
-        
-    </div>
-    <canvas id="cubicCanvas" width="500" height="500"></canvas>
-    <script>
-        const canvas = document.getElementById('cubicCanvas');
-        const ctx = canvas.getContext('2d');
-        let scale = 50; // Initialize scale to 50
-        const origin = { x: canvas.width / 2, y: canvas.height / 2 };
+<h1>Vẽ Đồ Thị Hàm Số</h1>
 
-        function drawGraph() {
-            const a = parseFloat(document.getElementById('a').value);
-            const b = parseFloat(document.getElementById('b').value);
-            const c = parseFloat(document.getElementById('c').value);
-            const d = parseFloat(document.getElementById('d').value);
-            const e = parseFloat(document.getElementById('e').value);
-            const functionType = document.getElementById('functionType').value;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawGrid();
-            drawAxes();
-            drawFunction(functionType, a, b, c, d, e);
-	    drawEquation(functionType, a, b, c, d, e);	
-        }
+<label for="functionInput">Nhập hàm số: y = </label>
+<input type="text" id="functionInput" placeholder="Ví dụ: x^2 + 3x - 2">
+<button onclick="addFunction()">Vẽ đồ thị</button>
+<button onclick="clearGraphs()">Xóa các đồ thị</button>
+<div id="errorMessage" style="color: red;"></div>
+<div id="result"></div>
 
-function drawEquation(type, a, b, c, d, e) {
-    let equation = '';
-    switch (type) {
-        case 'linear':
-            equation = `y = ${a}x + ${b}`;
-            break;
-        case 'quadratic':
-            equation = `y = ${a}x² + ${b}x + ${c}`;
-            break;
-        case 'cubic':
-            equation = `y = ${a}x³ + ${b}x² + ${c}x + ${d}`;
-            break;
-        case 'quartic':
-            equation = `y = ${a}x⁴ + ${b}x² + ${c}`;
-            break;
-        case 'rational1':
-            equation = `y = (${a}x + ${b}) / (${c}x + ${d})`;
-            break;
-	case 'rational2':
-            equation = `y = (${a}x² + ${b}x + ${c}) / (${d}x + ${e})`;
-            break;
+<div class="container">
+  <canvas id="graph" width="500em" height="500em"></canvas>
+  <div id="instructions">
+    <h2>Hướng dẫn sử dụng</h2>
+    <ul>
+      <li>Nhập hàm số vào ô input và nhấn "Vẽ đồ thị" để vẽ đồ thị.</li>
+      <li>Nhập hàm số đa thức: ^ mũ (x^2; e^x); / chia (x^2-x-1)/(x-2); sqrt(hàm) căn bậc 2;log(x)=ln(x);
+      log2(x)=log_2; log10(x)=log(x);log(5)/log(3)=log_3(5).</li>
+      <li>Sử dụng chuột cuộn để phóng to/thu nhỏ đồ thị.</li>
+      <li>Trên thiết bị cảm ứng, dùng hai ngón tay để phóng to/thu nhỏ.</li>
+      <li>Nhấn "Xóa các đồ thị" để xóa tất cả đồ thị đã vẽ.</li>
+      <li>Nhấn chuột phải vào đồ thị để lưu đồ thị thành file.</li>
+    </ul>
+  </div>
+</div>
+
+
+<script>
+  let scale = 50;
+  let functions = [];
+  let functionInput = document.getElementById("functionInput");
+  let canvas = document.getElementById("graph");
+  let ctx = canvas.getContext("2d");
+  const origin = { x: canvas.width / 2, y: canvas.height / 2 };
+
+  // Phóng to và thu nhỏ bằng cách lăn con chuột
+  canvas.addEventListener('wheel', function(event) {
+    event.preventDefault();
+    if (event.deltaY < 0) {
+      scale *= 1.1;
+    } else {
+      scale /= 1.1;
     }
-    ctx.font = '14px Arial';
-    ctx.fillStyle = 'red';
-    ctx.fillText(equation, 5, 30); // Adjust position as needed
-}
+    drawGraph();
+  });
 
-        function computeFunction(x, a, b, c, d, e, type) {
-            switch (type) {
-                case 'linear':
-                    return a * x + b;
-                case 'quadratic':
-                    return a * x ** 2 + b * x + c;
-                case 'cubic':
-                    return a * x ** 3 + b * x ** 2 + c * x + d;
-                case 'quartic':
-                    return a * x ** 4 + b * x ** 2 + c;
-		case 'rational1':
-                    return (a * x + b) / (c * x + d);
-                case 'rational2':
-                    return (a * x ** 2 + b * x + c) / (d * x + e);
-                default:
-                    return 0;
-            }
+  // Phóng to và thu nhỏ trên màn hình cảm ứng
+  let touchStartDist = 0;
+  canvas.addEventListener('touchstart', function(event) {
+    if (event.touches.length === 2) {
+      touchStartDist = getTouchDist(event.touches);
+    }
+  });
+
+  canvas.addEventListener('touchmove', function(event) {
+    if (event.touches.length === 2) {
+      event.preventDefault();
+      let touchMoveDist = getTouchDist(event.touches);
+      if (touchMoveDist > touchStartDist) {
+        scale *= 1.05;
+      } else {
+        scale /= 1.05;
+      }
+      touchStartDist = touchMoveDist;
+      drawGraph();
+    }
+  });
+
+  function getTouchDist(touches) {
+    let dx = touches[0].pageX - touches[1].pageX;
+    let dy = touches[0].pageY - touches[1].pageY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function addFunction() {
+    let functionStr = functionInput.value;
+    if (functionStr=="") {
+    document.getElementById("errorMessage").textContent = "Vui lòng nhập hàm số.";
+    return;
+  }
+
+    try {
+      // Kiểm tra hàm số trước khi thêm vào mảng
+      
+      math.compile(functionStr);
+      functions.push(functionStr);
+      drawGraph(); 
+    } catch (error) {
+      document.getElementById("errorMessage").textContent = "Hàm số không hợp lệ 1.";
+      console.error(error);
+    }
+  }
+
+  function clearGraphs() {
+    functions = [];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid();
+    drawAxes();
+    document.getElementById("errorMessage").textContent = "";
+  }
+
+  function drawGraph() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid();
+    drawAxes();
+
+    for (let i = 0; i < functions.length; i++) {
+      try {
+        let expr = math.compile(functions[i]);
+        drawFunction(expr, getColor(i));
+      } catch (error) {
+        document.getElementById("errorMessage").textContent = "Hàm số không hợp lệ 2.";
+        console.error(error);
+        functions.splice(i, 1);
+        i--;
+      }
+    }
+  }
+
+  function drawFunction(expr, color) {
+     document.getElementById("errorMessage").textContent = "";
+    try {
+      ctx.beginPath();
+      for (let x = -origin.x / scale; x <= origin.x / scale; x += 0.01) {
+        let y = expr.evaluate({ x: x });
+        let canvasX = origin.x + x * scale;
+        let canvasY = origin.y - y * scale;
+        if (x === -origin.x / scale) {
+          ctx.moveTo(canvasX, canvasY);
+        } else {
+          ctx.lineTo(canvasX, canvasY);
         }
+      }
+      ctx.strokeStyle = color;
+      ctx.stroke();
+    } catch (error) {
+      document.getElementById("errorMessage").textContent = "Hàm số không hợp lệ.";
+      console.error(error);
+    }
+  }
 
-        function drawAxes() {
-            ctx.beginPath();
-            ctx.font = '14px Arial';
-            // X-axis
-            ctx.moveTo(0, origin.y);
-            ctx.lineTo(canvas.width, origin.y);
-            ctx.moveTo(canvas.width - 10, origin.y - 5);
-            ctx.lineTo(canvas.width, origin.y);
-            ctx.lineTo(canvas.width - 10, origin.y + 5);
-            ctx.fillText('x', canvas.width - 10, origin.y - 10);
-            // Y-axis
-            ctx.moveTo(origin.x, 0);
-            ctx.lineTo(origin.x, canvas.height);
-            ctx.moveTo(origin.x - 5, 10);
-            ctx.lineTo(origin.x, 0);
-            ctx.lineTo(origin.x + 5, 10);
+  function drawAxes() {
+    ctx.beginPath();
+    // X-axis
+    ctx.moveTo(0, origin.y);
+    ctx.lineTo(canvas.width, origin.y);
+    ctx.moveTo(canvas.width - 10, origin.y - 5);
+    ctx.lineTo(canvas.width, origin.y);
+    ctx.lineTo(canvas.width - 10, origin.y + 5);
+    ctx.fillText('x', canvas.width - 10, origin.y - 10);
+    // Y-axis
+    ctx.moveTo(origin.x, 0);
+    ctx.lineTo(origin.x, canvas.height);
+    ctx.moveTo(origin.x - 5, 10);
+    ctx.lineTo(origin.x, 0);
+    ctx.lineTo(origin.x + 5, 10);
+    ctx.fillText('y', origin.x + 10, 15);
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
 
-            ctx.strokeStyle = 'black';
-            ctx.stroke();
-            ctx.fillText('y', origin.x + 10, 15);
-            // Draw unit markers on x and y axes
-            for (let x = scale; x < canvas.width; x += scale) {
-                ctx.moveTo(origin.x + x, origin.y - 5);
-                ctx.lineTo(origin.x + x, origin.y + 5);
-                ctx.moveTo(origin.x - x, origin.y - 5);
-                ctx.lineTo(origin.x - x, origin.y + 5);
-            }
+    // Draw unit markers on x and y axes
+    for (let x = scale; x < canvas.width; x += scale) {
+      ctx.moveTo(origin.x + x, origin.y - 5);
+      ctx.lineTo(origin.x + x, origin.y + 5);
+      ctx.moveTo(origin.x - x, origin.y - 5);
+      ctx.lineTo(origin.x - x, origin.y + 5);
+    }
 
-            for (let y = scale; y < canvas.height; y += scale) {
-                ctx.moveTo(origin.x - 5, origin.y + y);
-                ctx.lineTo(origin.x + 5, origin.y + y);
-                ctx.moveTo(origin.x - 5, origin.y - y);
-                ctx.lineTo(origin.x + 5, origin.y - y);
-            }
+    for (let y = scale; y < canvas.height; y += scale) {
+      ctx.moveTo(origin.x - 5, origin.y + y);
+      ctx.lineTo(origin.x + 5, origin.y + y);
+      ctx.moveTo(origin.x - 5, origin.y - y);
+      ctx.lineTo(origin.x + 5, origin.y - y);
+    }
 
-            ctx.strokeStyle = 'black';
-            ctx.stroke();
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
 
-            // Draw unit labels
-            ctx.font = '12px Arial';
-            ctx.fillStyle = 'black';
-            for (let x = scale; x < canvas.width; x += scale) {
-                ctx.fillText((x / scale).toFixed(0), origin.x + x - 5, origin.y + 15); 
-                ctx.fillText((-x / scale).toFixed(0), origin.x - x - 5, origin.y + 15);
-            }
+    // Draw unit labels
+    ctx.font = '10px Arial';
+    ctx.fillStyle = 'black';
+    for (let x = scale; x < canvas.width; x += scale) {
+      ctx.fillText((x / scale).toFixed(0), origin.x + x - 5, origin.y + 15);
+      ctx.fillText((-x / scale).toFixed(0), origin.x - x - 5, origin.y + 15);
+    }
 
-            for (let y = scale; y < canvas.height; y += scale) {
-                ctx.fillText((-y / scale).toFixed(0), origin.x + 5, origin.y + y + 3);
-                ctx.fillText((y / scale).toFixed(0), origin.x + 5, origin.y - y + 3);
-            }
-        }
+    for (let y = scale; y < canvas.height; y += scale) {
+      ctx.fillText((-y / scale).toFixed(0), origin.x + 5, origin.y + y + 3);
+      ctx.fillText((y / scale).toFixed(0), origin.x + 5, origin.y - y + 3);
+    }
+  }
 
-        function drawFunction(type, a, b, c, d, e) {
-            ctx.beginPath();
+  function drawGrid() {
+    const step = scale;
+    ctx.strokeStyle = '#e0e0e0';
+    for (let x = step; x < canvas.width; x += step) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+      ctx.stroke();
+    }
+    for (let y = step; y < canvas.height; y += step) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+    }
+  }
 
-            for (let x = -origin.x / scale; x <= origin.x / scale; x += 0.01) {
-                const canvasX = origin.x + x * scale;
-                const canvasY = origin.y - computeFunction(x, a, b, c, d, e, type) * scale;
-                if (x === -origin.x / scale) {
-                    ctx.moveTo(canvasX, canvasY);
-                } else {
-                    ctx.lineTo(canvasX, canvasY);
-                }
-            }
-            ctx.strokeStyle = 'blue';
-            ctx.stroke();
-        }
+  function getColor(index) {
+    const colors = ['blue', 'red', 'green', 'orange', 'purple', 'brown', 'cyan', 'magenta'];
+    return colors[index % colors.length];
+  }
 
-        function drawGrid() {
-            const step = scale; // Use scale directly for grid step
-            ctx.strokeStyle = '#e0e0e0';
-
-            // Draw vertical grid lines
-            for (let x = step; x < canvas.width; x += step) {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
-                ctx.stroke();
-            }
-
-            // Draw horizontal grid lines
-            for (let y = step; y < canvas.height; y += step) {
-                ctx.beginPath();
-                ctx.moveTo(0, y);
-                ctx.lineTo(canvas.width, y);
-                ctx.stroke();
-            }
-        }
-
-        function updateScale() {
-            scale = parseInt(document.getElementById('scale').value, 10) * 10;
-            drawGraph();
-        }
-
-        drawGraph();
-    </script>
+  // Initial draw of the grid and axes
+  drawGrid();
+  drawAxes();
+</script>
 </body>
 </html>
